@@ -1,0 +1,13 @@
+# Local research/build inputs and private machine configuration
+work/
+artifacts/
+local/
+LOCAL_ENVIRONMENT.md
+.vs/
+bin/
+obj/
+__pycache__/
+*.user
+*.dll
+*.assets
+*.log
