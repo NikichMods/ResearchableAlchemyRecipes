@@ -10,7 +10,7 @@ The concept/naming/bootstrap chat and two bounded static mechanism passes are co
 - Adopted progression gate: journal information and product research open after vanilla The Beginning Of Alchemy is unlocked. Earlier product awareness does not by itself open access. A visible locked entry with explanatory text is proposed, not a finalized UI.
 - The selected behavior is owned by PRODUCT_REQUIREMENTS.md: character awareness from an available verified source; research selected/performed at the study table; one product research reveals all remaining ordinary formulas and ingredient-source guidance; informational journal; chosen vanilla material studies and ordinary manufacture.
 - Research access before later manufacturing-equipment availability (after the adopted foundational alchemy gate), exact prices/partial-knowledge pricing and the final UI remain open. Do not silently resolve them during technical work.
-- The project is documentation-only. There is no production source, candidate, chosen build setup or runtime acceptance. Implementation remains subject to the independent readiness gates.
+- The stable baseline is documentation-only. There is no production source, candidate, chosen production build setup or runtime acceptance. Research-only Study Table Work Probe 0.1.0 is being prepared on research/study-table-work; production remains subject to independent readiness gates.
 - Existing awareness research is partial (26/34 structural/vendor candidate coverage, not proof of first exposure for every save). Existing mixed-output/ingredient intersection evidence is complete for the inspected ordinary 1.407 corpus and should not be repeated merely to recover context.
 - Read VERIFIED_RUNTIME_DATA.md for accepted evidence identities, then inspect the corresponding shared/previous research. LOCAL_ENVIRONMENT.md locates local inputs; it is intentionally untracked.
 
@@ -52,7 +52,9 @@ Research-method choice follows DevRules: reuse accepted evidence first, inspect 
 
 ## Immediate next step
 
-Inspect the smallest table-local selection/entry UI seam, preserving normal Survey. Then a bounded research-only runtime experiment can verify one registered sample-free job: launch, manual progress, midway save/reload, cancellation resource deltas and native formula-knowledge persistence. Do not build a full journal or price model into that experiment. Finish current keeper-room builder and Merchant-source predicates independently. Detailed price tuning and visual polish follow mechanism verification.
+Run the bounded Study Table Work Probe 0.1.0 after its exact build identity is recorded in TEST_LOG.md. It uses a temporary native dialog to choose ordinary Study or a native card for one sample-free job; static DialogGUI inspection establishes Hide-before-callback ordering and native gamepad button ownership. The runtime question is launch/manual progress/mid-work reload/cancellation/completion/cleanup. Formula disclosure is deliberately a later independent experiment; do not expand this probe into a journal or price model. Finish current keeper-room builder and Merchant-source predicates independently. Detailed price tuning and visual polish follow mechanism verification.
+
+The current diagnostic entry intercepts only GUIElements.OpenCraftGUI for an idle mf_alchemy_survey after the native alchemy unlock. Normal selection calls the original dispatch under a recursion guard; research opens CraftGUI.OpenCraftList on the same table. Alternatives were adding controls directly to ResourceBasedCraftGUI (requires unverified prefab/layout ownership) or replacing Survey selection (changes its sample contract). The native dialog is the smallest test entry with already-inspected input/callback behavior, not the adopted final table design. User approval on 2026-10-12 accepted the research direction and next experiment; layout and cancellation economics remain open.
 
 ## Alchemy access and proposed onboarding — 2026-10-12
 

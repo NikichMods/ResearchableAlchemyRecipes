@@ -7,7 +7,7 @@ Follow [NikichMods/DevRules/WORKING_RULES.md](https://github.com/NikichMods/DevR
 - Project: Researchable Alchemy Recipes.
 - Repository: NikichMods/ResearchableAlchemyRecipes (public).
 - Target: Graveyard Keeper 1.407, Windows PC, BepInEx 5.
-- Phase: adopted product concept; design and mechanism verification. No production source, build or runtime candidate yet.
+- Phase: adopted product concept; design and mechanism verification. No production source or production candidate yet. Research-only Study Table Work Probe exists on research/study-table-work; its runtime acceptance is pending.
 - Purpose: target-directed paid recipe learning with ingredient-source guidance, followed by ordinary vanilla material study and production.
 
 ## Canonical documents
@@ -37,5 +37,5 @@ Verify each independent host-mechanics dependency under DevRules before producti
 - main is the stable/documentation baseline; adopted documentation may be committed directly.
 - Use research/<topic> for substantial diagnostic work and dev/<version> or a semantic feature branch for build-bearing work.
 - Runtime behavior reaches main only after its exact candidate is tested and explicitly accepted by the user. Numbered handed artifacts are immutable; stable binary distribution uses GitHub Releases under GIT_WORKFLOW.md.
-- No production version, build toolchain or CI gate is selected yet. Add infrastructure only when an actual executable check requires it.
+- No production version, build toolchain or CI gate is selected yet. The research probe has its own local compile/identity gate; this does not select a production setup. Add infrastructure only when an actual executable check requires it.
 - Original software and its software-supporting documents use MPL-2.0. See LICENSE and LICENSING.md; host and third-party rights are separate.

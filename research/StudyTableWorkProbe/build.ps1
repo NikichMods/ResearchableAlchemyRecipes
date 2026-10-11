@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: MPL-2.0
+param(
+    [Parameter(Mandatory=$true)][string]$GameRoot,
+    [Parameter(Mandatory=$true)][string]$DotnetRoot,
+    [Parameter(Mandatory=$true)][string]$ExpectedSource,
+    [switch]$CheckOnly
+)
+$ErrorActionPreference = 'Stop'
+$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$sourceHead = (& git -C $repoRoot rev-parse HEAD).Trim()
+if ($sourceHead -ne $ExpectedSource) { throw 'Unexpected source commit' }
+if (!$CheckOnly -and (& git -C $repoRoot status --porcelain --untracked-files=normal)) { throw 'Source tree must be clean for a handoff build' }
+$managed = Join-Path $GameRoot 'Graveyard Keeper_Data/Managed'
+$core = Join-Path $GameRoot 'BepInEx/core'
+$compiler = Join-Path $DotnetRoot 'sdk/6.0.406/Roslyn/bincore/csc.dll'
+$dotnet = Join-Path $DotnetRoot 'dotnet.exe'
+$outDir = Join-Path $repoRoot 'artifacts/StudyTableWorkProbe-0.1.0'
+New-Item -ItemType Directory -Path $outDir -Force | Out-Null
+$output = Join-Path $outDir $(if ($CheckOnly) { 'compile-check.dll' } else { 'StudyTableWorkProbe-0.1.0.dll' })
+if (!$CheckOnly -and (Test-Path -LiteralPath $output)) { throw 'Numbered output already exists; do not overwrite it' }
+$refs = @('mscorlib.dll','System.dll','System.Core.dll','Assembly-CSharp.dll','Assembly-CSharp-firstpass.dll','UnityEngine.dll','UnityEngine.CoreModule.dll','UnityEngine.InputLegacyModule.dll') | ForEach-Object { Join-Path $managed $_ }
+$refs += @('BepInEx.dll','0Harmony.dll') | ForEach-Object { Join-Path $core $_ }
+$compilerArgs = @('/nologo','/target:library','/nostdlib+','/noconfig','/langversion:7.3','/optimize+','/deterministic+','/warnaserror+',('/out:'+$output))
+$compilerArgs += $refs | ForEach-Object { if (!(Test-Path -LiteralPath $_)) { throw "Missing local reference: $_" }; '/reference:'+$_ }
+$compilerArgs += Join-Path $PSScriptRoot 'StudyTableWorkProbe.cs'
+& $dotnet $compiler @compilerArgs
+if ($LASTEXITCODE -ne 0) { throw "Compilation failed: $LASTEXITCODE" }
+if ($CheckOnly) { Write-Output 'Compile check passed (development source, not a handoff artifact)'; return }
+$version = [Reflection.AssemblyName]::GetAssemblyName($output).Version.ToString()
+if ($version -ne '0.1.0.0') { throw 'Artifact version mismatch' }
+$hash = (Get-FileHash -LiteralPath $output -Algorithm SHA256).Hash.ToLowerInvariant()
+$manifest = [ordered]@{ version='0.1.0'; source=$sourceHead; compiler='SDK 6.0.406 Roslyn'; artifact=(Split-Path $output -Leaf); sha256=$hash; references=@($refs | ForEach-Object { [ordered]@{ name=(Split-Path $_ -Leaf); sha256=(Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash.ToLowerInvariant() } }) }
+$manifest | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $outDir 'build-identity.json') -Encoding utf8
+Write-Output "Built $output SHA256=$hash source=$sourceHead"
