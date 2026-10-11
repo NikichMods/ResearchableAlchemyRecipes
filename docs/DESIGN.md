@@ -4,7 +4,7 @@ Current direction: study-table research plus an informational alchemy journal. T
 
 ## Current recovery entry point — 2026-10-12
 
-The concept/naming/bootstrap chat is complete. Continue concrete mechanism verification in the next project chat; do not restart the product-direction comparison or treat the previous chat transcript as required input.
+The concept/naming/bootstrap chat and first bounded static mechanism pass are complete. Continue from the findings below; do not restart the product-direction comparison or treat the previous chat transcript as required input.
 
 - Adopted: Researchable Alchemy Recipes; public NikichMods/ResearchableAlchemyRecipes; Graveyard Keeper 1.407 / Windows PC / BepInEx 5.
 - The selected behavior is owned by PRODUCT_REQUIREMENTS.md: character awareness from an available verified source; research selected/performed at the study table; one product research reveals all remaining ordinary formulas and ingredient-source guidance; informational journal; chosen vanilla material studies and ordinary manufacture.
@@ -13,7 +13,9 @@ The concept/naming/bootstrap chat is complete. Continue concrete mechanism verif
 - Existing awareness research is partial (26/34 structural/vendor candidate coverage, not proof of first exposure for every save). Existing mixed-output/ingredient intersection evidence is complete for the inspected ordinary 1.407 corpus and should not be repeated merely to recover context.
 - Read VERIFIED_RUNTIME_DATA.md for accepted evidence identities, then inspect the corresponding shared/previous research. LOCAL_ENVIRONMENT.md locates local inputs; it is intentionally untracked.
 
-Begin with two bounded questions: (1) what native study-table owner can offer and perform a target-product research job without a sample of that product; (2) what save-backed availability conditions cover the residual target-awareness gaps. Reuse prior evidence and direct inspection first. Before writing a diagnostic, state the residual uncertainty and why existing paths do not answer it. If a product has no verified awareness source, surface that gap instead of opening the full catalog or inventing a source.
+First-pass findings: ordinary Survey is sample-dependent at selection, completion dialog and sample return. The common work owner is CraftComponent, and an independent work definition can be investigated without changing material Survey. Native craft restoration resolves a saved ID through GameBalance, so a transient UI-only definition is insufficient. The seven paint gaps have 26 keeper-room blueprint consumers and native persistent unlock/migration owners; Spices has an already accepted Merchant task source. Neither finding establishes full current-save source availability.
+
+Next bounded questions: (1) when/how can a separate stable craft definition be registered before station-cache construction and save craft restoration, and how can the table offer it alongside ordinary Study; (2) what current builder/dialogue predicates make the keeper-room paint and Merchant/Spices sources available. Verify completion-to-formula knowledge and cancellation/science-cost behavior before a runtime candidate. Reuse prior evidence and direct inspection first. Before writing a diagnostic, state the residual uncertainty and why existing paths do not answer it. If a product has no verified available source, surface that gap instead of opening the full catalog or inventing a source.
 
 This recovery checkpoint authorizes no new production behavior by itself. Record the selected technical mechanism only after evidence supports it, and request a user decision only if the evidence changes the adopted product scope or exposes a real unresolved choice.
 
@@ -46,7 +48,19 @@ Research-method choice follows DevRules: reuse accepted evidence first, inspect 
 
 ## Immediate next step
 
-Classify the residual source-eligibility gaps using prior accepted evidence and direct data, and verify study-table topic/work ownership. Report what is proved and what remains unknown before production implementation. Detailed price tuning and visual polish can follow mechanism verification.
+Trace GameBalance registration/cache construction versus save/station restoration, and the native table entry routing. In parallel within the research sequence, finish current keeper-room builder and Merchant-source predicates. No new runtime diagnostic is justified yet: direct source/data inspection still has useful unanswered paths. Detailed price tuning and visual polish follow mechanism verification.
+
+## First mechanism comparison — 2026-10-12
+
+Goal: choose a known product at the study table, pay and perform work without its sample, preserve material Study, and resume correctly after save reload.
+
+| Mechanism family | Evidence and consequence | Current judgment |
+| --- | --- | --- |
+| Reuse normal Survey with altered needs | ResourceBasedCraftGUI selects by first input; Survey completion reads item details and returns that input. Removing the sample alone is insufficient and requires changing several special-case consumers. | Do not pursue as a simple input edit. |
+| Separate native work definition on the study table, topic selection using native craft cards | Common CraftComponent handles costs, manual work and completion; CraftGUI cards support explicit name/icon without a manufactured target output. Registration, entry UI, knowledge reward and reload still need verification. | Preferred research direction, not an accepted implementation architecture. |
+| Separate mod work/payment/save machinery | Would duplicate already identified native owners and introduce independent persistence/progress state. | Defer unless native work proves unable to satisfy the contract. |
+
+Shared static findings and their exact applicability limits are linked from VERIFIED_RUNTIME_DATA.md. No new UI layout, economics, equipment-access rule or production behavior was adopted in this pass.
 
 ## Rejected/deferred options and rationale
 

@@ -36,3 +36,13 @@ Accepted evidence may be reused from AlchemyRiddle; its former product decisions
 - [UI_INPUT_TIME_AND_ENVIRONMENT.md](https://github.com/NikichMods/GraveyardKeeperResearch/blob/main/docs/UI_INPUT_TIME_AND_ENVIRONMENT.md): applicable UI/gamepad/localization lifecycle findings; do not generalize one audited tooltip family to every new journal widget.
 
 No concrete vanilla formulas, copied binaries or game assets are included in this repository.
+
+## Mechanism verification — 2026-10-12
+
+Read-only first pass; both local input hashes above were rechecked and match. Static source is the shared pinned `Kupie/GYK_DECOMP@6abf79199d92482af1c7573870dd9a20ec2270b9`. No game/save mutation, new runtime probe or production code.
+
+- Shared [crafting evidence](https://github.com/NikichMods/GraveyardKeeperResearch/blob/main/docs/CRAFTING_INVENTORY_AND_TRADING.md) now records the sample-dependent ResourceBasedCraftGUI/Survey completion contract, common CraftComponent work ownership and the requirement to register a stable GameBalance craft ID before save restoration. Merely removing the sample from Survey inputs is insufficient.
+- Shared [alchemy evidence](https://github.com/NikichMods/GraveyardKeeperResearch/blob/main/docs/ALCHEMY_SYSTEM.md) now classifies the seven paint gaps: 26 unlocked-by-state keeper-room blueprint consumers, explicit old-save migration unlock writers, and no direct exact-record Technology mapping. Builder availability and normal new-save writers are still open.
+- The accepted Merchant/Spices task source was recovered from prior progression research. Its current dialogue availability remains unverified; no full save-specific coverage claim is made.
+
+Next evidence must establish definition registration/cache/load order, table entry routing, completion-to-formula knowledge and cancellation of science costs; separately establish current keeper-room builder and Merchant-source availability. Static control flow is not installed-runtime acceptance.
