@@ -45,4 +45,12 @@ Read-only first pass; both local input hashes above were rechecked and match. St
 - Shared [alchemy evidence](https://github.com/NikichMods/GraveyardKeeperResearch/blob/main/docs/ALCHEMY_SYSTEM.md) now classifies the seven paint gaps: 26 unlocked-by-state keeper-room blueprint consumers, explicit old-save migration unlock writers, and no direct exact-record Technology mapping. Builder availability and normal new-save writers are still open.
 - The accepted Merchant/Spices task source was recovered from prior progression research. Its current dialogue availability remains unverified; no full save-specific coverage claim is made.
 
-Next evidence must establish definition registration/cache/load order, table entry routing, completion-to-formula knowledge and cancellation of science costs; separately establish current keeper-room builder and Merchant-source availability. Static control flow is not installed-runtime acceptance.
+The second static pass establishes the following (details and graph hash are in the shared owners above):
+
+- Definition insertion before GameBalanceBase.CreateIDsCache, scoped to GameBalance and idempotent by ID, precedes native ID/station cache construction. `AddData` after cache creation is insufficient without cache maintenance. Stable definitions must exist even when a topic is not currently offered, for saved-job restoration.
+- GUIElements.OpenCraftGUI routes the study table to its Survey sample picker; appending ordinary jobs does not create a research tab/entry. A narrow table-local entry is required. Hidden jobs also cannot be used as an eligibility shortcut because native manual DoAction rejects them.
+- The real job's completion reaches GameSave.OnFinishedCraft before CraftComponent.End. Formula disclosure uses native completed_one_time_crafts as established by UnlockAlchemy; fabricated manufacturing completion would carry unrelated quest/achievement side effects.
+- Native cancellation refunds item needs but does not symmetrically refund station needs_from_wgo science. No research refund rule has been selected.
+- The normal tech_alchemy_begins graph opens 22 of the 26 paint-consumer blueprints, covering all seven paint outputs. These sources are not proved to be available from game start. Actual unlocked_techs state supplies the adopted journal/research gate; a new perk is not technically required.
+
+Next evidence must verify the table-local entry, installed registration/load/resumption and formula-knowledge reload; separately establish current keeper-room builder and Merchant-source availability. Static control flow is not installed-runtime acceptance.

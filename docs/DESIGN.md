@@ -4,18 +4,21 @@ Current direction: study-table research plus an informational alchemy journal. T
 
 ## Current recovery entry point — 2026-10-12
 
-The concept/naming/bootstrap chat and first bounded static mechanism pass are complete. Continue from the findings below; do not restart the product-direction comparison or treat the previous chat transcript as required input.
+The concept/naming/bootstrap chat and two bounded static mechanism passes are complete. Continue from the findings below; do not restart the product-direction comparison or treat the previous chat transcript as required input.
 
 - Adopted: Researchable Alchemy Recipes; public NikichMods/ResearchableAlchemyRecipes; Graveyard Keeper 1.407 / Windows PC / BepInEx 5.
+- Adopted progression gate: journal information and product research open after vanilla The Beginning Of Alchemy is unlocked. Earlier product awareness does not by itself open access. A visible locked entry with explanatory text is proposed, not a finalized UI.
 - The selected behavior is owned by PRODUCT_REQUIREMENTS.md: character awareness from an available verified source; research selected/performed at the study table; one product research reveals all remaining ordinary formulas and ingredient-source guidance; informational journal; chosen vanilla material studies and ordinary manufacture.
-- Research access before manufacturing-equipment availability, exact prices/partial-knowledge pricing and the final UI remain open. Do not silently resolve them during technical work.
+- Research access before later manufacturing-equipment availability (after the adopted foundational alchemy gate), exact prices/partial-knowledge pricing and the final UI remain open. Do not silently resolve them during technical work.
 - The project is documentation-only. There is no production source, candidate, chosen build setup or runtime acceptance. Implementation remains subject to the independent readiness gates.
 - Existing awareness research is partial (26/34 structural/vendor candidate coverage, not proof of first exposure for every save). Existing mixed-output/ingredient intersection evidence is complete for the inspected ordinary 1.407 corpus and should not be repeated merely to recover context.
 - Read VERIFIED_RUNTIME_DATA.md for accepted evidence identities, then inspect the corresponding shared/previous research. LOCAL_ENVIRONMENT.md locates local inputs; it is intentionally untracked.
 
 First-pass findings: ordinary Survey is sample-dependent at selection, completion dialog and sample return. The common work owner is CraftComponent, and an independent work definition can be investigated without changing material Survey. Native craft restoration resolves a saved ID through GameBalance, so a transient UI-only definition is insufficient. The seven paint gaps have 26 keeper-room blueprint consumers and native persistent unlock/migration owners; Spices has an already accepted Merchant task source. Neither finding establishes full current-save source availability.
 
-Next bounded questions: (1) when/how can a separate stable craft definition be registered before station-cache construction and save craft restoration, and how can the table offer it alongside ordinary Study; (2) what current builder/dialogue predicates make the keeper-room paint and Merchant/Spices sources available. Verify completion-to-formula knowledge and cancellation/science-cost behavior before a runtime candidate. Reuse prior evidence and direct inspection first. Before writing a diagnostic, state the residual uncertainty and why existing paths do not answer it. If a product has no verified available source, surface that gap instead of opening the full catalog or inventing a source.
+Second-pass findings: CraftComponent is a statically supported execution mechanism. Registration before GameBalanceBase.CreateIDsCache, restricted to GameBalance and idempotent by stable job ID, lets the subsequent native ID/station cache construction include the jobs. GUIElements.OpenCraftGUI selects the Survey inventory window when Survey definitions are present; job insertion alone cannot supply research selection. The normal tech_alchemy_begins graph covers all seven paint outputs through 22 of their 26 blueprint consumers; they are not established as initial-game topics. The native unlocked_techs list supplies the adopted access gate without requiring a new perk.
+
+Next bounded questions: (1) choose and verify a narrow table-local entry between normal Study and research craft cards, plus the loaded registration/resumption/completion path; (2) finish current builder/dialogue source predicates. Cancellation returns ordinary consumed items but does not symmetrically refund needs_from_wgo science; preserve this observed native distinction and resolve research cancellation semantics before a payable candidate. Reuse prior evidence and direct inspection first. Before writing a diagnostic, state the residual uncertainty and why existing paths do not answer it. If a product has no verified available source, surface that gap instead of opening the full catalog or inventing a source.
 
 This recovery checkpoint authorizes no new production behavior by itself. Record the selected technical mechanism only after evidence supports it, and request a user decision only if the evidence changes the adopted product scope or exposes a real unresolved choice.
 
@@ -28,9 +31,10 @@ This recovery checkpoint authorizes no new production behavior by itself. Record
 
 ## Remaining user-owned decisions
 
-1. Can recipe research precede access to the equipment/technology needed to manufacture the product? Awareness and production capability can differ.
+1. After The Beginning Of Alchemy, can recipe research precede access to further manufacturing equipment/technology, particularly Advanced alchemy? The foundational access gate is adopted; later production capability remains separate.
 2. Exact faith/science/energy/work costs and treatment of partially known products.
-3. Final journal/table layout after representative UI evidence.
+3. Final journal/table layout after representative UI evidence; whether a locked entry explains the alchemy prerequisite before access opens.
+4. Cancellation behavior for paid research, including station science, after representative native behavior is verified.
 
 These are open decisions, not implicitly accepted defaults. The separate paid reagent-source stage, per-formula research buttons, automatic study of all sources, automatic formula reveal on awareness and a combined targeted-purchasing feature are not the chosen direction.
 
@@ -48,7 +52,13 @@ Research-method choice follows DevRules: reuse accepted evidence first, inspect 
 
 ## Immediate next step
 
-Trace GameBalance registration/cache construction versus save/station restoration, and the native table entry routing. In parallel within the research sequence, finish current keeper-room builder and Merchant-source predicates. No new runtime diagnostic is justified yet: direct source/data inspection still has useful unanswered paths. Detailed price tuning and visual polish follow mechanism verification.
+Inspect the smallest table-local selection/entry UI seam, preserving normal Survey. Then a bounded research-only runtime experiment can verify one registered sample-free job: launch, manual progress, midway save/reload, cancellation resource deltas and native formula-knowledge persistence. Do not build a full journal or price model into that experiment. Finish current keeper-room builder and Merchant-source predicates independently. Detailed price tuning and visual polish follow mechanism verification.
+
+## Alchemy access and proposed onboarding — 2026-10-12
+
+The user selected access after the vanilla alchemy introduction. Use actual `GameSave.unlocked_techs.Contains("The Beginning Of Alchemy")`, not merely revealed/visible technology state, a Merchant quest, possession of a product or a remembered conversation. Existing accepted Clotho research identifies the early memory-help branch and its Heal Potion/reagent alternatives, with The Beginning Of Alchemy as the granted technology; it does not make Merchant/Spices a universally first or mandatory entry.
+
+Proposed presentation: retain a discoverable journal entry before access, showing a short alchemy-prerequisite explanation without product/formula lists. This lets a new player recognize that the mod is installed. Final location, wording and whether it is a tab remain open. A new research perk is not needed to encode the gate; consider one only if a separate player-facing purpose justifies it, not as a duplicate persistent flag. Do not assume exactly eight initial research topics: source eligibility and actual formula knowledge determine the list.
 
 ## First mechanism comparison — 2026-10-12
 

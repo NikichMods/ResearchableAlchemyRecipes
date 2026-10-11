@@ -9,7 +9,7 @@ For an alchemical product known to the character, the player can follow a predic
 ## Adopted player flow
 
 1. An available, verified in-game source mentions a product. This counts as character awareness even if the player has not opened that source's window.
-2. The product appears as a research topic. External player knowledge does not reveal the entire catalog.
+2. After the character has unlocked the vanilla The Beginning Of Alchemy technology, eligible products appear as research topics. Earlier awareness alone does not open the mod's research/information access. External player knowledge does not reveal the entire catalog.
 3. The player selects, pays for and performs research at the study table. Possession of the target product is not required.
 4. Research reveals all ordinary alternative formulas for the product and the acquisition methods of their ingredients.
 5. The player chooses suitable material sources, performs any required vanilla material studies, produces ingredients and uses ordinary mixed alchemy.
@@ -27,6 +27,7 @@ For an alchemical product known to the character, the player can follow a predic
 ## Journal
 
 - Informational only; research is not launched from the journal.
+- Recipe information and product research become accessible only after The Beginning Of Alchemy is actually unlocked. Apply the same progression gate to journal content and the research entry at the study table. Whether a locked journal entry remains visible with explanatory text is an open presentation choice.
 - Start with a list divided into available research and studied products.
 - Product entries use native item icons and names; a known product shows its known alternative formulas and ingredient composition. Partial knowledge must not reveal still-unknown variants before the remaining product research.
 - Product -> ingredient -> acquisition methods supplies the relevant material information; an unrelated all-material encyclopedia is not required.
@@ -36,6 +37,7 @@ For an alchemical product known to the character, the player can follow a predic
 ## Existing saves and invariants
 
 - Installing the mod after progression must not require restarting or replaying technology unlocks merely to register research topics. Reconstruct current eligibility and knowledge from verified save-backed/native state on load.
+- Read the existing technology unlock state on old saves; opening access must not depend solely on observing a new Clotho conversation or a future unlock event.
 - Awareness of a past disappeared item or interaction cannot be promised unless a persistent host record is established. Current-source eligibility is the selected rule.
 - Preserve vanilla source-material study and ordinary manufacturing. Unknown formulas are not automatically revealed just because the product becomes a research topic.
 - Targeted recipe purchasing from Clotho is a separate possible future mod, outside initial scope.
