@@ -17,7 +17,7 @@ For an alchemical product known to the character, the player can follow a predic
 ## Knowledge and payment
 
 - Reveal ingredient-source information with product research; no separate paid reagent-source research is required.
-- Show each source material, processing method, equipment and required conditions. Do not explain world acquisition of the source material itself.
+- Show all source alternatives within the supported host-data scope, each material, processing method, equipment and required conditions. Include ordinary producer paths where relevant, not just alchemical decomposition. Do not explain world acquisition of the source material itself.
 - Show alternative sources without automatically completing their vanilla studies or charging for all of them.
 - Respect previously known formulas and material studies, irrespective of whether knowledge came from crafting, vanilla authored disclosure or this mod.
 - One product research reveals its remaining formulas. If some are already known, display them immediately and label the remaining topic as studying other manufacturing methods.
@@ -28,7 +28,7 @@ For an alchemical product known to the character, the player can follow a predic
 
 - Informational only; research is not launched from the journal.
 - Start with a list divided into available research and studied products.
-- Product entries use native item icons and names; a known product shows its alternative formulas and ingredient composition.
+- Product entries use native item icons and names; a known product shows its known alternative formulas and ingredient composition. Partial knowledge must not reveal still-unknown variants before the remaining product research.
 - Product -> ingredient -> acquisition methods supplies the relevant material information; an unrelated all-material encyclopedia is not required.
 - Display remaining vanilla material-study requirements clearly and account for completed studies.
 - Tooltip vs detail-panel presentation and the exact mouse/gamepad layout remain subject to inspection and usability verification.

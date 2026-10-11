@@ -16,6 +16,8 @@ Follow [NikichMods/DevRules/WORKING_RULES.md](https://github.com/NikichMods/DevR
 - docs/DESIGN.md owns proposed interface, open choices and next research questions.
 - docs/VERIFIED_RUNTIME_DATA.md owns evidence pointers and their limits.
 
+For a new chat, start with the Current recovery entry point in docs/DESIGN.md, then read the owning requirements/evidence as needed. LOCAL_ENVIRONMENT.md is an ignored machine-local map to the checkouts, game inputs and prior inspection artifacts; it is not a second product specification.
+
 Recover actual files and Git state before checkout work. Read these documents and relevant accepted evidence before implementation. Capture adopted decisions in their owning document within the same working segment; do not treat tentative designs as accepted.
 
 ## Shared evidence and separation

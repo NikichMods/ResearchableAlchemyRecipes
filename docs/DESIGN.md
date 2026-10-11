@@ -2,6 +2,21 @@
 
 Current direction: study-table research plus an informational alchemy journal. This is design work, not a verified implementation architecture.
 
+## Current recovery entry point — 2026-10-12
+
+The concept/naming/bootstrap chat is complete. Continue concrete mechanism verification in the next project chat; do not restart the product-direction comparison or treat the previous chat transcript as required input.
+
+- Adopted: Researchable Alchemy Recipes; public NikichMods/ResearchableAlchemyRecipes; Graveyard Keeper 1.407 / Windows PC / BepInEx 5.
+- The selected behavior is owned by PRODUCT_REQUIREMENTS.md: character awareness from an available verified source; research selected/performed at the study table; one product research reveals all remaining ordinary formulas and ingredient-source guidance; informational journal; chosen vanilla material studies and ordinary manufacture.
+- Research access before manufacturing-equipment availability, exact prices/partial-knowledge pricing and the final UI remain open. Do not silently resolve them during technical work.
+- The project is documentation-only. There is no production source, candidate, chosen build setup or runtime acceptance. Implementation remains subject to the independent readiness gates.
+- Existing awareness research is partial (26/34 structural/vendor candidate coverage, not proof of first exposure for every save). Existing mixed-output/ingredient intersection evidence is complete for the inspected ordinary 1.407 corpus and should not be repeated merely to recover context.
+- Read VERIFIED_RUNTIME_DATA.md for accepted evidence identities, then inspect the corresponding shared/previous research. LOCAL_ENVIRONMENT.md locates local inputs; it is intentionally untracked.
+
+Begin with two bounded questions: (1) what native study-table owner can offer and perform a target-product research job without a sample of that product; (2) what save-backed availability conditions cover the residual target-awareness gaps. Reuse prior evidence and direct inspection first. Before writing a diagnostic, state the residual uncertainty and why existing paths do not answer it. If a product has no verified awareness source, surface that gap instead of opening the full catalog or inventing a source.
+
+This recovery checkpoint authorizes no new production behavior by itself. Record the selected technical mechanism only after evidence supports it, and request a user decision only if the evidence changes the adopted product scope or exposes a real unresolved choice.
+
 ## Working interaction model
 
 - The study table presents eligible product research topics, required resources and work. Its native integration seam must be verified; ordinary item-insertion UI must not force the player to possess the unknown product.
