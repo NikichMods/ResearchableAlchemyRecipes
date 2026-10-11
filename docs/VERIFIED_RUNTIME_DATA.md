@@ -54,3 +54,7 @@ The second static pass establishes the following (details and graph hash are in 
 - The normal tech_alchemy_begins graph opens 22 of the 26 paint-consumer blueprints, covering all seven paint outputs. These sources are not proved to be available from game start. Actual unlocked_techs state supplies the adopted journal/research gate; a new perk is not technically required.
 
 Next evidence must verify the table-local entry, installed registration/load/resumption and formula-knowledge reload; separately establish current keeper-room builder and Merchant-source availability. Static control flow is not installed-runtime acceptance.
+
+## Work-lifecycle runtime candidate — 2026-10-12
+
+Study Table Work Probe 0.1.0 has passed its local compile/identity gate; see TEST_LOG.md for exact source, binary hash and procedure. The temporary native dialog entry is supported by inspected DialogGUI Hide-before-callback and gamepad button ownership. The probe registers one sample-free job and observes the actual native work/save path; it does not assign completion/progress or disclose formulas. No runtime evidence has been returned yet. This candidate does not close the journal UI, current-source eligibility, pricing/refunds or formula reward gates.
