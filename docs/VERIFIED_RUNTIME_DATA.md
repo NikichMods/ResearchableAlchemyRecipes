@@ -91,3 +91,10 @@ Pinned source: Kupie/GYK_DECOMP@6abf79199d92482af1c7573870dd9a20ec2270b9, Assemb
 - Native DialogButtonsGUI has three text slots but only two initialized key slots; its gamepad redraw can index past that pair for a third button. This probe uses only two-option dialogs, with explicit nested actions.
 
 The ordinary representative pot_heal group has two nonhidden, needs_unlock=false formulas on mf_alchemy_craft_02 in the inspected local balance. Actual loaded group count is asserted before registration. No ingredient IDs/formulas are published. Shared native facts are promoted to GraveyardKeeperResearch/docs/ALCHEMY_SYSTEM.md.
+
+
+## Native knowledge runtime closure — returned 0.1.7
+
+Exact installed candidate, two returned launch logs and user screenshots/report (identities in TEST_LOG.md) confirm real sample-free completion -> remaining-only exact native formula knowledge -> native grouped popup and tier-I list -> full process restart -> retained native knowledge. Unknown setup learns two, partial setup learns one; both reach two native recipe cards. Cleanup returns the original zero knowledge and final native serialization records cleaned state. No duplicated production knowledge ledger is required for this proven path.
+
+Limits: one product/station and current mod set; actual manufacture and loaded nonzero-baseline restoration were not separately exercised. Popup wording/pseudotech lookup warning need presentation refinement; source eligibility, component guidance, economics and prior picker warnings remain open. Initial zero knowledge is log-measured; no initial native-list screenshot was taken. This closes the bounded mechanism dependency, not production readiness.

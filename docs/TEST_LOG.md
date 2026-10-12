@@ -168,7 +168,7 @@ Installed environment includes Alchemy Research Redux 0.1.8, Decomp Delight! 0.1
 
 UX feedback: the diagnostic work is too long for comfortable play; its 30 work units/10 energy remain test inputs, not adopted balance. Ending without a reward dialog is expected because this probe has no reward/notification. The modal A/B chooser works but is not desired final UX. Preferred next design is two tabs, normal Study and recipe research, with native-style tab navigation; exact integration remains to be verified. Do not rebuild 0.1.0 with changed timing or tabs.
 
-## Candidate 0.1.7 — native formula knowledge reward (installed evidence pending)
+## Candidate 0.1.7 — native formula knowledge reward (bounded runtime result accepted)
 
 - Source: b9721dd1ad169f7561a6ac31e47ecd0477d631c3, research/study-table-work; clean exact-source handoff build.
 - DLL: StudyTableWorkProbe-0.1.7.dll, assembly/file version 0.1.7.0.
@@ -188,3 +188,17 @@ Minimum installed procedure on a disposable save with foundational alchemy unloc
 5. Return both launch logs and notes/screenshots about native reward/list appearance. Preserve a second log before any further launch. Keep the test cleaned and saved before removing DLL.
 
 No separate repetition of ordinary Study/input calibration is required for this downstream test. RAR_WORK_ERROR, an absent reward/list seam or incorrect cleanup/load state blocks this candidate's acceptance. Existing source-awareness, ingredient-guidance presentation, pricing/refunds and picker-layer-warning gates remain independent.
+
+
+### Returned 0.1.7 evidence — 2026-10-12
+
+Installed StudyTableWorkProbe-0.1.7.dll SHA-256 matches 439ab0329b37298d4efe932dee4a087fab5a991ce8bc0f1766a3ce1993d1bdfe. Source remains b9721dd1ad169f7561a6ac31e47ecd0477d631c3; frozen bytes are unchanged. Returned raw files are archived privately in ignored work/evidence/knowledge-0.1.7.
+
+- Launch 1: user-pasted full Unity/player log text, SHA-256 2561de4deebe69a3ff2b8b1c1f3261a72c8dd36ddac4d2d56f46e8d360f49ae7. Startup reports version 0.1.7 and verified host hash. Native loaded/F8 state is prepared=False, known=0, completed=False. Synthetic unknown setup stays known=0. Actual completion records learned=2, known=2, native_job_marker=True; native dialog before/after/closed markers occur. SaveSlot manualsave.20260912_124029 is saved with prepared=True, known=2, completed=True.
+- Launch 2: BepInEx LogOutput.log, SHA-256 19dab51bf0d522d4879b0ac563855c83ace453ce206371f8781ebe4fe84799ae. Separate startup and native PrepareAfterLoad restore prepared=True, known=2, completed=True. Tier-I OpenAsAlchemy observes cards=2, known=2. User reports full exit/relaunch and successful loaded presentation.
+- First cleanup restores prepared=False, known=0, completed=False; clears one native last-craft reference. Partial setup then measures known=1. Actual completion records learned=1, known=2 and one popup unlock; native list cards=2. Final cleanup restores zero knowledge, removes the last-craft reference, repeated cleanup has nothing left to clear. Final ToBinary returns with prepared=False, known=0, completed=False on the same save slot.
+- No RAR_WORK_ERROR or exception match occurs in either returned file. Native pseudotech lookup warns No data for object [TechDefinition] with id pot_heal once per reward (one in each launch). Broader game/world/asset warnings and errors also exist with unassigned ownership; this is not a clean-log or clean-vanilla compatibility claim. No picker-layer-warning match occurs here, but the relevant picker path is not established as exercised, so its prior gate stays open.
+- Screenshots confirm the grouped two-row native reward and both native formula cards. Exact ingredients are not transcribed. User reports the post-cleanup tier-I list has no healing-elixir recipes and accepts functionality without global objections. They did not inspect the pre-research native list: initial zero knowledge is log-proved, initial zero rendered cards is not independently captured. The finished-topic hiding has no separate post-completion screenshot; do not overclaim it from successful reward alone.
+- User flags generic technology-discovery wording as unsuitable; formula-discovery wording is the adopted presentation meaning, exact text remains open. The popup's two identical product rows are native craft-unlock rows, not proof that the two formulas were duplicated in knowledge.
+
+Accepted envelope: one sample-free two-variant product, all missing variants, partial knowledge, native reward/list, full-process-restart retention and cleanup restoring an originally unknown baseline. Preexisting nonzero baseline restoration remains automated-state evidence, not an installed scenario. No actual manufacture, additional products, tier-II, changed mod set, source eligibility, final guidance or production release is accepted by this result.
