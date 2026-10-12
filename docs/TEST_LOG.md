@@ -474,7 +474,9 @@ User reports guidance generally works, but gamepad Up from Spices fails intermit
 
 ## Study Table Work Probe 0.1.20 — anchor-cache correction and taller native window
 
-Status: local warning-as-error compilation and existing knowledge/source/actual-foreign-DLL regressions pass; exact handoff identity to follow. Live layout and gamepad acceptance pending.
+Status: local warning-as-error compilation and existing knowledge/source/actual-foreign-DLL regressions pass. Clean-source build and installed-byte identity pass; live layout and gamepad acceptance pending.
+
+- Exact source 824138bcfadbb7fa1d08d591fa00871254459d33, research/study-table-work. DLL StudyTableWorkProbe-0.1.20.dll; plugin 0.1.20, assembly/file 0.1.20.0; SHA-256 3466850957fd8e9be021ae62e1b5bf9cb2d156b595e22f8915e62d0b4467c49a. Existing deterministic SDK 6.0.406/art gate. Installed with game closed; prior installed 0.1.19 hash checked before replacement, installed new bytes verified. Earlier numbered artifacts stay immutable.
 
 - Readiness/diagnosis: direct installed firstpass IL shows UIRect.UpdateAnchorsInternal consumes AnchorPoint.rect, while ResetAnchors resolves this cache from target. Merely assigning target and calling UpdateAnchors leaves the previous rect cached. The guidance right anchor changes from the native description parent to the row, so failing to reset it can calculate width from the old owner. Reset native caches on both apply and restoration for description, ingredients and energy. Native text/height/collider/grid remain the layout consumers. No guessed corrective height cap or extra redraw loop. Static cache evidence explains a defect consistent with extreme first-pass heights; installed convergence remains to be tested.
 - Native CraftItemGUI.Redraw is called while cards/hierarchy are being initialized; an absent active measurement cell is presentation not ready, not a failed knowledge/host contract. Skip optical alignment on that pass and retain later redraw measurement. Do not disable the whole probe on this transient condition. No fake material knowledge, inventory or scene activation.
