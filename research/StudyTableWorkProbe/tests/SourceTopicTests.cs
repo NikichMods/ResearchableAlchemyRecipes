@@ -51,9 +51,11 @@ public static class SourceTopicTests
         MainGame.me = host; host.save = Save();
         var balance = (GameBalance)FormatterServices.GetUninitializedObject(typeof(GameBalance));
         balance.craft_data = new List<CraftDefinition>(); balance.craft_obj_data = new List<ObjectCraftDefinition>();
+        balance.items_data = new List<ItemDefinition>();
         var products = new[] { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint" };
         foreach (string product in products)
         {
+            balance.items_data.Add(new ItemDefinition { id = product, icon = "fixture_native_icon_" + product });
             balance.craft_data.Add(new CraftDefinition { id = "fixture_" + product, craft_type = CraftDefinition.CraftType.MixedCraft, output = new List<Item> { new Item(product, 1) } });
             balance.craft_obj_data.Add(new ObjectCraftDefinition { id = "source_" + product, builder_ids = new List<string> { "keeper_room_builddesk" }, needs = new List<Item> { new Item(product, 1) } });
         }
@@ -66,6 +68,7 @@ public static class SourceTopicTests
         var visible = topic.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance);
         var formulas = (List<CraftDefinition>)topic.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(topic);
         Assert(job.needs.Count == 1 && job.needs[0].id == "faith" && job.output.Count == 0 && job.one_time_craft && !job.CanCraftMultiple(), "Sample-free single job contract");
+        Assert(job.icon == "fixture_native_icon_yellow_paint", "Native item icon metadata ignored");
         var enabled = asm.GetType("NikichMods.Research.StudyTableWorkProbe").GetField("enabledProbe", Private);
         enabled.SetValue(null, true);
         var harmony = new Harmony("rar.offline.source-topics");
@@ -101,5 +104,21 @@ public static class SourceTopicTests
         finally { harmony.UnpatchSelf(); enabled.SetValue(null, false); }
         for (int mask = 0; mask < 16; mask++)
             Assert((bool)Call("Eligible", (mask & 1) != 0, (mask & 2) != 0, (mask & 4) != 0 ? 1 : 0, (mask & 8) != 0 ? 1 : 0) == (mask == 15), "Independent eligibility gate");
+        var guidance = asm.GetType("NikichMods.Research.RecipeGuidance", true);
+        var producer = new CraftDefinition { id = "manual", craft_type = CraftDefinition.CraftType.AlchemyDecompose,
+            craft_in = new List<string> { "mill" }, needs = new List<Item> { new Item("source", 1) }, output = new List<Item> { new Item("reagent", 1) } };
+        var automatic = new CraftDefinition { id = "automatic", craft_in = new List<string> { "alchemy_table_zombie" },
+            needs = producer.needs, output = producer.output };
+        var mixed = new CraftDefinition { id = "mixed", craft_type = CraftDefinition.CraftType.MixedCraft,
+            craft_in = producer.craft_in, needs = producer.needs, output = producer.output };
+        var hidden = new CraftDefinition { id = "hidden", hidden = true, craft_in = producer.craft_in, needs = producer.needs, output = producer.output };
+        var found = (List<CraftDefinition>)guidance.GetMethod("FindRoutes", Private).Invoke(null, new object[] { new[] { automatic, producer, mixed, hidden }, "reagent" });
+        Assert(found.Count == 1 && ReferenceEquals(found[0], producer), "Guidance includes hidden/mixed/automated routes");
+        // UI method detours cannot be compiled by the standalone CLR: Unity ECalls require
+        // the real engine. Resolve exact contracts here; installed patching remains a live gate.
+        foreach (string name in new[] { "Redraw", "OnOver", "OnMouseOvered" })
+            Assert(AccessTools.Method(typeof(CraftItemGUI), name, Type.EmptyTypes) != null, "Missing exact UI method: " + name);
+        Assert(AccessTools.Method(typeof(CraftGUI), "OpenAsAlchemy", new[] { typeof(WorldGameObject) }) != null, "Missing alchemy UI entry");
+        Assert(AccessTools.Method(typeof(CraftGUI), "Hide", new[] { typeof(bool) }) != null, "Missing UI close contract");
     }
 }

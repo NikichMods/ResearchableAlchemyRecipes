@@ -51,7 +51,7 @@ namespace NikichMods.Research
                     throw new InvalidOperationException("Verified paint group changed: " + product);
                 topic.job = new CraftDefinition {
                     id = JobPrefix + product, craft_in = new List<string> { "mf_alchemy_survey" },
-                    custom_name = product, icon = "i_" + product,
+                    custom_name = product, icon = balance.items_data.Find(item => item.id == product).GetIcon(),
                     craft_type = CraftDefinition.CraftType.None,
                     needs = new List<Item> { new Item("faith", 1) }, needs_from_wgo = new List<Item> { new Item("science", 1) },
                     output = new List<Item>(), condition = new SmartExpression { default_value = 1 },

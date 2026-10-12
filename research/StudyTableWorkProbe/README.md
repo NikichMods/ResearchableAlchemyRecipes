@@ -2,7 +2,17 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current bounded accepted candidate: 0.1.10, automatic room-paint topics
+## Current candidate: 0.1.11, visible known-recipe guidance
+
+Research only. The accepted automatic-topic/reward baseline remains 0.1.10; new UI acceptance is pending. Native selected-card description displays "Как получить ингредиенты" for already-known yellow paint at Alchemy Workbench II, with source alternatives, required equipment, native material-study indication and native recipe lock/extra-condition notes. Sources are authored manual decomposition and ordinary production, excluding automated mirrors; this is not a complete graph for every ingredient. Costs/research/formula knowledge are unchanged. Paint topic icons now use ItemDefinition.GetIcon instead of guessed IDs.
+
+On gamepad, focus the yellow recipe normally. With mouse, its description is initially shown when opening the known list; entering another row removes it, entering yellow again shows it immediately. No delay or ingredient tooltip is required. The native description column/auto-height/grid/collider perform layout; a saved anchor is restored between redraws and on close. This candidate tests whether that native column is readable; a final full-width/detail layout is not yet selected.
+
+Minimum installed check: replace the old study-probe DLL with this candidate (one copy), keep existing mods/save, and open the known-recipe tab at Alchemy Workbench II. Select yellow paint, inspect the block and scroll if necessary; move to another row and back, close/reopen, and try mouse/gamepad navigation. Native crafting/select buttons must keep their original meaning. Open the study research tab once to confirm the four remaining paint topics now have their icons. Return a screenshot of the block and LogOutput.log, noting text clipping/scroll/navigation. Do not research another paint, repeat reward/persistence tests or alter native material studies for this UI-only check. No extra persistent state or guidance cleanup is added.
+
+Local test.ps1 checks all previous state/foreign integration invariants plus native icon metadata and exclusion of hidden/mixed/automatic guidance paths. These tests do not render UILabels or execute Unity scene geometry. Exact candidate identity is in docs/TEST_LOG.md.
+
+## Bounded accepted 0.1.10, automatic room-paint topics
 
 Question: does the accepted native room-source reconstruction actually offer the correct paid topics on the study table, without F8 preparation, and remove each after native knowledge reward? The manual SourceEligibilityProbe 0.1.1 proves positive builder/card agreement; 0.1.9 proves work/UI/single-payment integration. Neither existing binary combines those seams. This candidate adds that bounded composition; no general source framework or new startup polling is needed.
 
