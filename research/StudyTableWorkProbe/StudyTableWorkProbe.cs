@@ -10,8 +10,8 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.14.0")]
-[assembly: AssemblyFileVersion("0.1.14.0")]
+[assembly: AssemblyVersion("0.1.15.0")]
+[assembly: AssemblyFileVersion("0.1.15.0")]
 
 namespace NikichMods.Research
 {
@@ -19,7 +19,7 @@ namespace NikichMods.Research
     [BepInDependency("p1xel8ted.gyk.maxbuttonsredux", BepInDependency.DependencyFlags.SoftDependency)]
     public sealed class StudyTableWorkProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.14";
+        public const string Version = "0.1.15";
         internal const string JobId = "rar_probe_work_010";
         private const string TableId = "mf_alchemy_survey";
         private const string Technology = "The Beginning Of Alchemy";
@@ -55,6 +55,7 @@ namespace NikichMods.Research
         private void OnDestroy()
         {
             enabledProbe = false;
+            HeaderCalibration.Shutdown();
             RecipeGuidance.Restore();
             StudyTabs.Restore();
             if (harmony != null) harmony.UnpatchSelf();
@@ -63,6 +64,8 @@ namespace NikichMods.Research
 
         private void Update()
         {
+            try { HeaderCalibration.Tick(); }
+            catch (Exception ex) { HeaderCalibration.Shutdown(); Fail(ex); }
             if (!registrationSeen || !Input.GetKeyDown(KeyCode.F8) || !MainGame.game_started || !BaseGUI.all_guis_closed)
                 return;
             try
@@ -73,6 +76,12 @@ namespace NikichMods.Research
                     "Закрыть", null, null, GameKey.Select, GameKey.Back, "Очистка доступна. После неё сохраните игру.");
             }
             catch (Exception ex) { Fail(ex); }
+        }
+
+        private void OnGUI()
+        {
+            try { HeaderCalibration.Draw(); }
+            catch (Exception ex) { HeaderCalibration.Shutdown(); Fail(ex); }
         }
 
         internal static void Write(string message) { if (Log != null) Log.LogInfo(message); }

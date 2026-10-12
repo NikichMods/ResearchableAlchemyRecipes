@@ -105,6 +105,10 @@ public static class SourceTopicTests
         for (int mask = 0; mask < 16; mask++)
             Assert((bool)Call("Eligible", (mask & 1) != 0, (mask & 2) != 0, (mask & 4) != 0 ? 1 : 0, (mask & 8) != 0 ? 1 : 0) == (mask == 15), "Independent eligibility gate");
         var guidance = asm.GetType("NikichMods.Research.RecipeGuidance", true);
+        var palette = asm.GetType("NikichMods.Research.ReagentHeadingPalette", true).GetMethod("Heading", Private);
+        var heading = (string)palette.Invoke(null, new object[] { "alchemy_1_yellow", "localized example" });
+        Assert(heading.StartsWith("[c][") && heading.Contains("localized example:") && heading.EndsWith("[-][/c]"), "Palette must preserve localized heading and close colour scope");
+        Assert((string)palette.Invoke(null, new object[] { "unverified_future_reagent", "plain example" }) == "plain example:", "Unverified reagent assigned a guessed colour");
         var producer = new CraftDefinition { id = "manual", craft_type = CraftDefinition.CraftType.AlchemyDecompose,
             craft_in = new List<string> { "mill" }, needs = new List<Item> { new Item("source", 1) }, output = new List<Item> { new Item("reagent", 1) } };
         var automatic = new CraftDefinition { id = "automatic", craft_in = new List<string> { "alchemy_table_zombie" },
@@ -123,7 +127,8 @@ public static class SourceTopicTests
         Assert(pending.Contains("[не изучено]") && pending.Contains("исследовательском столе"), "Unstudied native source lacks marker/instruction");
         catalogue["reagent"].Add(producer);
         var multiplePending = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });
-        Assert(multiplePending.IndexOf("Для использования", StringComparison.Ordinal) == multiplePending.LastIndexOf("Для использования", StringComparison.Ordinal), "Shared instruction duplicated per alternative");
+        const string footer = "Получение ингредиентов из отмеченных материалов требует их изучения на исследовательском столе.";
+        Assert(multiplePending.IndexOf(footer, StringComparison.Ordinal) >= 0 && multiplePending.IndexOf(footer, StringComparison.Ordinal) == multiplePending.LastIndexOf(footer, StringComparison.Ordinal), "Shared explanation absent or duplicated per alternative");
         catalogue["reagent"].RemoveAt(1);
         host.save.completed_one_time_crafts.Add("surv:source");
         var studied = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });

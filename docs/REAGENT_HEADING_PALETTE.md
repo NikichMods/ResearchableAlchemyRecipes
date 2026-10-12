@@ -1,6 +1,6 @@
 # Reagent heading palette — proposal
 
-Status: the user positively reviewed the full static comparison and supports the readable icon-associated heading direction. Live styling is not installed or accepted. Current implementation/DLL is unchanged.
+Status: the user explicitly adopts this palette for ingredient headings. Research candidate 0.1.15 applies it to the existing known-yellow guidance slice; installed visual acceptance remains pending. This does not expand guidance to all formulas.
 
 ## Scope and comparison method
 

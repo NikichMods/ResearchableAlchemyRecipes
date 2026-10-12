@@ -66,7 +66,7 @@ namespace NikichMods.Research
                 foreach (var candidate in cells)
                     if (candidate.gameObject.activeInHierarchy) { cell = candidate.GetComponent<UIWidget>(); if (cell != null) break; }
                 if (cell == null) throw new InvalidOperationException("No visible native ingredient widget to measure");
-                float desired = CenterY(row.label_name, row.transform);
+                float desired = CenterY(row.label_name, row.transform) - HeaderCalibration.Down;
                 float ingredientBefore = CenterY(cell, row.transform) - desired;
                 float energyBefore = CenterY(row.txt_spend, row.transform) - desired;
                 MoveY(icons.transform, row.transform, -ingredientBefore);
@@ -139,7 +139,7 @@ namespace NikichMods.Research
             bool pending = false;
             foreach (var ingredient in formula.needs)
             {
-                text.Append("\n\n").Append(name(ingredient.id)).Append(":");
+                text.Append("\n\n").Append(ReagentHeadingPalette.Heading(ingredient.id, name(ingredient.id)));
                 List<CraftDefinition> producers;
                 if (!catalogue.TryGetValue(ingredient.id, out producers) || producers.Count == 0)
                 { text.Append("\nИсточник пока не проверен"); continue; }
@@ -162,10 +162,23 @@ namespace NikichMods.Research
                     if (route.condition.has_expression) text.Append(" (есть дополнительное условие)");
                 }
             }
-            if (pending) text.Append("\n\n[E5B86D]Для использования отмеченных материалов требуется изучение на исследовательском столе.[-]");
+            if (pending) text.Append("\n\n[E5B86D]Получение ингредиентов из отмеченных материалов требует их изучения на исследовательском столе.[-]");
             return text.ToString();
         }
         private static string Text(CraftDefinition formula) { return BuildText(formula, routes, MainGame.me.save, Name, previewUnstudied); }
+        internal static bool CanCalibrate
+        {
+            get
+            {
+                return selected != null && GUIElements.me != null && GUIElements.me.craft.is_shown &&
+                    !GUIElements.me.resource_picker.is_shown &&
+                    (GUIElements.me.craft.is_shown_and_top || GUIElements.me.mixed_craft_tabbed.is_shown_and_top) && Supports(selected);
+            }
+        }
+        internal static void RefreshHeader()
+        {
+            if (CanCalibrate) layouts[selected].AlignFinal(selected);
+        }
         internal static void PreviewMenu()
         {
             GUIElements.me.dialog.Open("Проверка отметки изучения", previewUnstudied ? "Обычный вид" : "Сера не изучена: просмотр",
@@ -222,6 +235,7 @@ namespace NikichMods.Research
         }
         internal static void Restore()
         {
+            HeaderCalibration.Hide("card_closed");
             describing = null;
             var old = selected; selected = null;
             if (old != null) old.Redraw();

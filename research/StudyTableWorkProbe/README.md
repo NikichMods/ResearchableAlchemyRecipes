@@ -2,7 +2,15 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.14, measured visible-header alignment
+## Current candidate: 0.1.15, coloured headings and live header calibration
+
+The reviewed full reagent palette is approved and now colours section headings by native item ID; existing known-yellow guidance remains the only live slice. Source rows and amber pending-source markers retain their roles. Native font is unchanged. Adopted footer: "Получение ингредиентов из отмеченных материалов требует их изучения на исследовательском столе."
+
+Open the known yellow recipe at the alchemy table and press F2. Mouse slider/buttons move ingredients and energy together in integer native UI pixels (-12..+12); positive moves down, negative up. Zero is the measured 0.1.14 geometry, not a new guessed correction. Reset returns to zero. Done closes and exports RAR_HEADER_CALIBRATION_VALUES reason=chosen down_ui_pixels=... to the ordinary BepInEx log. F2 can also close. Corrections survive card close/reopen in this session, never save/config or game restart.
+
+While the mouse-operated panel is open, UICamera events and CraftGUI/MixedCraftGUI BaseGUI keys are suppressed. Close restores original input capture on a later frame after mouse release; plugin destruction restores immediately. Panel requires the shown selected supported card, no resource picker or unrelated modal. Check chosen position after Done, move away/back and close/reopen with mouse/gamepad. Existing F8 sulfur-pending preview checks heading/marker/footer roles without a save mutation. Return chosen-value log and screenshot; no repeated research/payment/production/restart required.
+
+## Frozen 0.1.14, measured visible-header alignment
 
 Returned 0.1.13 header alignment fails; marker colour/shared explanation/one-line sulfur route are user-approved. The correction measures final native visible-cell/name/energy UIWidget bounds after native Redraw and converts to the same row-local coordinates; only vertical positions move by their actual center difference. No guessed pixel offset. Original native anchors restore on deselection/close; header residuals are checked/logged in RAR_GUIDANCE_HEADER. Native horizontal geometry, font, wider text and accepted scrolling are preserved. Actual optical alignment remains a user visual gate.
 
