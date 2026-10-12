@@ -2,7 +2,7 @@
 
 ## Study Table Work Probe 0.1.6 — fixed user-selected icon position
 
-**Status:** clean-source compile/identity gate passed. Selected placement was observed in 0.1.5; exact 0.1.6 binary is not yet runtime-tested.
+**Status:** clean-source compile/identity gate passed. Selected placement was observed in 0.1.5; exact 0.1.6 binary is not yet runtime-tested. The user explicitly defers a standalone 0.1.6 test and will inspect fixed placement in subsequent substantive candidates; do not request another dedicated run merely for these offsets.
 
 - Exact source: 5322a458b50507c97b9f0adcaefe1a0d5d8573bb, research/study-table-work.
 - Artifact: StudyTableWorkProbe-0.1.6.dll; SHA-256 dabe12e8c4d23d22d3e1b12286d6d989feda0b8df98ae9df9b97042dbdef160c. Plugin 0.1.6, assembly/file 0.1.6.0; deterministic optimized SDK 6.0.406 build, warnings as errors and both version assertions. Previous numbered artifacts frozen.
