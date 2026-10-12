@@ -10,8 +10,8 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.16.0")]
-[assembly: AssemblyFileVersion("0.1.16.0")]
+[assembly: AssemblyVersion("0.1.17.0")]
+[assembly: AssemblyFileVersion("0.1.17.0")]
 
 namespace NikichMods.Research
 {
@@ -19,7 +19,7 @@ namespace NikichMods.Research
     [BepInDependency("p1xel8ted.gyk.maxbuttonsredux", BepInDependency.DependencyFlags.SoftDependency)]
     public sealed class StudyTableWorkProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.16";
+        public const string Version = "0.1.17";
         internal const string JobId = "rar_probe_work_010";
         private const string TableId = "mf_alchemy_survey";
         private const string Technology = "The Beginning Of Alchemy";
@@ -45,7 +45,7 @@ namespace NikichMods.Research
                 TabArtwork.Load();
                 harmony = new Harmony("nikichmods.research.studytablework");
                 harmony.PatchAll(typeof(StudyTableWorkProbe).Assembly);
-                QuantityInputCompatibility.Install(harmony, StudyTabs.QuantityInputUnavailable, RecipeGuidance.QuantityCardUnavailable);
+                QuantityInputCompatibility.Install(harmony, StudyTabs.QuantityInputUnavailable, RecipeGuidance.QuantityUnavailableReason);
                 enabledProbe = true;
                 Write("RAR_WORK_READY version=" + Version + " hash=" + actual + " save_persistent=True reward_probe=True");
             }

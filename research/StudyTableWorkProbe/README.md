@@ -2,7 +2,15 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.16, fixed header and alchemy quantity readiness
+## Current candidate: 0.1.17, whole-window readiness and native focus synchronization
+
+User accepts 0.1.16's visuals, but its input guard retains 42 MaxButtons checker errors and gamepad quantity appears blocked. This correction keeps +9, palette/footer and native navigation unchanged. The one unreproduced down-navigation episode remains unassigned.
+
+Capture the supported known-yellow alchemy window from OpenAsAlchemy until Hide, across all selected rows and input modes. Before the actual foreign checker, validate the game's real current_overed card in that list and its recipe/needs; if ready, synchronize only the hash/type-verified cached card/craftery to the actual native inputs. Original Min/Max policy/calculation then runs. Missing native selection remains safely unavailable. No fake OnOver, native selection write or global bulk-craft disable. Study single-operation guard remains.
+
+Minimum live check: open alchemy using mouse/gamepad, select yellow and another ordinary row, try usual Min/Max without needing to craft, close/reopen. Agent reads local log directly. Require no checker/probe errors and normal quantity controls; native_focus_synchronized can show projection occurred. No paid research/production/restart repetition. Actual-DLL local regression passes; live mode/controls acceptance is separate.
+
+## Frozen 0.1.16, fixed header and alchemy quantity readiness
 
 The chosen +9 native UI pixel downward correction is fixed for ingredients and energy together. F2 panel, temporary input capture/guards and IMGUI reference are removed. Approved heading palette/footer remain unchanged.
 

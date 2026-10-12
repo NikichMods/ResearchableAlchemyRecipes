@@ -15,6 +15,7 @@ namespace NikichMods.Research
         private const int HeaderDown = 9;
         private static readonly Dictionary<string, List<CraftDefinition>> routes = new Dictionary<string, List<CraftDefinition>>();
         private static CraftItemGUI selected;
+        private static CraftGUI guidanceWindow;
         private static CraftDefinition describing;
         private static readonly Dictionary<CraftItemGUI, int> anchors = new Dictionary<CraftItemGUI, int>();
         private static bool changing;
@@ -168,17 +169,21 @@ namespace NikichMods.Research
             return text.ToString();
         }
         private static string Text(CraftDefinition formula) { return BuildText(formula, routes, MainGame.me.save, Name, previewUnstudied); }
-        internal static string QuantityCardUnavailable(CraftItemGUI card)
+        internal static string QuantityUnavailableReason()
         {
-            bool owns = selected != null && GUIElements.me != null && GUIElements.me.craft.is_shown && Supports(selected);
-            return CardUnavailableReason(owns, card, owns ? GUIElements.me.craft.list_items : null, CraftItemGUI.current_overed);
+            if (!StudyTableWorkProbe.enabledProbe || guidanceWindow == null || !guidanceWindow.is_shown) return null;
+            var table = guidanceWindow.GetCrafteryWGO();
+            if (table == null || table.obj_id != "mf_alchemy_craft_02") return null;
+            var focused = CraftItemGUI.current_overed;
+            string reason = CardUnavailableReason(true, focused, guidanceWindow.list_items);
+            if (reason == null) QuantityInputCompatibility.Synchronize(focused, table);
+            return reason;
         }
-        internal static string CardUnavailableReason(bool owns, CraftItemGUI card, List<CraftItemGUI> rows, CraftItemGUI focused)
+        internal static string CardUnavailableReason(bool owns, CraftItemGUI card, List<CraftItemGUI> rows)
         {
             if (!owns) return null;
             if (ReferenceEquals(card, null)) return "guidance_missing_card";
             if (!rows.Exists(row => ReferenceEquals(row, card))) return "guidance_stale_card";
-            if (!ReferenceEquals(card, focused)) return "guidance_card_not_focused";
             // Check only initialized live-list cards; no Unity component lookup or fake focus.
             var craft = card.current_craft;
             if (craft == null || craft.needs == null) return "guidance_missing_formula";
@@ -240,6 +245,7 @@ namespace NikichMods.Research
         }
         internal static void Restore()
         {
+            guidanceWindow = null;
             describing = null;
             var old = selected; selected = null;
             if (old != null) old.Redraw();
@@ -306,7 +312,10 @@ namespace NikichMods.Research
         {
             private static void Postfix(CraftGUI __instance)
             {
-                if (!StudyTableWorkProbe.enabledProbe || BaseGUI.for_gamepad) return;
+                if (!StudyTableWorkProbe.enabledProbe) return;
+                // Own the entire opened known-yellow list, including other selected rows.
+                guidanceWindow = __instance.list_items.Exists(Supports) ? __instance : null;
+                if (BaseGUI.for_gamepad) return;
                 foreach (var row in __instance.list_items) if (Supports(row)) { Select(row); break; }
             }
         }
