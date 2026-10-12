@@ -27,6 +27,11 @@ namespace NikichMods.Research
         private static ResourceBasedCraftGUI Study { get { return GUIElements.me.resource_based_craft; } }
         private static bool Active { get { return table != null && snapshot != null; } }
         private static bool Owns(CraftGUI gui) { return Active && gui == Craft && gui.GetCrafteryWGO() == table; }
+        internal static bool QuantityInputUnavailable()
+        {
+            // Study has no fixed-recipe card; this probe's recipe work is faith-paid, one-time.
+            return Active && Owns(Craft) && (selected == StudyTab || selected == ResearchTab);
+        }
 
         internal static void Open(WorldGameObject owner)
         {
