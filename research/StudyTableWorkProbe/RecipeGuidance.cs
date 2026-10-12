@@ -7,10 +7,10 @@ using UnityEngine;
 
 namespace NikichMods.Research
 {
-    // First visible-layout experiment: one already-known product, manual producer paths only.
+    // Known ordinary formulas at both native manual alchemy tiers.
     internal static class RecipeGuidance
     {
-        private const string Product = "yellow_paint";
+        private static readonly HashSet<string> ordinary = new HashSet<string>();
         // User-selected optical correction exported twice by 0.1.15 Done.
         private const int HeaderDown = 9;
         private static readonly Dictionary<string, List<CraftDefinition>> routes = new Dictionary<string, List<CraftDefinition>>();
@@ -123,23 +123,44 @@ namespace NikichMods.Research
         internal static void Register(GameBalance balance)
         {
             routes.Clear();
+            ordinary.Clear();
+            var definitions = new Dictionary<string, ItemDefinition>();
+            foreach (var item in balance.items_data) definitions[item.id] = item;
+            var products = new HashSet<string>();
             foreach (var formula in balance.craft_data)
             {
-                if (!IsTarget(formula)) continue;
+                if (!IsOrdinary(formula, definitions)) continue;
+                ordinary.Add(formula.id);
+                products.Add(formula.GetFirstRealOutput().id);
                 foreach (var ingredient in formula.needs)
                 {
                     if (routes.ContainsKey(ingredient.id)) continue;
                     routes.Add(ingredient.id, FindRoutes(balance.craft_data, ingredient.id));
                 }
             }
-            if (routes.Count != 2) throw new InvalidOperationException("Bounded known paint ingredient count changed");
-            StudyTableWorkProbe.Write("RAR_GUIDANCE_REGISTER ingredients=" + routes.Count + " scope=known_yellow_manual_sources");
+            if (ordinary.Count != 43 || products.Count != 34 || routes.Count != 35)
+                throw new InvalidOperationException("Verified ordinary guidance corpus changed");
+            AdditionalSources.Register(balance, new HashSet<string>(routes.Keys));
+            StudyTableWorkProbe.Write("RAR_GUIDANCE_REGISTER formulas=" + ordinary.Count + " products=" + products.Count + " ingredients=" + routes.Count + " scope=known_ordinary_manual_tables");
         }
         internal static bool IsTarget(CraftDefinition craft)
         {
-            if (craft == null || craft.craft_type != CraftDefinition.CraftType.MixedCraft) return false;
+            return craft != null && ordinary.Contains(craft.id);
+        }
+        internal static bool IsOrdinary(CraftDefinition craft, IDictionary<string, ItemDefinition> definitions)
+        {
+            if (craft == null || craft.craft_type != CraftDefinition.CraftType.MixedCraft || craft.hidden) return false;
             var output = craft.GetFirstRealOutput();
-            return output != null && output.id == Product;
+            if (output == null || output.id.StartsWith("goo", StringComparison.Ordinal) || craft.id.Contains(":_:")) return false;
+            if (!(craft.needs.Count == 2 && craft.craft_in.Contains("mf_alchemy_craft_02")) &&
+                !(craft.needs.Count == 3 && craft.craft_in.Contains("mf_alchemy_craft_03"))) return false;
+            for (int i = 0; i < craft.needs.Count; i++)
+            {
+                ItemDefinition definition;
+                if (!definitions.TryGetValue(craft.needs[i].id, out definition) ||
+                    ((int)definition.alch_type != i + 1 && definition.alch_type != ItemDefinition.AlchemyType.Universal)) return false;
+            }
+            return true;
         }
         internal static List<CraftDefinition> FindRoutes(IEnumerable<CraftDefinition> crafts, string ingredient)
         {
@@ -160,22 +181,31 @@ namespace NikichMods.Research
             if (!StudyTableWorkProbe.enabledProbe || row == null || !IsTarget(row.current_craft)) return false;
             var save = MainGame.me.save;
             var table = row.craft_gui_interface.GetCrafteryWGO();
-            return table != null && table.obj_id == "mf_alchemy_craft_02" &&
-                save.unlocked_techs.Contains(SourceResearch.Technology) && save.completed_one_time_crafts.Contains(row.current_craft.id);
+            return table != null && KnownForTable(row.current_craft, table.obj_id, save);
+        }
+        internal static bool SupportedStation(string id) { return id == "mf_alchemy_craft_02" || id == "mf_alchemy_craft_03"; }
+        internal static bool KnownForTable(CraftDefinition formula, string station, GameSave save)
+        {
+            return IsTarget(formula) && SupportedStation(station) && formula.craft_in.Contains(station) &&
+                save.unlocked_techs.Contains(SourceResearch.Technology) && save.completed_one_time_crafts.Contains(formula.id);
         }
         private static string Name(string id) { return GJL.L(id); }
         internal static string BuildText(CraftDefinition formula, Dictionary<string, List<CraftDefinition>> catalogue, GameSave save, Func<string, string> name, bool preview)
+        { return BuildTextCore(formula, catalogue, save, name, preview, false); }
+        private static string BuildTextCore(CraftDefinition formula, Dictionary<string, List<CraftDefinition>> catalogue, GameSave save, Func<string, string> name, bool preview, bool additional)
         {
             var text = new StringBuilder("[C9D8DC]Как получить ингредиенты[-]");
             bool pending = false;
             foreach (var ingredient in formula.needs)
             {
                 text.Append("\n\n").Append(ReagentHeadingPalette.Heading(ingredient.id, name(ingredient.id)));
+                bool hasAdditional = additional && AdditionalSources.Append(text, ingredient.id, save, name);
                 List<CraftDefinition> producers;
                 if (!catalogue.TryGetValue(ingredient.id, out producers) || producers.Count == 0)
-                { text.Append("\nИсточник пока не проверен"); continue; }
-                foreach (var route in producers)
+                { if (!hasAdditional) text.Append("\nИсточник пока не проверен"); continue; }
+                foreach (var group in GroupRoutes(producers, save))
                 {
+                    var route = group[0];
                     text.Append("\n• ");
                     for (int i = 0; i < route.needs.Count; i++)
                     {
@@ -184,8 +214,23 @@ namespace NikichMods.Research
                         if (route.needs[i].value > 1) text.Append(" ×").Append(route.needs[i].value);
                     }
                     text.Append(" → ");
-                    for (int i = 0; i < route.craft_in.Count; i++)
-                    { if (i > 0) text.Append(", "); text.Append(name(route.craft_in[i])); }
+                    var stations = new List<string>();
+                    var yields = new List<int>();
+                    foreach (var member in group) foreach (string station in member.craft_in) if (!stations.Contains(station))
+                    {
+                        stations.Add(station);
+                        var produced = member.output.Find(item => item.id == ingredient.id);
+                        yields.Add(produced == null ? 0 : AdditionalSources.FixedYield(produced));
+                    }
+                    for (int i = 0; i < stations.Count; i++)
+                    {
+                        if (i > 0) text.Append(" / ");
+                        string stationName = name(stations[i]);
+                        if (i == 1 && stations[0] == "mf_distcube_2_clay" && stations[1] == "mf_distcube_2_cuprum" && stationName.StartsWith(name(stations[0]) + " ", StringComparison.Ordinal))
+                            stationName = stationName.Substring(name(stations[0]).Length + 1);
+                        text.Append(stationName);
+                        if (yields[i] > 1) text.Append(" — ").Append(yields[i]).Append(" ед.");
+                    }
                     bool unstudied = route.craft_type == CraftDefinition.CraftType.AlchemyDecompose &&
                         ((!save.IsSurveyComplete(CraftDefinition.CraftSubType.Alchemy, route.needs[0].id)) || (preview && route.needs[0].id == "sulfur"));
                     if (unstudied) { pending = true; text.Append(" [E5B86D][не изучено][-]"); }
@@ -196,12 +241,44 @@ namespace NikichMods.Research
             if (pending) text.Append("\n\n[E5B86D]Получение ингредиентов из отмеченных материалов требует их изучения на исследовательском столе.[-]");
             return text.ToString();
         }
-        private static string Text(CraftDefinition formula) { return BuildText(formula, routes, MainGame.me.save, Name, previewUnstudied); }
+        internal static List<List<CraftDefinition>> GroupRoutes(List<CraftDefinition> producers, GameSave save)
+        {
+            var result = new List<List<CraftDefinition>>();
+            foreach (var route in producers)
+            {
+                var group = result.Find(g => EquivalentSources(g[0], route) && save.IsCraftVisible(g[0]) == save.IsCraftVisible(route));
+                if (group == null) result.Add(new List<CraftDefinition> { route }); else group.Add(route);
+            }
+            return result;
+        }
+        private static bool EquivalentSources(CraftDefinition a, CraftDefinition b)
+        {
+            if (a.craft_type != b.craft_type || a.is_auto != b.is_auto || a.condition.has_expression || b.condition.has_expression || a.needs.Count != b.needs.Count || a.output.Count != b.output.Count || a.needs_from_wgo.Count != 0 || b.needs_from_wgo.Count != 0) return false;
+            for (int i = 0; i < a.needs.Count; i++) if (!SameItem(a.needs[i], b.needs[i])) return false;
+            bool sameStations = a.craft_in.Exists(station => b.craft_in.Contains(station));
+            for (int i = 0; i < a.output.Count; i++)
+            {
+                var x = a.output[i]; var y = b.output[i];
+                if (x.id != y.id || x.chance_group != y.chance_group || !SameExpression(x.self_chance, y.self_chance) || !SameExpression(x.common_chance, y.common_chance) || (sameStations && !SameItem(x, y))) return false;
+            }
+            return true;
+        }
+        private static bool SameItem(Item a, Item b)
+        {
+            return a.id == b.id && a.value == b.value && a.chance_group == b.chance_group &&
+                SameExpression(a.min_value, b.min_value) && SameExpression(a.max_value, b.max_value) &&
+                SameExpression(a.self_chance, b.self_chance) && SameExpression(a.common_chance, b.common_chance);
+        }
+        private static bool SameExpression(SmartExpression a, SmartExpression b)
+        {
+            return ReferenceEquals(a, b) || (a != null && b != null && a.default_value == b.default_value && a.GetRawExpressionString() == b.GetRawExpressionString());
+        }
+        private static string Text(CraftDefinition formula) { return BuildTextCore(formula, routes, MainGame.me.save, Name, previewUnstudied, true); }
         internal static string QuantityUnavailableReason()
         {
             if (!StudyTableWorkProbe.enabledProbe || guidanceWindow == null || !guidanceWindow.is_shown) return null;
             var table = guidanceWindow.GetCrafteryWGO();
-            if (table == null || table.obj_id != "mf_alchemy_craft_02") return null;
+            if (table == null || !SupportedStation(table.obj_id)) return null;
             var focused = CraftItemGUI.current_overed;
             string reason = CardUnavailableReason(true, focused, guidanceWindow.list_items);
             if (reason == null) QuantityInputCompatibility.Synchronize(focused, table);
@@ -243,7 +320,7 @@ namespace NikichMods.Research
                     if (next.label_descr == null || !next.auto_height || next.hgt_widget == null)
                         throw new InvalidOperationException("Missing native description/auto-height contract");
                     next.Redraw();
-                    StudyTableWorkProbe.Write("RAR_GUIDANCE_SHOW native_description=True height=" + next.GetComponent<UIWidget>().height + " text_width=" + next.label_descr.width + " text_height=" + next.label_descr.height);
+                    StudyTableWorkProbe.Write("RAR_GUIDANCE_SHOW product=" + next.current_craft.GetFirstRealOutput().id + " ingredients=" + next.current_craft.needs.Count + " native_description=True height=" + next.GetComponent<UIWidget>().height + " text_width=" + next.label_descr.width + " text_height=" + next.label_descr.height);
                     StudyTableWorkProbe.Write("RAR_GUIDANCE_STUDY native_sulfur_studied=" + MainGame.me.save.IsSurveyComplete(CraftDefinition.CraftSubType.Alchemy, "sulfur") + " preview=" + previewUnstudied);
                 }
                 GUIElements.me.craft.craft_list_grid.Reposition();
@@ -341,7 +418,7 @@ namespace NikichMods.Research
             private static void Postfix(CraftGUI __instance)
             {
                 if (!StudyTableWorkProbe.enabledProbe) return;
-                // Own the entire opened known-yellow list, including other selected rows.
+                // Own the entire opened supported known-formula list, including other rows.
                 guidanceWindow = __instance.list_items.Exists(Supports) ? __instance : null;
                 if (BaseGUI.for_gamepad) return;
                 foreach (var row in __instance.list_items) if (Supports(row)) { Select(row); break; }

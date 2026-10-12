@@ -142,11 +142,102 @@ public static class SourceTopicTests
         host.save.completed_one_time_crafts.Remove("surv:sulfur");
         var ordinary = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });
         Assert(!ordinary.Contains("[не изучено]"), "Ordinary production incorrectly requires material Study");
+        CheckBroadGuidance(asm, host.save);
         // UI method detours cannot be compiled by the standalone CLR: Unity ECalls require
         // the real engine. Resolve exact contracts here; installed patching remains a live gate.
         foreach (string name in new[] { "Redraw", "OnOver", "OnMouseOvered" })
             Assert(AccessTools.Method(typeof(CraftItemGUI), name, Type.EmptyTypes) != null, "Missing exact UI method: " + name);
         Assert(AccessTools.Method(typeof(CraftGUI), "OpenAsAlchemy", new[] { typeof(WorldGameObject) }) != null, "Missing alchemy UI entry");
         Assert(AccessTools.Method(typeof(CraftGUI), "Hide", new[] { typeof(bool) }) != null, "Missing UI close contract");
+    }
+    private static void CheckBroadGuidance(Assembly asm, GameSave save)
+    {
+        var guidance = asm.GetType("NikichMods.Research.RecipeGuidance", true);
+        var classify = guidance.GetMethod("IsOrdinary", Private);
+        var definitions = new Dictionary<string, ItemDefinition> {
+            { "fixture_powder", new ItemDefinition { alch_type = ItemDefinition.AlchemyType.Powder } },
+            { "fixture_fluid", new ItemDefinition { alch_type = ItemDefinition.AlchemyType.Fluid } },
+            { "fixture_essence", new ItemDefinition { alch_type = ItemDefinition.AlchemyType.Essence } },
+            { "fixture_universal", new ItemDefinition { alch_type = ItemDefinition.AlchemyType.Universal } }
+        };
+        var a = new CraftDefinition { id = "fixture_known_variant", craft_type = CraftDefinition.CraftType.MixedCraft,
+            craft_in = new List<string> { "mf_alchemy_craft_02" }, needs = new List<Item> { new Item("fixture_powder", 1), new Item("fixture_fluid", 1) },
+            output = new List<Item> { new Item("fixture_product", 1) } };
+        Assert((bool)classify.Invoke(null, new object[] { a, definitions }), "Ordinary two-slot formula rejected");
+        a.needs[0].id = "fixture_fluid";
+        Assert(!(bool)classify.Invoke(null, new object[] { a, definitions }), "Wrong picker slot accepted");
+        a.needs[0].id = "fixture_universal";
+        Assert((bool)classify.Invoke(null, new object[] { a, definitions }), "Native universal reagent rejected");
+        a.needs.Add(new Item("fixture_essence", 1)); a.craft_in[0] = "mf_alchemy_craft_03";
+        Assert((bool)classify.Invoke(null, new object[] { a, definitions }), "Three-slot table unsupported");
+        a.craft_in[0] = "alchemy_table_zombie";
+        Assert(!(bool)classify.Invoke(null, new object[] { a, definitions }), "Automated station included");
+        a.craft_in[0] = "mf_alchemy_craft_03"; a.output[0].id = "goo";
+        Assert(!(bool)classify.Invoke(null, new object[] { a, definitions }), "Failure output included");
+        a.output[0].id = "fixture_product";
+        var targets = (HashSet<string>)guidance.GetField("ordinary", Private).GetValue(null);
+        targets.Add(a.id); targets.Add("fixture_unknown_variant");
+        var b = new CraftDefinition { id = "fixture_unknown_variant", craft_in = a.craft_in, needs = a.needs, output = a.output };
+        save.completed_one_time_crafts.Add(a.id);
+        var eligible = guidance.GetMethod("KnownForTable", Private);
+        Assert((bool)eligible.Invoke(null, new object[] { a, "mf_alchemy_craft_03", save }), "Known exact formula unavailable");
+        Assert(!(bool)eligible.Invoke(null, new object[] { b, "mf_alchemy_craft_03", save }), "Partial knowledge leaks another formula for the same product");
+        Assert(!(bool)eligible.Invoke(null, new object[] { a, "mf_alchemy_craft_02", save }), "Wrong manufacturing station accepted");
+        save.unlocked_techs.Clear();
+        Assert(!(bool)eligible.Invoke(null, new object[] { a, "mf_alchemy_craft_03", save }), "Pre-alchemy guidance disclosed");
+        save.unlocked_techs.Add("The Beginning Of Alchemy"); targets.Clear();
+        var first = new CraftDefinition { id = "fixture_source_I", craft_type = CraftDefinition.CraftType.AlchemyDecompose,
+            craft_in = new List<string> { "mf_distcube_2_clay" }, needs = new List<Item> { new Item("fixture_source", 1) }, output = new List<Item> { new Item("fixture_reagent", 1) } };
+        var second = new CraftDefinition { id = "fixture_source_II", craft_type = first.craft_type,
+            craft_in = new List<string> { "mf_distcube_2_cuprum" }, needs = first.needs, output = first.output };
+        var grouping = guidance.GetMethod("GroupRoutes", Private);
+        var sources = new List<CraftDefinition> { first, second };
+        Assert(((List<List<CraftDefinition>>)grouping.Invoke(null, new object[] { sources, save })).Count == 1, "Equivalent tiers repeat the source");
+        save.locked_crafts.Add(second.id);
+        Assert(((List<List<CraftDefinition>>)grouping.Invoke(null, new object[] { sources, save })).Count == 2, "Different source visibility lost in grouping");
+        save.locked_crafts.Remove(second.id); second.output = new List<Item> { new Item("fixture_reagent", 2) };
+        Assert(((List<List<CraftDefinition>>)grouping.Invoke(null, new object[] { sources, save })).Count == 1, "Distinct tiers cannot share their common material");
+        var tierFormula = new CraftDefinition { needs = new List<Item> { new Item("fixture_reagent", 1) } };
+        var tierCatalogue = new Dictionary<string, List<CraftDefinition>> { { "fixture_reagent", sources } };
+        Func<string, string> tierNames = id => id;
+        string tiers = (string)guidance.GetMethod("BuildText", Private).Invoke(null, new object[] { tierFormula, tierCatalogue, save, tierNames, false });
+        Assert(tiers.Contains("mf_distcube_2_clay") && tiers.Contains("mf_distcube_2_cuprum") && tiers.Contains("2 ед."), "Equipment/yield alternative lost in common-material grouping");
+        second.craft_in[0] = first.craft_in[0];
+        Assert(((List<List<CraftDefinition>>)grouping.Invoke(null, new object[] { sources, save })).Count == 2, "Different recipes at the same station collapsed");
+        var bonusYield = new Item("fixture_reagent", 1) { min_value = new SmartExpression(), max_value = new SmartExpression() };
+        bonusYield.min_value.FromString("2+Ppar(\"p_scientist\")");
+        var fixedYield = asm.GetType("NikichMods.Research.AdditionalSources").GetMethod("FixedYield", Private);
+        Assert((int)fixedYield.Invoke(null, new object[] { bonusYield }) == 0, "Dynamic yield presented as a fixed quantity");
+        bonusYield.min_value.FromString("1"); bonusYield.max_value.default_value = 3;
+        Assert((int)fixedYield.Invoke(null, new object[] { bonusYield }) == 0, "Random yield range presented as fixed");
+        var balance = (GameBalance)FormatterServices.GetUninitializedObject(typeof(GameBalance));
+        balance.items_data = new List<ItemDefinition> {
+            new ItemDefinition { id = "fixture_water_container", can_be_used = true, drop_on_use = new List<Item> { new Item("water", 20) } },
+            new ItemDefinition { id = "fixture_not_usable", drop_on_use = new List<Item> { new Item("water", 20) } }
+        };
+        balance.craft_data = new List<CraftDefinition> {
+            new CraftDefinition { id = "ex:fixture:blood", needs_unlock = true, craft_in = new List<string> { "fixture_autopsy" }, output = new List<Item> { new Item("blood", 1) } },
+            new CraftDefinition { id = "corp_burning", hidden = true, is_auto = true, output = new List<Item> { new Item("ash", 5) } },
+            new CraftDefinition { id = "crematorium_corp_burning", hidden = true, is_auto = true, output = new List<Item> { new Item("ash", 5) } }
+        };
+        balance.craft_obj_data = new List<ObjectCraftDefinition> {
+            new ObjectCraftDefinition { id = "cremation_builddesk:p:mf_pyre_placed", out_obj = "mf_pyre_placed", enabled = true },
+            new ObjectCraftDefinition { id = "souls_builddesk:p:mf_crematorium", out_obj = "mf_crematorium", enabled = true }
+        };
+        balance.techs_data = new List<TechDefinition> { new TechDefinition { id = "fixture_required_skill", crafts = new List<string> { "ex:fixture:blood" } } };
+        var extras = asm.GetType("NikichMods.Research.AdditionalSources", true);
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "water", "blood", "ash" } });
+        var core = guidance.GetMethod("BuildTextCore", Private);
+        var empty = new Dictionary<string, List<CraftDefinition>>();
+        Func<string, string> names = id => id;
+        foreach (string ingredient in new[] { "water", "blood", "ash" })
+        {
+            var formula = new CraftDefinition { needs = new List<Item> { new Item(ingredient, 1) } };
+            string text = (string)core.Invoke(null, new object[] { formula, empty, save, names, false, true });
+            Assert(!text.Contains("Источник пока") && !text.Contains("[не изучено]"), "Procedural source absent or incorrectly needs material Study");
+            if (ingredient == "water") Assert(text.Contains("fixture_water_container") && text.Contains("20 ед.") && !text.Contains("fixture_not_usable"), "Item-use eligibility/yield wrong");
+            if (ingredient == "blood") Assert(text.Contains("извлечение") && text.Contains("часть должна быть в теле") && text.Contains("fixture_required_skill"), "Body-part or declared technology condition absent");
+            if (ingredient == "ash") Assert(text.Contains("сожжение") && text.Contains("mf_pyre_placed") && text.Contains("mf_crematorium"), "Hidden native automatic channels missing or incorrectly shown as menu recipes");
+        }
     }
 }

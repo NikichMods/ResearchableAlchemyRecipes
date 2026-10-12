@@ -2,7 +2,15 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.18, native amount-arrow container at normal header level
+## Current candidate: 0.1.19, broader known-formula guidance
+
+Guidance now supports every ordinary already-known formula at both manual alchemy tiers; exact knowledge, native station membership and The Beginning Of Alchemy remain mandatory. Native matched corpus is 43 formulas/34 products/35 ingredients, checked at metadata registration. Failure/goo recipes, automated tables and the picker exception are excluded. Unknown alternatives of a known product stay hidden. Existing room-paint research topics/economics/knowledge/manufacture remain unchanged.
+
+Use existing manual producer data plus verified simple inventory use, body extraction and automatic cremation sources. Group common inputs across equipment while retaining availability/equipment alternatives; show per-equipment fixed output only when metadata establishes it. Never evaluate drop RNG or perk expressions to format quantity. Source Study marks remain native and conditional. Missing declared unlock technologies are named where available; no match gives a closed fallback, not a fabricated quest requirement. Russian prototype labels remain; full localization is future work.
+
+Accepted +9/palette/footer/native amount positions and scrolling are preserved. Minimum check: a known non-paint at table I and already-known Spices/another three-component recipe at table II, mouse/gamepad scrolling and quantity controls. Inspect pending source if available and one basic-substance acquisition line when used by a known formula. No paid research/production/restart repetition. Agent reads log; broad card fit and advanced-table input require actual observation. Source corpus/native counts do not establish every world/quest/shop acquisition path or complete UI acceptance.
+
+## Frozen accepted 0.1.18, native amount-arrow container at normal header level
 
 Explicitly accepted by the user; returned exact-candidate log has no checker/probe exceptions and confirms native amount-container alignment executes. Current known-yellow presentation/interaction is the accepted slice. No new cosmetic build or repeated paid/restart test needed; broader guidance/source/localization/economics remain open.
 
