@@ -2,21 +2,23 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.1, two-tab composition
+## Current candidate: 0.1.2, native icons and safe key-map restoration
 
-Question: can the existing Survey panel and craft-card list share a native CraftGUI frame/tabs with correct controller/mouse focus, resource-picker return and close/rollback? Work execution is already verified by 0.1.0; do not repeat its full save/cancel lifecycle just to test tabs.
+Question: retain the user-tested two-tab Survey/craft-card composition while eliminating the identified close-time Dictionary enumeration failure and missing-icon errors. Native formula reward remains excluded. 0.1.1 source/artifact stays frozen; its returned results and limits are in docs/TEST_LOG.md.
 
-Method: native tab creation/selection and BaseGUI stack semantics plus direct level2 inspection establish the static owners and geometry. Installed focus/layout with the user's mod set still requires observation. This candidate composes the existing ResourceBasedCraftGUI as a native top-of-stack subwindow, like MixedCraftGUI on the native alchemy tab; it does not clone Survey logic or replace its sample filter. It temporarily hides its outer frame/header/dimmer and positions its content inside the outer craft frame. Native picker remains a separate modal. Scoped next/previous-tab delegates and paired window close handlers bridge the two owners; originals and layout are restored on close/failure.
+Method: pinned BaseGUI.Update enumerates gamekey_delegates.Keys and invokes callbacks that can close the window. The old restoration replaced dictionary values inside that enumeration. 0.1.2 installs a cloned map and restores the original field reference; neither enumerated map is mutated on close. Layout restoration now also verifies original map identity. A .NET Framework regression reproduces the original exception and verifies the field-replacement strategy; installed patch/lifecycle confirmation remains necessary.
 
-Inspected scene: level2 SHA-256 `1f75a0328dc4987f3020688a0feb0d310c2bf3f6e288c6e4a64ad09db1f39041`, matching installed host assembly identity. GUIElements owns CraftGUI component 24109 and ResourceBasedCraftGUI 22567; tab prefab width/height is 66/32 UI units. Paths/component existence are checked at entry; missing contracts disable this diagnostic rather than guess a hierarchy.
+Native icon presentation uses book / ?alch, resolving tab_book / tab_custom_alch via unchanged CraftTabGUI.Draw; native SetSelectedState supplies selected/dim tint. No cloned caption labels or extracted art are distributed. The table-local SwitchTab interception still handles both pages, so the icon ID does not activate vanilla MixedCraftGUI content. The quill/scroll and paired-flask pair remains subject to visual acceptance.
 
-Minimum procedure: replace 0.1.0 with 0.1.1 (one installed copy under StudyTableWorkProbe.dll). Open the study table after alchemy unlock. Switch Изучение/Рецепты with LB/RB and, if available, mouse. On Изучение, open the real material picker, select an item or cancel, then switch again. Close the complete window from each tab and reopen. Check an unrelated workbench's original tabs. A short test job can be started to verify automatic window closing; it keeps the diagnostic 1 faith/1 science/10 energy inputs but now uses 2 work units. No recipe reward. After any job, F8 cleanup and save remain required as below.
+The composition retains the real ResourceBasedCraftGUI Survey owner, native picker/filter/craft callbacks and separate top-of-stack semantics, as in native mixed-alchemy composition. Only the inspected frame/header/dimmer, position, depth, tips and key-map field are temporarily changed and restored. Inspected level2 SHA-256: `1f75a0328dc4987f3020688a0feb0d310c2bf3f6e288c6e4a64ad09db1f39041`; tab prefab 66x32 units, CraftGUI component 24109 and ResourceBasedCraftGUI 22567.
 
-Return a screenshot of each tab and LogOutput.log. Look for RAR_TABS_OPEN, SWITCH, RESTORE layout_restored=True and CLOSED outer=False study=False. RAR_WORK_ERROR or RAR_TABS_RESTORE_ERROR prevents acceptance. This is a two-tab candidate, not proof that its layout/focus is correct before the user test. Caption strings and final presentation remain diagnostic.
+Minimum procedure: replace the installed 0.1.1 copy with 0.1.2, keeping one probe DLL. Open the table, switch the quill/flask tabs using mouse and LB/RB, and close from each page using Back/Esc; reopen and also try right-click closing. On Study select/cancel the material picker and switch again. Provide a screenshot with the icons and LogOutput.log. Repeating the established work/save-load lifecycle is unnecessary. If any diagnostic job is started, use F8 cleanup beside the table and save afterwards as below.
+
+Expected: native icons visible with selected tint, no tab_rar_* missing sprites, no Collection was modified exception, and RAR_TABS_RESTORE layout_restored=True plus RAR_TABS_CLOSED outer=False study=False. The old log's six NGUI layer warnings around a picker opening have no assigned cause: inspect the returned log before accepting the UI; this change does not claim to fix them. No production UI acceptance from compilation alone.
 
 ## Frozen 0.1.0 work-lifecycle baseline
 
-The sections below describe the immutable first probe, source `6f4fd3bd21e6fee2247c0edfdc372bb1e1f988ef`; its artifact is not rebuilt. Returned evidence and current pending UI candidate identities are owned by docs/TEST_LOG.md.
+The sections below describe the immutable first probe, source `6f4fd3bd21e6fee2247c0edfdc372bb1e1f988ef`; its artifact is not rebuilt. Returned evidence and current correction candidate identities are owned by docs/TEST_LOG.md.
 
 ## Question and method
 
@@ -52,4 +54,4 @@ Return BepInEx `LogOutput.log` and note whether both menus were usable. No exact
 
 `build.ps1 -GameRoot <installation> -DotnetRoot <dotnet installation> -ExpectedSource <commit SHA>` invokes SDK 6.0.406 Roslyn directly against local host/BepInEx references, without package restore. `-CheckOnly` permits a development-tree compilation and writes an explicitly unnumbered check artifact; that output is never handed as a candidate. The handoff mode requires the exact commit and clean tree, refuses to overwrite numbered output, verifies the assembly version and records hashes of its local references. No proprietary references are copied into the repository or output. Output is under ignored `artifacts/`; the installed filename is `StudyTableWorkProbe.dll`, the handed filename `StudyTableWorkProbe-0.1.0.dll`.
 
-Runtime acceptance is pending. The compile gate proves binding only, not the UI or saved job lifecycle.
+The frozen 0.1.0 lifecycle was runtime-verified; the current correction candidate still needs installed UI verification. The compile gate proves binding only.

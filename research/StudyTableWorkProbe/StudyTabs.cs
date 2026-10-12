@@ -10,8 +10,8 @@ namespace NikichMods.Research
     // Research-only native window composition. Survey still owns all sample/craft behavior.
     internal static class StudyTabs
     {
-        internal const string StudyTab = "rar_study";
-        internal const string ResearchTab = "rar_research";
+        internal const string StudyTab = "book";
+        internal const string ResearchTab = "?alch";
         private static readonly FieldInfo TabIds = AccessTools.Field(typeof(CraftGUI), "_tabs_ids");
         private static readonly FieldInfo Tabs = AccessTools.Field(typeof(CraftGUI), "_tabs");
         private static readonly FieldInfo Expanded = AccessTools.Field(typeof(CraftGUI), "_exanded_item");
@@ -47,10 +47,12 @@ namespace NikichMods.Research
 
         private static void ReplaceTabKeys(BaseGUI gui)
         {
-            var keys = (Dictionary<GameKey, GJCommons.BoolDelegate>)Keys.GetValue(gui);
-            snapshot.keyMaps.Add(new KeyMap(keys));
+            var original = (Dictionary<GameKey, GJCommons.BoolDelegate>)Keys.GetValue(gui);
+            var keys = new Dictionary<GameKey, GJCommons.BoolDelegate>(original);
+            snapshot.keyMaps.Add(new KeyMap(gui, original));
             keys[GameKey.PrevTab] = delegate { return Toggle(gui); };
             keys[GameKey.NextTab] = delegate { return Toggle(gui); };
+            Keys.SetValue(gui, keys);
         }
 
         private static bool Toggle(BaseGUI owner)
@@ -124,11 +126,13 @@ namespace NikichMods.Research
 
         private sealed class KeyMap
         {
-            private readonly Dictionary<GameKey, GJCommons.BoolDelegate> map;
-            private readonly GJCommons.BoolDelegate previous;
-            private readonly GJCommons.BoolDelegate next;
-            internal KeyMap(Dictionary<GameKey, GJCommons.BoolDelegate> owner) { map = owner; previous = map[GameKey.PrevTab]; next = map[GameKey.NextTab]; }
-            internal void Restore() { map[GameKey.PrevTab] = previous; map[GameKey.NextTab] = next; }
+            private readonly BaseGUI owner;
+            private readonly Dictionary<GameKey, GJCommons.BoolDelegate> original;
+            internal KeyMap(BaseGUI gui, Dictionary<GameKey, GJCommons.BoolDelegate> map) { owner = gui; original = map; }
+            // Hide can run inside BaseGUI.Update's dictionary enumeration. Restore the field,
+            // never mutate that enumerated dictionary (including replacement of existing values).
+            internal void Restore() { Keys.SetValue(owner, original); }
+            internal bool Matches() { return ReferenceEquals(Keys.GetValue(owner), original); }
         }
 
         private sealed class Snapshot
@@ -164,6 +168,7 @@ namespace NikichMods.Research
             }
             internal bool Matches(ResourceBasedCraftGUI study, CraftGUI craft)
             {
+                foreach (KeyMap map in keyMaps) if (!map.Matches()) return false;
                 if (study.transform.localPosition != position || study.GetButtonTips().transform.localPosition != tipsPosition ||
                     study.GetComponent<UIPanel>().depth != panelDepth || craft.GetButtonTips().gameObject.activeSelf != craftTipsActive) return false;
                 foreach (var pair in chrome) if (pair.Key.activeSelf != pair.Value) return false;
@@ -190,31 +195,6 @@ namespace NikichMods.Research
                 if (!Owns(__instance)) return true;
                 try { Switch(tab_id); } catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
                 return false;
-            }
-        }
-
-        [HarmonyPatch(typeof(CraftTabGUI), "Draw")]
-        private static class TabCaption
-        {
-            private static void Postfix(CraftTabGUI __instance, WorldGameObject craftery_wgo, string tab_id)
-            {
-                if (!Active || craftery_wgo != table || (tab_id != StudyTab && tab_id != ResearchTab)) return;
-                try
-                {
-                    // Keep the native clickable tab; replace only its icon presentation with a short caption.
-                    __instance.spr_icon.gameObject.SetActive(false);
-                    UILabel label = UnityEngine.Object.Instantiate(Craft.LB);
-                    label.name = "RAR tab caption";
-                    label.transform.SetParent(__instance.transform, false);
-                    label.transform.localPosition = Vector3.zero;
-                    label.transform.localScale = Vector3.one;
-                    label.width = 62; label.height = 24; label.fontSize = 10;
-                    label.alignment = NGUIText.Alignment.Center;
-                    label.depth = __instance.spr_icon.depth + 2;
-                    label.text = tab_id == StudyTab ? "Изучение" : "Рецепты";
-                    label.gameObject.SetActive(true);
-                }
-                catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
             }
         }
 

@@ -24,6 +24,10 @@ For an alchemical product known to the character, the player can follow a predic
 - Knowledge remains available for repeated reference and across recipes. Ordinary repeat manufacture pays production costs, not another information fee.
 - Research uses faith, science, energy and work time in the style of vanilla study. Exact values are deferred. Recipe knowledge and guidance are the reward; additional red/green/blue technology-point rewards are not required.
 
+## Study-table presentation
+
+- Present ordinary material Study and recipe research as two tabs in a common native-style frame. Tabs use icons, as on vanilla workbenches, rather than permanent text captions. Exact icon choice and final presentation remain subject to visual acceptance.
+
 ## Journal
 
 - Informational only; research is not launched from the journal.

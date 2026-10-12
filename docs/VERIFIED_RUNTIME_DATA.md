@@ -9,7 +9,7 @@ Accepted 1.407 research input identities:
 - resources.assets SHA-256: 215c7981901a4b72d5db717666ba47ad3cc032527c95f58dc39d8af1293a69ca
 - Assembly-CSharp.dll SHA-256: e72e4270e4b88dd0a87ca23c9cf1750aec4c4a0fedb40b6d2dae7902fc9c7fd8
 
-This project has no installed-runtime candidate or build acceptance yet. Host evidence does not by itself prove the new table/journal integration.
+This project has installed research-probe evidence, recorded in TEST_LOG.md, but no production acceptance. Host evidence does not by itself prove the journal or formula-reward integration.
 
 ## Alchemy knowledge and sources
 
@@ -63,4 +63,6 @@ Study Table Work Probe 0.1.0 passed its local compile/identity gate and the boun
 
 Static source plus direct level2 scene inspection establishes native CraftTabGUI layout, CraftGUI tab ownership and MixedCraftGUI's separate top-of-stack subwindow model. BaseGUI.Update handles semantic keys only for the shown top window; opening another native window disables the previous window's controller. ResourceBasedCraftGUI remains the real Survey owner in the research-only 0.1.1 composition. Exact scene hash, references, mechanism and residual uncertainty are documented in research/StudyTableWorkProbe/README.md.
 
-0.1.1 has passed its local compile/identity gate (TEST_LOG.md); its two-tab rendering, focus, picker return and close behavior have not been observed in the installed game. The 0.1.0 modal is replaced only in this new immutable candidate, and its diagnostic work-time input is shortened. Formula reward is unchanged/excluded.
+0.1.1 passed the compile/identity gate and now has installed user evidence for keyboard/mouse/gamepad switching, native picker selection/cancel, closing/reopening, short work and F8 cleanup. The exact installed DLL matches the handed hash. Ten opens, 28 switches and ten paired closes/layout restorations are recorded. This is bounded usability evidence, not UI acceptance: the log also contains eight BaseGUI.Update dictionary enumeration exceptions after closing, 20 missing tab_rar_* sprite errors, and six NGUI layer warnings around a picker opening.
+
+Direct pinned BaseGUI source identifies live gamekey_delegates.Keys enumeration; the probe restores values during its callback, invalidating that enumerator. 0.1.2 installs a cloned map and restores the field reference instead. A deterministic .NET Framework regression reproduces the original defect and completes the corrected enumeration with the original map restored; game integration remains pending. Verified native tab_book / tab_custom_alch assets supply the icon-only candidate without copied artwork or caption widgets. Their selection tint remains owned by native CraftTabGUI.SetSelectedState. Formula reward is unchanged/excluded, and the layer-warning cause remains open.

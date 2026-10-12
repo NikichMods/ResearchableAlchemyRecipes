@@ -2,7 +2,7 @@
 
 ## Study Table Work Probe 0.1.1 — two-tab candidate, 2026-10-12
 
-**Status:** local compile/identity gate passed; installed UI/layout/input test pending. No production UI acceptance.
+**Status:** local compile/identity gate passed; installed usability demonstrated, but close/key-map errors block UI acceptance. No production UI acceptance.
 
 - Exact compiled source: `d72441d25ed868ac069180077d5e38f73fb8dba1`, research/study-table-work.
 - Artifact: `StudyTableWorkProbe-0.1.1.dll`; replace the previous installed copy as `StudyTableWorkProbe.dll`, do not install side by side.
@@ -21,7 +21,18 @@ Minimum user procedure:
 4. Optionally start the short test job to verify that the entire composed window closes on launch. A normal material Study can be performed if convenient. If a test job was started/completed, close menus, use F8 cleanup beside the table and save as in 0.1.0. No mid-work save/reload repetition is required.
 5. Return LogOutput.log. Expected markers are RAR_TABS_OPEN, RAR_TABS_SWITCH, RAR_TABS_RESTORE layout_restored=True and RAR_TABS_CLOSED outer=False study=False. RAR_WORK_ERROR or RAR_TABS_RESTORE_ERROR blocks acceptance. Visual/controller outcomes still require user observations even when log state looks correct.
 
-Nothing in the build result establishes correct layout/focus in the installed game. Formula reward, final text/art, source eligibility and refund economics remain separate gates. Numbered 0.1.0 and 0.1.1 artifacts are immutable.
+The original build result alone did not establish installed layout/focus. Formula reward, final text/art, source eligibility and refund economics remain separate gates. Numbered 0.1.0 and 0.1.1 artifacts are immutable.
+
+### Returned 0.1.1 evidence
+
+Returned log SHA-256: `04aa127c681b8a3df008dc33324c27011d6eb64a577e682ca1d3f8c5d050b028`. Installed DLL hash matches the exact 0.1.1 artifact. Raw log and private asset inspection remain ignored local inputs.
+
+- User checked tab switching with keyboard/mouse and gamepad; native material picker opening, selection/cancel, switching afterwards, closing and reopening. Screenshots show the common frame without reported clipping. The unrelated church workbench retains native icon tabs. This does not establish general compatibility with all UI mods.
+- Log: 10 completed opens, 28 switches, 10 layout_restored=True restorations and 10 outer=False/study=False paired closes; no RAR_WORK_ERROR or RAR_TABS_RESTORE_ERROR.
+- Short job starts sample_free=True/output_count=0, faith 5 -> 4, science 19 -> 18; native completion marker recorded with formulas=0. F8 removes one completed marker and one last-craft reference, active=0/completed=False. User screenshots show the completed job hidden and the cleaned job visible again.
+- Blocking diagnostics: eight InvalidOperationException/Dictionary KeyCollection Enumerator stacks in BaseGUI.Update after paired closure. Inspection identifies restoration of the currently enumerated gamekey_delegates dictionary as the defect. 20 missing tab_rar_study/tab_rar_research errors are caused by the caption candidate requesting nonexistent native icons before hiding them.
+- Six NGUI widget/panel layer warnings occur around a picker opening. Cause unassigned; do not call the overall log clean or claim that changing key maps removes these warnings. Other world/mod diagnostics are outside this scoped result.
+- User requests icon-only tabs matching vanilla. The native icon pair selected for the next visual candidate is quill/scroll (tab_book) and paired flasks (tab_custom_alch). Final visual acceptance remains open.
 
 ## Study Table Work Probe 0.1.0 — work lifecycle verified, 2026-10-12
 
