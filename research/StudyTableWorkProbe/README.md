@@ -4,6 +4,8 @@ Research only. No production mod or final interface. Original code is MPL-2.0.
 
 ## Current candidate: 0.1.18, native amount-arrow container at normal header level
 
+Explicitly accepted by the user; returned exact-candidate log has no checker/probe exceptions and confirms native amount-container alignment executes. Current known-yellow presentation/interaction is the accepted slice. No new cosmetic build or repeated paid/restart test needed; broader guidance/source/localization/economics remain open.
+
 Returned 0.1.17 has a clean checker/probe log and user-satisfactory inspection. User requests a simple correction for amount arrows that move down when guidance expands. Single arrows are native; current MaxButtons double arrows share their native amount_buttons container.
 
 After native redraw, move only this plain container upward by half of the native row-height increase over its normal height. Its stretched selection-frame parent caused exactly that downward displacement. Restore captured position first on each pass and on deselection/close, preserving child positions, handlers, hitboxes and native visibility. No new dependency on foreign button names/version/hooks. If the validated native parent/pivot/stretch structure differs, leave the arrows unchanged and report it. +9/palette/footer/input projection remain unchanged.
