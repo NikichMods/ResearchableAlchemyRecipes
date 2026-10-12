@@ -2,7 +2,10 @@
 
 ## Study Table Work Probe 0.1.6 — fixed user-selected icon position
 
-**Status:** local compile gate passed; exact clean-source handoff identity to be recorded after build. Selected placement was observed in 0.1.5; exact 0.1.6 binary is not yet runtime-tested.
+**Status:** clean-source compile/identity gate passed. Selected placement was observed in 0.1.5; exact 0.1.6 binary is not yet runtime-tested.
+
+- Exact source: 5322a458b50507c97b9f0adcaefe1a0d5d8573bb, research/study-table-work.
+- Artifact: StudyTableWorkProbe-0.1.6.dll; SHA-256 dabe12e8c4d23d22d3e1b12286d6d989feda0b8df98ae9df9b97042dbdef160c. Plugin 0.1.6, assembly/file 0.1.6.0; deterministic optimized SDK 6.0.406 build, warnings as errors and both version assertions. Previous numbered artifacts frozen.
 
 - Freeze final 0.1.5 calibration corrections: Material Study +1/+1 -> absolute (-2,+2); Recipe Research +2/+1 -> absolute (+1.5,+1.5), relative to native tab-background center. The last two chosen records agree.
 - Remove IconCalibration, F2 polling/OnGUI, native input-capture flags/Update guards, page/tuning callbacks and IMGUI-module reference. F8 job cleanup remains. No PNG, size, native tint, ordinary Study, work/cost/save or science-header change.
