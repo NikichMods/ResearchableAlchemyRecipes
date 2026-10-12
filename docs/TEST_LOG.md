@@ -202,3 +202,21 @@ Installed StudyTableWorkProbe-0.1.7.dll SHA-256 matches 439ab0329b37298d4efe932d
 - User flags generic technology-discovery wording as unsuitable; formula-discovery wording is the adopted presentation meaning, exact text remains open. The popup's two identical product rows are native craft-unlock rows, not proof that the two formulas were duplicated in knowledge.
 
 Accepted envelope: one sample-free two-variant product, all missing variants, partial knowledge, native reward/list, full-process-restart retention and cleanup restoring an originally unknown baseline. Preexisting nonzero baseline restoration remains automated-state evidence, not an installed scenario. No actual manufacture, additional products, tier-II, changed mod set, source eligibility, final guidance or production release is accepted by this result.
+
+## Source Eligibility Probe 0.1.0 — read-only source availability candidate
+
+- Source: 8ac6051dcd31b6bd581bc766a0614173167d2483, research/study-table-work.
+- DLL: SourceEligibilityProbe-0.1.0.dll; plugin/assembly/file versions 0.1.0 / 0.1.0.0 / 0.1.0.0.
+- SHA-256: 58f02e675776228a38d23e81c4cbcb71d368522e4ad00468561e14960b25a485.
+- Build: clean exact-source deterministic SDK 6.0.406 C# 7.3 warnings-as-errors compile; existing local identity pattern, no assets embedded/distributed. Exact reference hashes stay in ignored build-identity.json. Local compile check and handoff build pass; installed observation is pending.
+- Shared source finding: GraveyardKeeperResearch f88344e, native room-builder filter, phrase rendering vs item-price pickability, and Clotho's specific Spices disclosure. No formula ingredients published.
+- Probe has no save writers, craft registration, grants, synthetic inputs, F8 handler or UI changes. It records one first-playing-save snapshot and bounded native source/UI interactions. Strict verified-host gate keeps diagnostic claims within the inspected 1.407 envelope. This remains a separate observer, not a playable research implementation.
+
+Minimum user procedure:
+
+1. Add this one DLL to BepInEx/plugins; previous Study Table Work Probe may remain installed if its synthetic state is already cleaned. Launch/load the existing save.
+2. Open the room-decoration builder in the keeper's house, then close it. Open the study table once for a second source snapshot. No crafting or spending is needed.
+3. Return this launch's LogOutput.log. If the Merchant cure answer is already naturally available, optionally open that menu without handing in Spices; if completed/unavailable, do not replay or manipulate the quest. Native loaded task/phrase/known-formula state still supplies useful evidence.
+4. Remove the observer DLL whenever desired; it requires no save cleanup. Formula-reward restart tests do not need repeating.
+
+Expected evidence: RAR_SOURCE_READY read_only=True, current native visibility/knowledge counts for all seven paint channels, RAR_SOURCE_NATIVE_BUILD counts through the actual opened native builder, and Spices state/remaining formula count. Native cure-option rendering is an optional independent observation; affordability is logged separately. A missing builder observation or RAR_SOURCE_ERROR is not a pass. First-observation builder presence alone is not labeled verified physical reachability. Locked/new-save negative states and source coverage beyond these eight products remain untested.
