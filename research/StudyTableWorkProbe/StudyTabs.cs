@@ -206,13 +206,25 @@ namespace NikichMods.Research
                 if (!Active || craftery_wgo != table || (tab_id != StudyTab && tab_id != ResearchTab)) return;
                 try
                 {
-                    // Keep native selection tint and the inspected centered icon transform.
+                    // Keep native selection tint; center opaque artwork rather than PNG margins.
                     // Draw uses existing native IDs first; no missing sprite lookup or atlas edits.
                     var icon = __instance.spr_icon;
                     icon.sprite2D = TabArtwork.Get(tab_id == StudyTab);
                     icon.width = 40;
                     icon.height = 26;
-                    StudyTableWorkProbe.Write("RAR_TAB_ART_DRAW tab=" + tab_id + " canvas=" + icon.width + "x" + icon.height);
+                    var background = __instance.tab_back.GetComponent<UI2DSprite>();
+                    if (background == null || background.pivot != UIWidget.Pivot.Center || icon.pivot != UIWidget.Pivot.Center ||
+                        background.transform.parent != icon.transform.parent)
+                        throw new InvalidOperationException("Unexpected native tab centering anchor");
+                    // Verified PNG opaque bounds: material (9,3)-(37,25), recipe (5,2)-(36,25).
+                    // PNG Y points down; native UI Y points up. Both complete 40x26 canvases remain intact.
+                    Vector3 offset = tab_id == StudyTab ? new Vector3(-3f, 1f, 0f) : new Vector3(-0.5f, 0.5f, 0f);
+                    Vector3 center = background.transform.localPosition;
+                    center.z = icon.transform.localPosition.z;
+                    icon.transform.localPosition = center + offset;
+                    StudyTableWorkProbe.Write("RAR_TAB_ART_DRAW tab=" + tab_id + " canvas=" + icon.width + "x" + icon.height +
+                        " offset_x=" + offset.x.ToString(System.Globalization.CultureInfo.InvariantCulture) +
+                        " offset_y=" + offset.y.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 }
                 catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
             }

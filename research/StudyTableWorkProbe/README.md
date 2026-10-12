@@ -2,7 +2,13 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.3, original artwork integration
+## Current candidate: 0.1.4, visible-art centering
+
+User-approved original icon appearance is preserved. The 0.1.3 screenshot reveals that centering full canvases leaves asymmetric opaque artwork off-center. Place each icon relative to the native background center, compensating exact alpha bounds: Material Study (-3,+1), Recipe Research (-0.5,+0.5) native UI units. Keep complete PNGs and native tint; no crop, scaling, new art, science-header or input/work change.
+
+Direct scene back/icon anchors share a parent and Center pivot; the icon has no anchor targets. Validate this contract, preserve Z and assign absolute position, avoiding reopen accumulation. Fractional recipe offset reflects odd artwork dimensions. Check installed selected/dim centering and sharpness, switch/close/reopen and return screenshot/log. Live calibration is unnecessary for the first exact geometric correction; consider bounded optical tuning only if that correction does not satisfy the user. No test job required.
+
+## Frozen 0.1.3 original artwork integration baseline
 
 Question: render the two user-selected original PNGs in the existing native tabs, with exact canvases, sharp sampling and native selected/dim tint. This is a bounded presentation-only research candidate; no work, input, pricing, formula reward or picker-layer fix. The unchanged 0.1.2 composition/close evidence remains baseline.
 

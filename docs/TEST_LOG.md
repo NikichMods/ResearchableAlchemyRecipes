@@ -1,8 +1,18 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.4 — visible-art centering candidate
+
+**Status:** compile check passed; exact handoff identity to be recorded after clean-source build. Installed centering acceptance pending.
+
+- Scope: icon placement only; original PNG bytes, 40x26 canvases, size, native tint, work/input/close paths and science header remain unchanged.
+- Root cause: 0.1.3 centered complete PNGs. Material opaque bounds (9,3)-(37,25) center at (23,14) inside a (20,13) canvas center; recipe (5,2)-(36,25) centers at (20.5,13.5). PNG Y is inverted relative to UI Y.
+- Corrected absolute offsets from the native tab-background center: Material Study x=-3/y=+1; Recipe Research x=-0.5/y=+0.5 UI units. Exact bounds centering; not a claim of subjective optical acceptance.
+- Direct scene evidence: back/icon share parent and Center pivot; back 66x32, icon unanchored. Postfix validates same-parent/center-pivot contract, preserves icon Z and uses absolute placement. Missing anchors fail the probe rather than guess. Native SetSelectedState changes tint/background sprites, not icon position.
+- Small installed check: open both tabs, inspect centering/clarity in selected and dim states, switch and close/reopen once. Return screenshots and log. Expected RAR_TAB_ART_DRAW offsets above and unchanged restore/close markers. No diagnostic job or repeated save/reload required. Existing picker warnings remain outside this correction.
+
 ## Study Table Work Probe 0.1.3 — original tab artwork candidate
 
-**Status:** local compile/identity and unchanged PNG embedding checks passed; installed rendering/tint acceptance pending.
+**Status:** local compile/identity and unchanged PNG embedding checks passed; returned screenshot and user report approve icon appearance but identify off-center opaque artwork. No returned runtime log for this segment; centering correction is 0.1.4.
 
 - Exact compiled source: fc719ca0f9561f0f77bdcd1147416b8d1fde5ce2, research/study-table-work.
 - Artifact: StudyTableWorkProbe-0.1.3.dll; SHA-256 7ac0a4bc80cd86f5114bd896f2ef36501cf5debf06e75b40e7c80afc164a8e09. Plugin version 0.1.3; assembly/file versions 0.1.3.0.
