@@ -2,19 +2,36 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
+using System.Collections.Generic;
 using HarmonyLib;
 
 class QuantityCompatibilityTests
 {
     private static void ForceMultiple(ref bool __result) { __result = true; }
     private static bool scoped;
+    private static bool guidanceScoped;
+    private static MethodInfo cardPolicy;
+    private static List<CraftItemGUI> rows;
+    private static CraftItemGUI focused;
+    private static string CardScope(CraftItemGUI card)
+    {
+        return (string)cardPolicy.Invoke(null, new object[] { guidanceScoped, card, rows, focused });
+    }
+    private static CraftItemGUI Card(params CraftDefinition[] definitions)
+    {
+        var card = (CraftItemGUI)FormatterServices.GetUninitializedObject(typeof(CraftItemGUI));
+        AccessTools.Field(typeof(CraftItemGUI), "_possible_crafts").SetValue(card, new List<CraftDefinition>(definitions));
+        AccessTools.Field(typeof(CraftItemGUI), "_current_craft_index").SetValue(card, 0);
+        return card;
+    }
     public static int Main(string[] args)
     {
         AppDomain.CurrentDomain.AssemblyResolve += delegate(object sender, ResolveEventArgs e) {
             foreach (string dir in args) { string path = Path.Combine(dir, new AssemblyName(e.Name).Name + ".dll"); if (File.Exists(path)) return Assembly.LoadFrom(path); }
             return null;
         };
-        try { Run(args); Console.WriteLine("PASS actual installed checker: original null failure, scoped guard, fallthrough and unpatch restoration"); return 0; }
+        try { Run(args); Console.WriteLine("PASS actual installed checker: null/empty/stale/unfocused guidance cards, valid ordinary/one-time fallthrough, study guard, outside scope and unpatch restoration"); return 0; }
         catch (Exception ex) { Console.WriteLine(ex); return 1; }
     }
     private static void NullFailure(MethodInfo method)
@@ -37,13 +54,40 @@ class QuantityCompatibilityTests
             if (attr.AttributeType.Name == "BepInDependency" && (string)attr.ConstructorArguments[0].Value == guid) dependency = true;
         if (!dependency) throw new Exception("Missing dependency on the actual installed plugin GUID");
         var install = probe.GetType("NikichMods.Research.QuantityInputCompatibility", true).GetMethod("Install", BindingFlags.NonPublic | BindingFlags.Static);
+        cardPolicy = probe.GetType("NikichMods.Research.RecipeGuidance", true).GetMethod("CardUnavailableReason", BindingFlags.NonPublic | BindingFlags.Static);
+        rows = new List<CraftItemGUI>();
+        var foreignCard = plugin.GetField("_craftItemGui", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
+        foreignCard.SetValue(null, Card()); NullFailure(method);
+        foreignCard.SetValue(null, null);
         var harmony = new Harmony("rar.offline.quantity-test");
         try
         {
-            install.Invoke(null, new object[] { harmony, new Func<bool>(() => scoped) });
+            install.Invoke(null, new object[] { harmony, new Func<bool>(() => scoped), new Func<CraftItemGUI, string>(CardScope) });
             scoped = true;
             if (!(bool)method.Invoke(null, null)) throw new Exception("Scoped invalid-input result not returned");
             scoped = false; NullFailure(method);
+            guidanceScoped = true;
+            if (!(bool)method.Invoke(null, null)) throw new Exception("Missing guidance card not contained");
+            var empty = Card(); rows.Add(empty); focused = empty; foreignCard.SetValue(null, empty);
+            if (empty.current_craft != null || !(bool)method.Invoke(null, null)) throw new Exception("Empty native card not contained");
+            var ordinary = new CraftDefinition { id = "ordinary", needs = new List<Item>() };
+            var valid = Card(ordinary); rows.Clear(); rows.Add(valid); focused = valid;
+            // Foreign checker reference can still point to a previous native window's row.
+            foreignCard.SetValue(null, empty);
+            if (!(bool)method.Invoke(null, null)) throw new Exception("Stale foreign card not contained");
+            foreignCard.SetValue(null, valid); focused = null;
+            if (!(bool)method.Invoke(null, null)) throw new Exception("Unfocused card not contained");
+            focused = valid;
+            if ((bool)method.Invoke(null, null)) throw new Exception("Ready ordinary quantity input was disabled");
+            ordinary.one_time_craft = true;
+            if (!(bool)method.Invoke(null, null)) throw new Exception("Original one-time rejection overwritten");
+            ordinary.one_time_craft = false; ordinary.needs = null;
+            if (!(bool)method.Invoke(null, null)) throw new Exception("Missing formula needs not contained");
+            ordinary.needs = new List<Item>();
+            guidanceScoped = false;
+            if ((bool)method.Invoke(null, null)) throw new Exception("Ordinary input outside guidance altered");
+            if (!ReferenceEquals(foreignCard.GetValue(null), valid)) throw new Exception("Foreign selection mutated by readiness guard");
+            foreignCard.SetValue(null, null); NullFailure(method);
         }
         finally { harmony.UnpatchSelf(); }
         NullFailure(method);

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -11,9 +12,11 @@ namespace NikichMods.Research
     {
         private const string VerifiedHash = "e811fc228ece102e389759d278bb66569884898b827369f99e11c984ffc2af30";
         private static Func<bool> unavailable;
-        private static bool reported;
+        private static Func<CraftItemGUI, string> cardUnavailable;
+        private static readonly HashSet<string> reported = new HashSet<string>();
         private static MethodInfo closed;
-        internal static void Install(Harmony harmony, Func<bool> scope)
+        private static FieldInfo selectedCard;
+        internal static void Install(Harmony harmony, Func<bool> scope, Func<CraftItemGUI, string> cardScope)
         {
             Assembly installed = null;
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -24,12 +27,14 @@ namespace NikichMods.Research
                 hash = BitConverter.ToString(sha.ComputeHash(stream)).Replace("-", "").ToLowerInvariant();
             var target = installed.GetType("MaxButtonsRedux.Plugin", true).GetMethod("IsCraftGuiInputValid", BindingFlags.Static | BindingFlags.NonPublic);
             closed = installed.GetType("MaxButtonsRedux.Patches", true).GetMethod("CraftGUI_OnClosePressed", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
-            if (hash != VerifiedHash || target == null || target.ReturnType != typeof(bool) || target.GetParameters().Length != 0 || closed == null || closed.GetParameters().Length != 0)
+            selectedCard = installed.GetType("MaxButtonsRedux.Plugin", true).GetField("_craftItemGui", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+            if (hash != VerifiedHash || target == null || target.ReturnType != typeof(bool) || target.GetParameters().Length != 0 || closed == null || closed.GetParameters().Length != 0 || selectedCard == null || selectedCard.FieldType != typeof(CraftItemGUI))
                 throw new InvalidOperationException("Unverified MaxButtonsRedux quantity-input contract: " + hash);
             unavailable = scope;
-            reported = false;
+            cardUnavailable = cardScope;
+            reported.Clear();
             harmony.Patch(target, prefix: new HarmonyMethod(typeof(QuantityInputCompatibility), "Prefix"));
-            StudyTableWorkProbe.Write("RAR_QUANTITY_COMPAT status=bound hash=" + hash + " scope=study_table_composition");
+            StudyTableWorkProbe.Write("RAR_QUANTITY_COMPAT status=bound hash=" + hash + " scope=study_table_and_guidance_card_readiness");
         }
         internal static void OnOurFrameClosed()
         {
@@ -40,13 +45,14 @@ namespace NikichMods.Research
         }
         private static bool Prefix(ref bool __result)
         {
-            if (unavailable == null || !unavailable()) return true;
+            string reason = unavailable != null && unavailable() ? "study_table_composition" :
+                cardUnavailable == null ? null : cardUnavailable((CraftItemGUI)selectedCard.GetValue(null));
+            if (reason == null) return true;
             // The verified method's true result means invalid: its caller returns without Min/Max.
             __result = true;
-            if (!reported)
+            if (reported.Add(reason))
             {
-                StudyTableWorkProbe.Write("RAR_QUANTITY_COMPAT status=scoped_input_skipped native_quantity_unavailable=True");
-                reported = true;
+                StudyTableWorkProbe.Write("RAR_QUANTITY_COMPAT status=scoped_input_skipped reason=" + reason + " native_quantity_unavailable=True");
             }
             return false;
         }

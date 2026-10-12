@@ -2,7 +2,15 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.15, coloured headings and live header calibration
+## Current candidate: 0.1.16, fixed header and alchemy quantity readiness
+
+The chosen +9 native UI pixel downward correction is fixed for ingredients and energy together. F2 panel, temporary input capture/guards and IMGUI reference are removed. Approved heading palette/footer remain unchanged.
+
+Exact installed MaxButtonsRedux 1.4.0 stores its selected card only on native gamepad OnOver, then dereferences it without checking card/formula presence. This candidate contains unsafe quantity input only while our known-yellow guidance owns the shown window: missing/stale/unfocused foreign card or absent native recipe means unavailable. Once a real current-list card is focused, the original checker/quantity input runs. Prior Study guard remains. Outside these scopes, original behavior is preserved; no synthetic selection or mod dependency changes. One RAR_QUANTITY_COMPAT reason record identifies a new readiness case.
+
+Minimum installed confirmation: inspect yellow fixed position; open with mouse, switch to gamepad, move between rows and close/reopen once. Normal other-workbench Min/Max may be checked alongside regular play. Return observation; local log can be read directly. No research/payment/production/restart repetition. Offline actual-DLL checks pass; live window/focus acceptance is separate. Exact identity/limits belong to TEST_LOG.md.
+
+## Frozen 0.1.15, coloured headings and live header calibration
 
 The reviewed full reagent palette is approved and now colours section headings by native item ID; existing known-yellow guidance remains the only live slice. Source rows and amber pending-source markers retain their roles. Native font is unchanged. Adopted footer: "Получение ингредиентов из отмеченных материалов требует их изучения на исследовательском столе."
 

@@ -11,6 +11,8 @@ namespace NikichMods.Research
     internal static class RecipeGuidance
     {
         private const string Product = "yellow_paint";
+        // User-selected optical correction exported twice by 0.1.15 Done.
+        private const int HeaderDown = 9;
         private static readonly Dictionary<string, List<CraftDefinition>> routes = new Dictionary<string, List<CraftDefinition>>();
         private static CraftItemGUI selected;
         private static CraftDefinition describing;
@@ -66,7 +68,7 @@ namespace NikichMods.Research
                 foreach (var candidate in cells)
                     if (candidate.gameObject.activeInHierarchy) { cell = candidate.GetComponent<UIWidget>(); if (cell != null) break; }
                 if (cell == null) throw new InvalidOperationException("No visible native ingredient widget to measure");
-                float desired = CenterY(row.label_name, row.transform) - HeaderCalibration.Down;
+                float desired = CenterY(row.label_name, row.transform) - HeaderDown;
                 float ingredientBefore = CenterY(cell, row.transform) - desired;
                 float energyBefore = CenterY(row.txt_spend, row.transform) - desired;
                 MoveY(icons.transform, row.transform, -ingredientBefore);
@@ -78,7 +80,7 @@ namespace NikichMods.Research
                 if (!measured && row.label_descr.width > 40)
                 {
                     measured = true;
-                    StudyTableWorkProbe.Write("RAR_GUIDANCE_HEADER ingredient_before=" + ingredientBefore + " energy_before=" + energyBefore + " ingredient_after=" + ingredientError + " energy_after=" + energyError + " owner=final_widget_bounds");
+                    StudyTableWorkProbe.Write("RAR_GUIDANCE_HEADER ingredient_before=" + ingredientBefore + " energy_before=" + energyBefore + " ingredient_after=" + ingredientError + " energy_after=" + energyError + " down_ui_pixels=" + HeaderDown + " owner=final_widget_bounds");
                 }
             }
             internal void Restore(CraftItemGUI row)
@@ -166,18 +168,21 @@ namespace NikichMods.Research
             return text.ToString();
         }
         private static string Text(CraftDefinition formula) { return BuildText(formula, routes, MainGame.me.save, Name, previewUnstudied); }
-        internal static bool CanCalibrate
+        internal static string QuantityCardUnavailable(CraftItemGUI card)
         {
-            get
-            {
-                return selected != null && GUIElements.me != null && GUIElements.me.craft.is_shown &&
-                    !GUIElements.me.resource_picker.is_shown &&
-                    (GUIElements.me.craft.is_shown_and_top || GUIElements.me.mixed_craft_tabbed.is_shown_and_top) && Supports(selected);
-            }
+            bool owns = selected != null && GUIElements.me != null && GUIElements.me.craft.is_shown && Supports(selected);
+            return CardUnavailableReason(owns, card, owns ? GUIElements.me.craft.list_items : null, CraftItemGUI.current_overed);
         }
-        internal static void RefreshHeader()
+        internal static string CardUnavailableReason(bool owns, CraftItemGUI card, List<CraftItemGUI> rows, CraftItemGUI focused)
         {
-            if (CanCalibrate) layouts[selected].AlignFinal(selected);
+            if (!owns) return null;
+            if (ReferenceEquals(card, null)) return "guidance_missing_card";
+            if (!rows.Exists(row => ReferenceEquals(row, card))) return "guidance_stale_card";
+            if (!ReferenceEquals(card, focused)) return "guidance_card_not_focused";
+            // Check only initialized live-list cards; no Unity component lookup or fake focus.
+            var craft = card.current_craft;
+            if (craft == null || craft.needs == null) return "guidance_missing_formula";
+            return null;
         }
         internal static void PreviewMenu()
         {
@@ -235,7 +240,6 @@ namespace NikichMods.Research
         }
         internal static void Restore()
         {
-            HeaderCalibration.Hide("card_closed");
             describing = null;
             var old = selected; selected = null;
             if (old != null) old.Redraw();
