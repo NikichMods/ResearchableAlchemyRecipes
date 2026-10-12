@@ -2,7 +2,7 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.10, automatic room-paint topics
+## Current bounded accepted candidate: 0.1.10, automatic room-paint topics
 
 Question: does the accepted native room-source reconstruction actually offer the correct paid topics on the study table, without F8 preparation, and remove each after native knowledge reward? The manual SourceEligibilityProbe 0.1.1 proves positive builder/card agreement; 0.1.9 proves work/UI/single-payment integration. Neither existing binary combines those seams. This candidate adds that bounded composition; no general source framework or new startup polling is needed.
 
@@ -12,7 +12,7 @@ All seven paints have one ordinary formula each at native tier-II station mf_alc
 
 F8 now offers status/cleanup only. Old synthetic heal metadata/jobs stay registered for old-save restoration, but those topics are hidden and synthetic preparation is not offered. New paint knowledge is genuine native progress: cleanup cancels loaded probe work, clears own queued/last/completed-job metadata and preserves earned paint formulas. Costs are not rolled back. Use a disposable/test save; save after cleanup before removing the DLL. Unloaded unfinished objects remain outside cleanup's verified envelope.
 
-Minimum installed matrix:
+Original installed matrix (positive flow now accepted; do not repeat solely for recovery):
 
 1. Replace the previous study probe with this candidate, retaining one study-probe DLL and the user's other mods. Do not install either source observer. Load the existing test save and open the study table directly, without F8 preparation or opening the room builder first. The last measured save had five unknown paints, but actual current knowledge controls the count. Log RAR_TOPICS_CARD must agree with RAR_TOPICS_PRODUCT; wholly known paints must have zero cards.
 2. Research one offered paint without its sample. Observe one payment and one reward learned=1; reopen the table and verify that topic disappears. Ordinary material Study must remain usable. Open native Alchemy Workbench II and verify the learned card (no ingredient/formula transcription is needed).
@@ -21,7 +21,7 @@ Minimum installed matrix:
 
 If an existing suitable pre-alchemy/locked-source save is available, open the table there without changing progression: expected no inaccessible topic and ordinary Study preserved. Do not replay progression or remove/unlock real source objects to manufacture a negative state. Actual negative physical-source cases remain unaccepted until naturally observed; local tests cover filtering policy, not scene access.
 
-Local test.ps1 compiles with warnings as errors and runs the legacy restoration suite, actual installed MaxButtons/one-operation suite and SourceTopicTests. New tests patch the real native IsCraftVisible consumer, exercise independent gate/visibility/knowledge exclusions, preserve native hidden/locked results, prevent snapshot reuse across save objects, and prove remaining-only/idempotent grants plus cleanup preserving learned and unrelated knowledge. Fixture sources/formulas are invented identifiers. The standalone CLR skips only Item.CheckAndInitBagItem because Unity Resources ECalls are unavailable; live bag initialization, scene availability, native serialization and visuals are not proved by these tests. Exact source/DLL identity belongs to docs/TEST_LOG.md; installed acceptance is pending.
+Local test.ps1 compiles with warnings as errors and runs the legacy restoration suite, actual installed MaxButtons/one-operation suite and SourceTopicTests. New tests patch the real native IsCraftVisible consumer, exercise independent gate/visibility/knowledge exclusions, preserve native hidden/locked results, prevent snapshot reuse across save objects, and prove remaining-only/idempotent grants plus cleanup preserving learned and unrelated knowledge. Fixture sources/formulas are invented identifiers. The standalone CLR skips only Item.CheckAndInitBagItem because Unity Resources ECalls are unavailable; live bag initialization, scene availability, native serialization and visuals are not proved by these tests. Exact source/DLL identity and returned acceptance limits belong to docs/TEST_LOG.md. Positive automatic research/manufacture/full-restart flow is accepted from user/screens and the available second-launch log; first-launch trace was overwritten. Topic icon identifiers are incorrect (missing i_<product> sprites); use native item icon metadata in a subsequent candidate. Negative physical-source states and cleanup remain unaccepted.
 
 ## Frozen 0.1.6, fixed chosen icon placement
 
