@@ -10,15 +10,15 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.6.0")]
-[assembly: AssemblyFileVersion("0.1.6.0")]
+[assembly: AssemblyVersion("0.1.7.0")]
+[assembly: AssemblyFileVersion("0.1.7.0")]
 
 namespace NikichMods.Research
 {
     [BepInPlugin("nikichmods.research.studytablework", "Study Table Work Probe", Version)]
     public sealed class StudyTableWorkProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.6";
+        public const string Version = "0.1.7";
         internal const string JobId = "rar_probe_work_010";
         private const string TableId = "mf_alchemy_survey";
         private const string Technology = "The Beginning Of Alchemy";
@@ -45,7 +45,7 @@ namespace NikichMods.Research
                 harmony = new Harmony("nikichmods.research.studytablework");
                 harmony.PatchAll(typeof(StudyTableWorkProbe).Assembly);
                 enabledProbe = true;
-                Write("RAR_WORK_READY version=" + Version + " hash=" + actual + " save_persistent=True formulas=0");
+                Write("RAR_WORK_READY version=" + Version + " hash=" + actual + " save_persistent=True reward_probe=True");
             }
             catch (Exception ex) { Fail(ex); }
         }
@@ -60,14 +60,14 @@ namespace NikichMods.Research
 
         private void Update()
         {
-            if (!enabledProbe || !Input.GetKeyDown(KeyCode.F8) || !MainGame.game_started || !BaseGUI.all_guis_closed)
+            if (!registrationSeen || !Input.GetKeyDown(KeyCode.F8) || !MainGame.game_started || !BaseGUI.all_guis_closed)
                 return;
             try
             {
                 DumpActive("RAR_WORK_STATUS");
-                GUIElements.me.dialog.Open("Проверка работы на столе " + Version, "Убрать тестовое состояние", Cleanup,
-                    "Закрыть", null, null, GameKey.Select, GameKey.Back,
-                    "Тест может сохраняться в игре. Очистка удаляет только тестовое задание и его отметку; потраченные ресурсы не возвращает. После очистки сохраните игру перед удалением DLL.");
+                if (enabledProbe) FormulaKnowledge.Menu();
+                else GUIElements.me.dialog.Open("Пробник отключён после ошибки", "Убрать тестовое состояние", Cleanup,
+                    "Закрыть", null, null, GameKey.Select, GameKey.Back, "Очистка доступна. После неё сохраните игру.");
             }
             catch (Exception ex) { Fail(ex); }
         }
@@ -79,10 +79,11 @@ namespace NikichMods.Research
             StudyTabs.Restore();
             if (Log != null) Log.LogError("RAR_WORK_ERROR action=disabled fallback=vanilla " + ex);
         }
-        private static bool IsJob(CraftDefinition craft) { return craft != null && craft.id == JobId; }
+        private static bool IsJob(CraftDefinition craft) { return craft != null && IsJobId(craft.id); }
+        private static bool IsJobId(string id) { return id == JobId || id == FormulaKnowledge.Job; }
         private static bool IsTable(WorldGameObject table) { return table != null && table.obj_id == TableId; }
 
-        private static void Cleanup()
+        internal static void Cleanup()
         {
             try
             {
@@ -93,10 +94,11 @@ namespace NikichMods.Research
                     if (!IsTable(table)) continue;
                     CraftComponent cc = table.components.craft;
                     if (cc.is_crafting && IsJob(cc.current_craft)) { cc.Cancel(); canceled++; }
-                    if ((string)Last.GetValue(cc) == JobId) { Last.SetValue(cc, ""); cleared++; }
-                    if ((string)Last2.GetValue(cc) == JobId) { Last2.SetValue(cc, ""); cleared++; }
+                    if (IsJobId((string)Last.GetValue(cc))) { Last.SetValue(cc, ""); cleared++; }
+                    if (IsJobId((string)Last2.GetValue(cc))) { Last2.SetValue(cc, ""); cleared++; }
                 }
                 int removed = MainGame.me.save.completed_one_time_crafts.RemoveAll(id => id == JobId);
+                FormulaKnowledge.Restore(MainGame.me.save);
                 Write("RAR_WORK_CLEANUP canceled=" + canceled + " last_cleared=" + cleared + " markers_removed=" + removed);
                 DumpActive("RAR_WORK_CLEAN");
                 GUIElements.me.dialog.OpenOK("Тестовое состояние убрано. Сохраните игру перед удалением пробника.");
@@ -168,6 +170,7 @@ namespace NikichMods.Research
                             tab_id = StudyTabs.ResearchTab
                         });
                     }
+                    FormulaKnowledge.Register(balance);
                     registrationSeen = true;
                     Write("RAR_WORK_REGISTER phase=before_id_cache added=" + (existing == null));
                 }
@@ -176,7 +179,7 @@ namespace NikichMods.Research
             private static void Postfix(GameBalanceBase __instance)
             {
                 if (!enabledProbe || !(__instance is GameBalance)) return;
-                if (__instance.GetDataOrNull<CraftDefinition>(JobId) == null)
+                if (__instance.GetDataOrNull<CraftDefinition>(JobId) == null || __instance.GetDataOrNull<CraftDefinition>(FormulaKnowledge.Job) == null)
                     Fail(new InvalidOperationException("Registered job is not resolvable through native ID cache"));
                 else Write("RAR_WORK_REGISTER phase=after_id_cache resolved=True");
             }
@@ -248,7 +251,12 @@ namespace NikichMods.Research
             private static void Postfix(GameSave __instance, CraftDefinition craft)
             {
                 if (!enabledProbe || !IsJob(craft)) return;
-                Write("RAR_WORK_COMPLETE native_marker=" + __instance.completed_one_time_crafts.Contains(JobId) + " formulas=0");
+                try
+                {
+                    if (craft.id == FormulaKnowledge.Job) FormulaKnowledge.Complete(__instance);
+                    else Write("RAR_WORK_COMPLETE native_marker=" + __instance.completed_one_time_crafts.Contains(JobId) + " formulas=0");
+                }
+                catch (Exception ex) { Fail(ex); }
             }
         }
 
@@ -257,7 +265,7 @@ namespace NikichMods.Research
         {
             private static void Postfix(CraftComponent __instance, SerializableWGO.SerializableCraft data)
             {
-                if (!enabledProbe || data.cur_craft_id != JobId) return;
+                if (!enabledProbe || !IsJobId(data.cur_craft_id)) return;
                 Write("RAR_WORK_RESTORE saved_active=" + data.is_crafting + " resolved=" + IsJob(__instance.current_craft) + " active=" + __instance.is_crafting);
             }
         }

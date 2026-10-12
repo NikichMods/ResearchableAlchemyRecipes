@@ -1,6 +1,6 @@
 # Product requirements
 
-Status: adopted working concept. Project name and public repository approved on 2026-10-11. Implementation is not yet started.
+Status: adopted working concept. Project name and public repository approved on 2026-10-11. Research-only mechanism candidates exist; production implementation is not yet started.
 
 ## Outcome
 
@@ -28,11 +28,12 @@ For an alchemical product known to the character, the player can follow a predic
 
 - Present ordinary material Study and recipe research as two tabs in a common native-style frame. Tabs use icons, as on vanilla workbenches, rather than permanent text captions. Exact icon choice and final presentation remain subject to visual acceptance.
 
-## Journal
+## Contextual recipe guidance
 
-- Informational only; research is not launched from the journal.
-- Recipe information and product research become accessible only after The Beginning Of Alchemy is actually unlocked. Apply the same progression gate to journal content and the research entry at the study table. Whether a locked journal entry remains visible with explanatory text is an open presentation choice.
-- Start with a list divided into available research and studied products.
+- First-version guidance lives with known formula components at the native alchemy tables; a standalone journal/character-window tab is deferred and is not required for the initial feature. Reconsider it later as optional consolidated browsing, not a prerequisite.
+- Research starts at the study table. Known formulas remain available through ordinary alchemy-table lists.
+- Ingredient guidance must be available for repeated reference while inspecting a known formula: reagent -> source alternatives -> processing method/equipment/conditions -> remaining material-study requirement.
+- Recipe information and product research become accessible only after The Beginning Of Alchemy is actually unlocked. Apply the same progression gate to contextual recipe guidance and the research entry at the study table. A pre-unlock locked entry is still an open presentation choice.
 - Product entries use native item icons and names; a known product shows its known alternative formulas and ingredient composition. Partial knowledge must not reveal still-unknown variants before the remaining product research.
 - Product -> ingredient -> acquisition methods supplies the relevant material information; an unrelated all-material encyclopedia is not required.
 - Display remaining vanilla material-study requirements clearly and account for completed studies.
@@ -49,4 +50,4 @@ For an alchemical product known to the character, the player can follow a predic
 
 ## Acceptance envelope
 
-A representative unknown product can be researched without owning it; the journal then shows usable formulas and component routes. A chosen unstudied source is explicitly identified as needing vanilla study; unrelated alternatives remain unstudied and unpaid. Previously known formulas/materials are recognized. Loading an existing save yields correct current topics. Repeated manufacture and repeated information viewing do not charge another knowledge fee. Save reload preserves the resulting knowledge. Exact research economics and interface acceptance will be defined before the corresponding candidate.
+A representative unknown product can be researched without owning it; the native alchemy-table list shows usable formulas and contextual component guidance supplies their acquisition routes. A chosen unstudied source is explicitly identified as needing vanilla study; unrelated alternatives remain unstudied and unpaid. Previously known formulas/materials are recognized. Loading an existing save yields correct current topics. Repeated manufacture and repeated information viewing do not charge another knowledge fee. Save reload preserves the resulting knowledge. Exact research economics and interface acceptance will be defined before the corresponding candidate.
