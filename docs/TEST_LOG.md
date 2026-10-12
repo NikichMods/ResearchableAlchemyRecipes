@@ -1,8 +1,8 @@
 # Diagnostic runtime tests
 
-## Study Table Work Probe 0.1.0 — candidate, 2026-10-12
+## Study Table Work Probe 0.1.0 — work lifecycle verified, 2026-10-12
 
-**Status:** local compile gate passed; installed-runtime test pending. This is not production or accepted behavior.
+**Status:** local compile gate passed; bounded installed-runtime work lifecycle confirmed by the returned log and user observations. This is not production/final-UI acceptance.
 
 - Purpose: prove one registered, sample-free native manual job on the study table, temporary table-local mode entry, cancellation observation, midway save/reload and cleanup. Formula disclosure is excluded.
 - Branch: `research/study-table-work`.
@@ -26,3 +26,19 @@ Minimum user procedure on a disposable/test save with alchemy unlocked and an ex
 Expected diagnostic evidence: `RAR_WORK_READY`, cache registration `resolved=True`, `RAR_WORK_START sample_free=True output_count=0`, native cancellation, `RAR_WORK_RESTORE resolved=True` for the saved in-progress job, loaded progress observation, `RAR_WORK_COMPLETE native_marker=True formulas=0`, and cleanup with no remaining active job/completed marker. `RAR_WORK_ERROR` blocks acceptance. An absent marker is a missing observation, not a pass.
 
 The pre-alchemy UI gate may be checked on an already available suitable save; replaying Clotho or opening a new playthrough is not required for this first work-lifecycle test. Native source availability, final UI, prices, refund policy and formula-knowledge persistence remain separate open checks.
+
+### Returned evidence
+
+Returned LogOutput.log snapshot SHA-256: `c21fcb3a4c23589b85ac25b1ccddff00b9c72f1f7cf0280daf8f93f343f8c732`. The locally installed probe DLL hash matched the exact handed artifact above. Raw log remains in ignored local evidence storage.
+
+- Native ID-cache registration resolves successfully; gate is unlocked; native craft cards open.
+- First start: `sample_free=True`, `output_count=0`, faith 6 -> 5, station science 21 -> 20. Observer did not assign progress/completion.
+- Before cancellation: table 3471 progress 0.268, energy 97.323. Native cancel leaves no active job and science remains 20. User saw the faith return; the next start independently records faith back at 6. Immediate post-cancel inventory still reads 5 because refund is a world drop.
+- Second start: faith 6 -> 5, science 20 -> 19. After saving and returning to the menu, the native deserializer reports `saved_active=True resolved=True active=True`. User reports the partial progress visually preserved and then finishes the work. This establishes same-process save/menu-load resumption; a full process restart was not reported.
+- Native completion records `native_marker=True formulas=0`. Final cleanup removes one completed marker and one last-craft reference, leaving `active=0 completed=False`; a subsequent SaveGame/serialization block is present.
+- No `RAR_WORK_ERROR` occurs. `RAR_WORK_LOADED` is absent: this loading route reaches the native craft deserializer but not the probed MainGame.OnGameLoaded postfix. There is no post-load numeric progress sample; the user's visual observation supplies that part of the evidence.
+- Ordinary material Study was completed; screenshot shows the native completion dialog and decomposition-form hint. The log also contains `Can't give back a craft item because it is null` at ordinary Survey completion before the first diagnostic job. Its cause is not established; do not characterize the entire modded session as error-free or attribute this to the research job.
+
+Installed environment includes Alchemy Research Redux 0.1.8, Decomp Delight! 0.1.9 and Save Now! 2.5.14. These are representative coexistence observations, not a clean-vanilla run or general compatibility guarantee. The user tested controller menu actions A/B; mouse input and pre-alchemy access were not independently demonstrated.
+
+UX feedback: the diagnostic work is too long for comfortable play; its 30 work units/10 energy remain test inputs, not adopted balance. Ending without a reward dialog is expected because this probe has no reward/notification. The modal A/B chooser works but is not desired final UX. Preferred next design is two tabs, normal Study and recipe research, with native-style tab navigation; exact integration remains to be verified. Do not rebuild 0.1.0 with changed timing or tabs.

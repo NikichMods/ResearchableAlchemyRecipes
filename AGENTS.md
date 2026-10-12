@@ -7,7 +7,7 @@ Follow [NikichMods/DevRules/WORKING_RULES.md](https://github.com/NikichMods/DevR
 - Project: Researchable Alchemy Recipes.
 - Repository: NikichMods/ResearchableAlchemyRecipes (public).
 - Target: Graveyard Keeper 1.407, Windows PC, BepInEx 5.
-- Phase: adopted product concept; design and mechanism verification. No production source or production candidate yet. Research-only Study Table Work Probe exists on research/study-table-work; its runtime acceptance is pending.
+- Phase: adopted product concept; design and mechanism verification. No production source or production candidate yet. Research-only Study Table Work Probe on research/study-table-work has verified the bounded native work/save-menu-load lifecycle; final UI, formula reward and full process-restart evidence remain open.
 - Purpose: target-directed paid recipe learning with ingredient-source guidance, followed by ordinary vanilla material study and production.
 
 ## Canonical documents
