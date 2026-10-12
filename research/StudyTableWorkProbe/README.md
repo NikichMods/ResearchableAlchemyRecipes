@@ -2,7 +2,9 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.12, expanded-card gamepad scroll correction
+## Current bounded accepted candidate: 0.1.12, expanded-card gamepad scroll correction
+
+Returned exact DLL/log plus user screenshot accept the last-row gamepad correction. Do not repeat this matrix for recovery. Next open presentation work is the adopted name/ingredients/energy alignment and clear unstudied-source instructions with a representative native negative-state check; current native prerequisite code alone is not installed display acceptance.
 
 Returned 0.1.11 establishes visible/mouse-readable source guidance, but the selected last row grows after the game's original auto-scroll and stays clipped on gamepad. 0.1.12 schedules one native-style 0.03s layout settle, redoes the selected row/grid, invalidates scroll bounds and calls the row's native PanelAutoScroll.Perform(false). It aborts for a destroyed/changed selection, closed window, disabled probe or changed input mode. No custom scrolling, Y workaround, recurring Update or ingredient/energy alignment change.
 

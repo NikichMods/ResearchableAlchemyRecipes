@@ -38,6 +38,8 @@ For an alchemical product known to the character, the player can follow a predic
 - Product entries use native item icons and names; a known product shows its known alternative formulas and ingredient composition. Partial knowledge must not reveal still-unknown variants before the remaining product research.
 - Product -> ingredient -> acquisition methods supplies the relevant material information; an unrelated all-material encyclopedia is not required.
 - Display remaining vanilla material-study requirements clearly and account for completed studies.
+- For a source blocked by native material Study, identify the material and make the next action clear: study that source at the study table before processing. Do not automatically study it as part of recipe research.
+- In the selected recipe card, ingredient widgets sit opposite the product name, with energy on the same horizontal line as the ingredients; source guidance follows below.
 - Tooltip vs detail-panel presentation and the exact mouse/gamepad layout remain subject to inspection and usability verification.
 
 ## Existing saves and invariants
