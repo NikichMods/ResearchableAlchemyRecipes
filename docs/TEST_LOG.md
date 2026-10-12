@@ -1,5 +1,16 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.3 — original tab artwork candidate
+
+**Status:** local compile and unchanged PNG embedding checks passed; exact handoff identity will be recorded after clean-source build. Installed rendering/tint acceptance pending.
+
+- Scope: two original user-selected 40x26 icons, preserved PNG bytes/full transparent canvases; native selected-state tint and existing input/work/close behavior.
+- Resource identities and provenance: research/StudyTableWorkProbe/assets/README.md. Embeds RAR.MaterialStudy.png and RAR.RecipeResearch.png in the single DLL; no adjacent PNG installation.
+- Mechanism/gate: scoped CraftTabGUI.Draw postfix assigns the sprite and 40x26 widget size only for the active study-table composition. Native lookup IDs remain valid, SetSelectedState remains the tint final writer. Direct scene icon widget is Center/54x32/Simple/pixel-size 1; full canvas is deliberately retained.
+- Local validation: exact handoff PNG hashes, RGBA 40x26 and binary alpha confirmed; compile with warnings as errors and installed ImageConversionModule reference passed. Both development DLL resources match their source hashes byte for byte. No new production behavior.
+- Minimum runtime check: inspect both active and dim icons, switch using mouse/gamepad and close/reopen. Return both page screenshots and log. RAR_TAB_ART_READY and RAR_TAB_ART_DRAW canvas=40x26 must be present; missing art, clipping/stretching, RAR_WORK_ERROR, restoration failure or changed unrelated tabs block acceptance. Existing picker-layer warnings remain a separate unresolved owner question.
+- No need to repeat work/save/reload. Starting any diagnostic job still creates save-persistent test state; clean using F8 beside the table and save after cleanup.
+
 ## Study Table Work Probe 0.1.2 — icon/close correction candidate, 2026-10-12
 
 **Status:** local compile/identity and deterministic key-map regression passed; returned 0.1.2 run confirms close correction and native icon rendering/usability. Remaining NGUI layer-warning investigation and final semantic icon choice are open. No production acceptance.

@@ -2,7 +2,17 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.2, native icons and safe key-map restoration
+## Current candidate: 0.1.3, original artwork integration
+
+Question: render the two user-selected original PNGs in the existing native tabs, with exact canvases, sharp sampling and native selected/dim tint. This is a bounded presentation-only research candidate; no work, input, pricing, formula reward or picker-layer fix. The unchanged 0.1.2 composition/close evidence remains baseline.
+
+Native owner/final writer: CraftTabGUI.Draw assigns UI2DSprite.sprite2D; subsequent SetSelectedState owns colour. A table-local Draw postfix replaces only the copied tab icon, preserving its inspected centered transform, and sets its widget to the complete 40x26 canvas. Direct level2 inspection finds native icon widgets at 54x32, pivot Center (4), pixel size 1, Simple fill. No custom label, panel, atlas registration or global sprite replacement is added. Existing book / ?alch IDs keep native lookup valid before the scoped replacement; other workbench tabs are unaffected.
+
+TabArtwork decodes the embedded originals once after the verified-host check, validates PNG hashes and canvas size, creates centered FullRect sprites, uses Point filtering/Clamp wrapping and releases owned sprites/textures on plugin destruction. Both final PNGs are unchanged and tracked as original software-supporting assets under MPL-2.0; private drafts/game references remain ignored. The compiler adds the installed ImageConversionModule reference and embeds both PNGs, so delivery remains a single DLL. Local compile and byte-preserving embedded-resource checks passed; installed rendering remains pending.
+
+Minimum check: replace the previous probe DLL, retaining one copy. Open both pages; switch by mouse/gamepad and close/reopen once. Return screenshots of both selected states and LogOutput.log. Check icons are sharp, fully visible, aligned and recognisable when dimmed. Expected RAR_TAB_ART_READY and RAR_TAB_ART_DRAW canvas=40x26, plus established paired restore/close markers. No work/save/reload repetition is needed. If a job is started, F8 cleanup and save remain required. Existing picker-layer warnings are not claimed fixed.
+
+## Frozen 0.1.2 icon/close correction baseline, native icons and safe key-map restoration
 
 Question: retain the user-tested two-tab Survey/craft-card composition while eliminating the identified close-time Dictionary enumeration failure and missing-icon errors. Native formula reward remains excluded. 0.1.1 source/artifact stays frozen; its returned results and limits are in docs/TEST_LOG.md.
 

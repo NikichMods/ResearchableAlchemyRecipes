@@ -198,6 +198,26 @@ namespace NikichMods.Research
             }
         }
 
+        [HarmonyPatch(typeof(CraftTabGUI), "Draw")]
+        private static class OriginalArtwork
+        {
+            private static void Postfix(CraftTabGUI __instance, WorldGameObject craftery_wgo, string tab_id)
+            {
+                if (!Active || craftery_wgo != table || (tab_id != StudyTab && tab_id != ResearchTab)) return;
+                try
+                {
+                    // Keep native selection tint and the inspected centered icon transform.
+                    // Draw uses existing native IDs first; no missing sprite lookup or atlas edits.
+                    var icon = __instance.spr_icon;
+                    icon.sprite2D = TabArtwork.Get(tab_id == StudyTab);
+                    icon.width = 40;
+                    icon.height = 26;
+                    StudyTableWorkProbe.Write("RAR_TAB_ART_DRAW tab=" + tab_id + " canvas=" + icon.width + "x" + icon.height);
+                }
+                catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
+            }
+        }
+
         [HarmonyPatch(typeof(CraftGUI), "Hide")]
         private static class OuterClose
         {
