@@ -69,6 +69,9 @@ namespace NikichMods.Research
                 icons.topAnchor.target = null; icons.bottomAnchor.target = null;
                 row.txt_spend.topAnchor.target = null; row.txt_spend.bottomAnchor.target = null;
                 Set(row.label_descr.rightAnchor, row.transform, 1f, -8);
+                icons.ResetAnchors();
+                row.txt_spend.ResetAnchors();
+                row.label_descr.ResetAnchors();
                 row.label_descr.UpdateAnchors();
             }
             private static float CenterY(UIWidget widget, Transform common)
@@ -86,7 +89,9 @@ namespace NikichMods.Research
                 UIWidget cell = null;
                 foreach (var candidate in cells)
                     if (candidate.gameObject.activeInHierarchy) { cell = candidate.GetComponent<UIWidget>(); if (cell != null) break; }
-                if (cell == null) throw new InvalidOperationException("No visible native ingredient widget to measure");
+                // Native Open builds/redraws cards before activating the full hierarchy.
+                // Rendering readiness is not a host-contract failure or a knowledge failure.
+                if (cell == null) return;
                 float desired = CenterY(row.label_name, row.transform) - HeaderDown;
                 float ingredientBefore = CenterY(cell, row.transform) - desired;
                 float energyBefore = CenterY(row.txt_spend, row.transform) - desired;
@@ -117,6 +122,9 @@ namespace NikichMods.Research
                 energyTop.Restore(row.txt_spend.topAnchor); energyBottom.Restore(row.txt_spend.bottomAnchor);
                 textRight.Restore(row.label_descr.rightAnchor);
                 if (amountGroup != null) amountGroup.localPosition = amountPosition;
+                icons.ResetAnchors();
+                row.txt_spend.ResetAnchors();
+                row.label_descr.ResetAnchors();
                 row.label_descr.UpdateAnchors();
             }
         }
@@ -350,6 +358,7 @@ namespace NikichMods.Research
         }
         internal static void Restore()
         {
+            GuidanceViewport.Restore();
             guidanceWindow = null;
             describing = null;
             var old = selected; selected = null;
@@ -420,6 +429,7 @@ namespace NikichMods.Research
                 if (!StudyTableWorkProbe.enabledProbe) return;
                 // Own the entire opened supported known-formula list, including other rows.
                 guidanceWindow = __instance.list_items.Exists(Supports) ? __instance : null;
+                if (guidanceWindow != null) GuidanceViewport.Enlarge(__instance);
                 if (BaseGUI.for_gamepad) return;
                 foreach (var row in __instance.list_items) if (Supports(row)) { Select(row); break; }
             }

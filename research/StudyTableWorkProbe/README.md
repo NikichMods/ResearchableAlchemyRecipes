@@ -2,6 +2,10 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
+## Current correction: 0.1.20
+
+Returned 0.1.19 has rejected broader presentation (huge first-pass heights, overlap and probe disable). Reset native anchor caches when switching owners and restoring them; skip optical measurement while native ingredient hierarchy is inactive. Resize only the supported native alchemy window using its measured frame/tips envelope and UI camera to 80% screen height, restoring on close. Source and knowledge policy remain unchanged. Local suites pass; installed rendering/navigation acceptance is pending. Inspect both tables, long three-input cards, repeated mouse/gamepad changes and close/reopen. Exact identity/evidence is in TEST_LOG.md.
+
 ## Current candidate: 0.1.19, broader known-formula guidance
 
 Guidance now supports every ordinary already-known formula at both manual alchemy tiers; exact knowledge, native station membership and The Beginning Of Alchemy remain mandatory. Native matched corpus is 43 formulas/34 products/35 ingredients, checked at metadata registration. Failure/goo recipes, automated tables and the picker exception are excluded. Unknown alternatives of a known product stay hidden. Existing room-paint research topics/economics/knowledge/manufacture remain unchanged.
