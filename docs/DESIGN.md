@@ -30,6 +30,7 @@ The authorized native formula reward/persistence investigation passed its bounde
 
 ## Working interaction model
 
+- Guidance discoverability concern (2026-10-12): a player seeing a missing ingredient may stop at its zero count without hovering/clicking it. The user prefers exploring information visibly integrated into the interface, while recognizing that source lines under every recipe could make the list excessively long. This is a design preference/question, not an adopted layout. Compare a visible guidance area for the selected recipe with scoped ingredient tooltips after inspecting native selection/expansion and mouse/gamepad ownership. Global reagent-tooltip enrichment is not adopted or required by the current plan; decide scope separately from presentation.
 - The study table presents eligible product research topics, required resources and work. Its native integration seam must be verified; ordinary item-insertion UI must not force the player to possess the unknown product.
 - Native alchemy-table lists expose known formulas. Contextual ingredient inspection supplies acquisition routes and required vanilla material study. Exact native tooltip/detail UI remains to be verified.
 - Short tooltips may be sufficient. Do not presume mouse/gamepad problems or require a separate panel without representative layout evidence; several source routes should remain readable and controllable.
