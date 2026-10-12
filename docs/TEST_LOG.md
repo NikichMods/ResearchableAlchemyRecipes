@@ -438,7 +438,9 @@ User requests a minor correction only if simple/reliable: single/double amount a
 
 ## Study Table Work Probe 0.1.18 — preserve native amount-container header position
 
-Status: local compile/regressions passed; clean source/artifact identity to follow. Installed visual acceptance pending. User requests only a simple optional layout correction; existing +9, heading palette/footer, quantity behavior and native input are preserved.
+Status: local compile/regressions and clean-source identity gate passed. Exact DLL installed with game closed; installed visual acceptance pending. User requests only a simple optional layout correction; existing +9, heading palette/footer, quantity behavior and native input are preserved.
+
+- Source 842a16d53aba5aac1102b55dbe9936f12e12fae6, research/study-table-work. DLL StudyTableWorkProbe-0.1.18.dll; plugin 0.1.18, assembly/file 0.1.18.0; SHA-256 63fb1bff645fc8c9f0c421416a0a1f1b7663528d3dae82f4c2d497d4a69cf5c1. Existing deterministic SDK gate/original artwork; installed bytes verified and prior 0.1.17 installed copy removed after its expected hash check. Previous numbered artifacts remain immutable.
 
 - READY bounded native-layout path: pinned native CraftItemGUI.amount_buttons points to the plain Transform container (no UIRect/own anchors) under selection_frame. Exact level2 prefab 24662: amount container local (-2,21,0), parent scale (1,1,1), frame vertical-centre pivot Left; frame stretches to the backing widget, whose vertical anchors exactly stretch to the row. no_multi_quality_height=44. Native Redraw grows row height from that baseline. Therefore extra height moves the amount-container parent centre down by exactly half of that growth.
 - Exact installed MaxButtons AddMinAndMaxButtons reads selection frame/amount buttons and clones Min/Max into the same native container; it changes child positions/sizes, not this container's transform. Its multiquality-specific alternative is outside the current known-yellow slice. Evidence remains private in work/palette/arrows-il.txt; no foreign source/assets copied.
