@@ -58,3 +58,9 @@ Next evidence must verify the table-local entry, installed registration/load/res
 ## Work-lifecycle runtime candidate — 2026-10-12
 
 Study Table Work Probe 0.1.0 passed its local compile/identity gate and the bounded installed work-lifecycle check; see TEST_LOG.md for exact source, binary/log hashes and observed values. Registration, sample-free start/payment, native work/cancellation, save/menu-load restoration, completion and cleanup are confirmed with the user's installed mod set. Full process restart, mouse control and pre-alchemy gate are not runtime-proved by this capture. The probe did not assign progress/completion or disclose formulas. Its A/B dialog is not the desired final UI. This evidence does not close the journal/two-tab UI, current-source eligibility, pricing/refunds or formula reward gates.
+
+## Two-tab UI candidate — 2026-10-12
+
+Static source plus direct level2 scene inspection establishes native CraftTabGUI layout, CraftGUI tab ownership and MixedCraftGUI's separate top-of-stack subwindow model. BaseGUI.Update handles semantic keys only for the shown top window; opening another native window disables the previous window's controller. ResourceBasedCraftGUI remains the real Survey owner in the research-only 0.1.1 composition. Exact scene hash, references, mechanism and residual uncertainty are documented in research/StudyTableWorkProbe/README.md.
+
+0.1.1 has passed its local compile/identity gate (TEST_LOG.md); its two-tab rendering, focus, picker return and close behavior have not been observed in the installed game. The 0.1.0 modal is replaced only in this new immutable candidate, and its diagnostic work-time input is shortened. Formula reward is unchanged/excluded.

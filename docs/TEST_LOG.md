@@ -1,5 +1,28 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.1 — two-tab candidate, 2026-10-12
+
+**Status:** local compile/identity gate passed; installed UI/layout/input test pending. No production UI acceptance.
+
+- Exact compiled source: `d72441d25ed868ac069180077d5e38f73fb8dba1`, research/study-table-work.
+- Artifact: `StudyTableWorkProbe-0.1.1.dll`; replace the previous installed copy as `StudyTableWorkProbe.dll`, do not install side by side.
+- SHA-256: `f7772345f6195073030872fbdfa6c2e3279d07cbedb15bfc92148f557f2fda31`.
+- Assembly/file versions: `0.1.1.0`; plugin/canonical source version: `0.1.1`. Build script derives artifact/manifest version from the code constant and asserts both binary versions.
+- Build: same local SDK 6.0.406 Roslyn and verified host/BepInEx references as 0.1.0; clean exact source, optimized deterministic output, warnings as errors. No proprietary inputs distributed.
+- Question: native two-tab composition, controller/mouse switching, material-picker return, paired close and layout restoration. The established work lifecycle is baseline, not a reason to repeat save/reload.
+- Changed diagnostic input: manual work time 30 -> 2 units. Other diagnostic costs stay 1 faith/1 science/10 energy; no formula disclosure or product balance decision.
+- Setup modifies only session UI layout and next/previous-tab delegates, restored on close. Starting the existing test job still creates save-persistent native craft state; use the test save and F8 cleanup after any job.
+
+Minimum user procedure:
+
+1. Replace 0.1.0 with this DLL, launch and open the study table on the existing suitable test save. There should be one common craft frame with Изучение / Рецепты tabs and no A/B entry dialog.
+2. Switch a few times with LB/RB. On Изучение open the real material picker, select an item or cancel, then switch again. If using a mouse, test tab clicks and return from the picker.
+3. Close from each tab and reopen. Check that ordinary Study remains usable and an unrelated workbench's tabs remain normal. Provide a screenshot of each tab and note overlap, clipping or lost focus.
+4. Optionally start the short test job to verify that the entire composed window closes on launch. A normal material Study can be performed if convenient. If a test job was started/completed, close menus, use F8 cleanup beside the table and save as in 0.1.0. No mid-work save/reload repetition is required.
+5. Return LogOutput.log. Expected markers are RAR_TABS_OPEN, RAR_TABS_SWITCH, RAR_TABS_RESTORE layout_restored=True and RAR_TABS_CLOSED outer=False study=False. RAR_WORK_ERROR or RAR_TABS_RESTORE_ERROR blocks acceptance. Visual/controller outcomes still require user observations even when log state looks correct.
+
+Nothing in the build result establishes correct layout/focus in the installed game. Formula reward, final text/art, source eligibility and refund economics remain separate gates. Numbered 0.1.0 and 0.1.1 artifacts are immutable.
+
 ## Study Table Work Probe 0.1.0 — work lifecycle verified, 2026-10-12
 
 **Status:** local compile gate passed; bounded installed-runtime work lifecycle confirmed by the returned log and user observations. This is not production/final-UI acceptance.
