@@ -33,6 +33,8 @@ namespace NikichMods.Research
         {
             private readonly Anchor iconTop, iconBottom, energyTop, energyBottom, textRight;
             private readonly UIWidget icons;
+            private readonly Transform amountGroup;
+            private readonly Vector3 amountPosition;
             private bool measured;
             internal Layout(CraftItemGUI row)
             {
@@ -41,6 +43,22 @@ namespace NikichMods.Research
                 iconTop = new Anchor(icons.topAnchor); iconBottom = new Anchor(icons.bottomAnchor);
                 energyTop = new Anchor(row.txt_spend.topAnchor); energyBottom = new Anchor(row.txt_spend.bottomAnchor);
                 textRight = new Anchor(row.label_descr.rightAnchor);
+                // Native amount container is a plain transform on a vertically centred,
+                // stretched selection frame. Preserve every child/button/mod-owned handler.
+                var frame = row.selection_frame;
+                var backing = frame == null || frame.topAnchor.target == null ? null : frame.topAnchor.target.GetComponent<UIWidget>();
+                if (row.amount_buttons != null && frame != null &&
+                    row.amount_buttons.transform.parent == frame.transform &&
+                    frame.pivot == UIWidget.Pivot.Left && frame.bottomAnchor.target == frame.topAnchor.target &&
+                    frame.topAnchor.relative == 1f && frame.bottomAnchor.relative == 0f &&
+                    backing != null && backing.topAnchor.target == row.transform && backing.bottomAnchor.target == row.transform &&
+                    backing.topAnchor.relative == 1f && backing.bottomAnchor.relative == 0f &&
+                    backing.topAnchor.absolute == 0 && backing.bottomAnchor.absolute == 0 && row.no_multi_quality_height > 0)
+                {
+                    amountGroup = row.amount_buttons.transform;
+                    amountPosition = amountGroup.localPosition;
+                }
+                else StudyTableWorkProbe.Write("RAR_GUIDANCE_AMOUNT status=unchanged reason=unsupported_native_group");
             }
             private static void Set(UIRect.AnchorPoint point, Transform target, float relative, int absolute)
             { point.target = target; point.relative = relative; point.absolute = absolute; }
@@ -76,12 +94,21 @@ namespace NikichMods.Research
                 MoveY(row.txt_spend.transform, row.transform, -energyBefore);
                 float ingredientError = CenterY(cell, row.transform) - desired;
                 float energyError = CenterY(row.txt_spend, row.transform) - desired;
+                if (amountGroup != null)
+                {
+                    // Native frame centre moves down by half of the row-height growth.
+                    // Restore the normal-row placement without guessing button coordinates.
+                    amountGroup.localPosition = amountPosition;
+                    float growth = row.GetComponent<UIWidget>().height - row.no_multi_quality_height;
+                    MoveY(amountGroup, row.transform, growth * 0.5f);
+                }
                 if (Math.Abs(ingredientError) > 0.1f || Math.Abs(energyError) > 0.1f)
                     throw new InvalidOperationException("Measured header alignment did not converge");
                 if (!measured && row.label_descr.width > 40)
                 {
                     measured = true;
                     StudyTableWorkProbe.Write("RAR_GUIDANCE_HEADER ingredient_before=" + ingredientBefore + " energy_before=" + energyBefore + " ingredient_after=" + ingredientError + " energy_after=" + energyError + " down_ui_pixels=" + HeaderDown + " owner=final_widget_bounds");
+                    if (amountGroup != null) StudyTableWorkProbe.Write("RAR_GUIDANCE_AMOUNT status=aligned owner=native_amount_container extra_height=" + (row.GetComponent<UIWidget>().height - row.no_multi_quality_height));
                 }
             }
             internal void Restore(CraftItemGUI row)
@@ -89,6 +116,7 @@ namespace NikichMods.Research
                 iconTop.Restore(icons.topAnchor); iconBottom.Restore(icons.bottomAnchor);
                 energyTop.Restore(row.txt_spend.topAnchor); energyBottom.Restore(row.txt_spend.bottomAnchor);
                 textRight.Restore(row.label_descr.rightAnchor);
+                if (amountGroup != null) amountGroup.localPosition = amountPosition;
                 row.label_descr.UpdateAnchors();
             }
         }

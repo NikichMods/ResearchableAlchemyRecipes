@@ -2,7 +2,15 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.17, whole-window readiness and native focus synchronization
+## Current candidate: 0.1.18, native amount-arrow container at normal header level
+
+Returned 0.1.17 has a clean checker/probe log and user-satisfactory inspection. User requests a simple correction for amount arrows that move down when guidance expands. Single arrows are native; current MaxButtons double arrows share their native amount_buttons container.
+
+After native redraw, move only this plain container upward by half of the native row-height increase over its normal height. Its stretched selection-frame parent caused exactly that downward displacement. Restore captured position first on each pass and on deselection/close, preserving child positions, handlers, hitboxes and native visibility. No new dependency on foreign button names/version/hooks. If the validated native parent/pivot/stretch structure differs, leave the arrows unchanged and report it. +9/palette/footer/input projection remain unchanged.
+
+Minimum check: expanded yellow and another row should keep the normal amount-arrow stack at header level; hover/use controls and close/reopen. No research/craft/restart repetition. Agent reads local log; RAR_GUIDANCE_AMOUNT reports aligned or unchanged. Installed visual acceptance pending.
+
+## Frozen 0.1.17, whole-window readiness and native focus synchronization
 
 User accepts 0.1.16's visuals, but its input guard retains 42 MaxButtons checker errors and gamepad quantity appears blocked. This correction keeps +9, palette/footer and native navigation unchanged. The one unreproduced down-navigation episode remains unassigned.
 
