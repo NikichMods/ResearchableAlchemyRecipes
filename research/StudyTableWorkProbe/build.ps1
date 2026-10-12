@@ -31,6 +31,8 @@ if ($LASTEXITCODE -ne 0) { throw "Compilation failed: $LASTEXITCODE" }
 if ($CheckOnly) { Write-Output 'Compile check passed (development source, not a handoff artifact)'; return }
 $version = [Reflection.AssemblyName]::GetAssemblyName($output).Version.ToString()
 if ($version -ne ($probeVersion+'.0')) { throw 'Artifact version mismatch' }
+$fileVersion = [Diagnostics.FileVersionInfo]::GetVersionInfo($output).FileVersion
+if ($fileVersion -ne ($probeVersion+'.0')) { throw 'File version mismatch' }
 $hash = (Get-FileHash -LiteralPath $output -Algorithm SHA256).Hash.ToLowerInvariant()
 $manifest = [ordered]@{ version=$probeVersion; source=$sourceHead; compiler='SDK 6.0.406 Roslyn'; artifact=(Split-Path $output -Leaf); sha256=$hash; references=@($refs | ForEach-Object { [ordered]@{ name=(Split-Path $_ -Leaf); sha256=(Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash.ToLowerInvariant() } }) }
 $manifest | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $outDir 'build-identity.json') -Encoding utf8
