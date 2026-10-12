@@ -2,7 +2,11 @@
 
 ## Study Table Work Probe 0.1.3 — original tab artwork candidate
 
-**Status:** local compile and unchanged PNG embedding checks passed; exact handoff identity will be recorded after clean-source build. Installed rendering/tint acceptance pending.
+**Status:** local compile/identity and unchanged PNG embedding checks passed; installed rendering/tint acceptance pending.
+
+- Exact compiled source: fc719ca0f9561f0f77bdcd1147416b8d1fde5ce2, research/study-table-work.
+- Artifact: StudyTableWorkProbe-0.1.3.dll; SHA-256 7ac0a4bc80cd86f5114bd896f2ef36501cf5debf06e75b40e7c80afc164a8e09. Plugin version 0.1.3; assembly/file versions 0.1.3.0.
+- Clean-source optimized deterministic handoff build, SDK 6.0.406 Roslyn, warnings as errors. Both resource byte hashes also checked in the exact handed binary; source canvases remain unchanged. Previous numbered artifacts remain frozen.
 
 - Scope: two original user-selected 40x26 icons, preserved PNG bytes/full transparent canvases; native selected-state tint and existing input/work/close behavior.
 - Resource identities and provenance: research/StudyTableWorkProbe/assets/README.md. Embeds RAR.MaterialStudy.png and RAR.RecipeResearch.png in the single DLL; no adjacent PNG installation.
