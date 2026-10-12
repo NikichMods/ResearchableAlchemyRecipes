@@ -220,3 +220,13 @@ Minimum user procedure:
 4. Remove the observer DLL whenever desired; it requires no save cleanup. Formula-reward restart tests do not need repeating.
 
 Expected evidence: RAR_SOURCE_READY read_only=True, current native visibility/knowledge counts for all seven paint channels, RAR_SOURCE_NATIVE_BUILD counts through the actual opened native builder, and Spices state/remaining formula count. Native cure-option rendering is an optional independent observation; affordability is logged separately. A missing builder observation or RAR_SOURCE_ERROR is not a pass. First-observation builder presence alone is not labeled verified physical reachability. Locked/new-save negative states and source coverage beyond these eight products remain untested.
+
+## Source Eligibility Probe 0.1.0 withdrawal
+
+User reports infinite load/unresponsive game and confirms loading returns after removal of only Source Eligibility Probe. Original observed LogOutput.log SHA-256 at inspection: 94e228ebbddab4c2b2b98468e4eed3cbf0b7f03ab8955be556d298db9d0ebb1a. It contains version 0.1.0 READY but no source census/ERROR, and stops during native object restoration after progress 0.05. It was overwritten by the comparison launch before full raw archival; the inspected tool output remains in chat. Do not mistake the privately archived baseline-loading-partial.log (9fdb1d2952d7a0a37cc1184854b1a6e63559d5cc5cd8501e9561384ffaa63ca0) for the failed launch.
+
+The baseline launch without any Source Eligibility Probe reaches native PrepareAfterLoad, Loading GUI Hide and OnGameStartedPlaying. User confirms playable loading. Exact baseline-loaded.log snapshot hash is recorded below; raw snapshot is ignored/private. This confirms the failure is associated with introducing this observer, not the precise failing call. No native source availability observation was reached; 0.1.0 is not accepted. No probe save writer exists, but that does not guarantee startup safety.
+
+Current containment candidate 0.1.1 removes all Harmony patches and automatic native reads. F9 only after load/open builder performs a bounded snapshot using existing balance _instance with before/after query markers. Compile passes. Existing formula probe remains unchanged. Actual loading and snapshot success are pending; do not represent the removed risk as proven root cause or resolution.
+
+Baseline-loaded.log SHA-256: 2303f2fba92f4a0a8145ab657cc0b757cb6fa7396ce60bf67dda4148f3a57f07. No Source Eligibility Probe startup entry is present. This is the successful comparison snapshot, not the original failed log. Frozen 0.1.0 artifact/source remain unchanged.

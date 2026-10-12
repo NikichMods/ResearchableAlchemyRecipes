@@ -112,3 +112,7 @@ Pinned source remains Kupie/GYK_DECOMP@6abf79199d92482af1c7573870dd9a20ec2270b9.
 - KnownNPCList.GetNPC is noncreating; GetOrCreateNPC would register a meeting and can invoke achievements. Eligibility readers must use the noncreating path.
 
 Research-only Source Eligibility Probe 0.1.0 measures those native loaded inputs and actual final builder/dialogue presentation without modifying formulas, progression, work or save state. Scope: seven paint gaps and Spices; this is not a 34/34 eligibility claim or production topic registration. Installed positive availability evidence remains pending.
+
+## Source observer regression limit
+
+Returned Source Eligibility Probe 0.1.0 run fails to finish loading; removing only it restores loading per user report and native successful-baseline log. No source census is reached. Thus the current-source eligibility hypothesis is still unverified; prior static graph/visibility/disclosure findings are unaffected. 0.1.0 is withdrawn. GameBalance.me can invoke native loading/cache construction when its instance is absent, so it must not be used as a harmless readiness check. That source fact identifies a risk, not the demonstrated cause of this freeze. Zero-patch manual 0.1.1 containment uses the already-loaded field and explicit post-load trigger, with installed execution pending. Exact evidence/candidate identity belongs to TEST_LOG.md.
