@@ -230,3 +230,12 @@ The baseline launch without any Source Eligibility Probe reaches native PrepareA
 Current containment candidate 0.1.1 removes all Harmony patches and automatic native reads. F9 only after load/open builder performs a bounded snapshot using existing balance _instance with before/after query markers. Compile passes. Existing formula probe remains unchanged. Actual loading and snapshot success are pending; do not represent the removed risk as proven root cause or resolution.
 
 Baseline-loaded.log SHA-256: 2303f2fba92f4a0a8145ab657cc0b757cb6fa7396ce60bf67dda4148f3a57f07. No Source Eligibility Probe startup entry is present. This is the successful comparison snapshot, not the original failed log. Frozen 0.1.0 artifact/source remain unchanged.
+
+## Source Eligibility Probe 0.1.1 — manual containment candidate (runtime pending)
+
+- Source: 25e3f834d04b1c1b07b218496c23328766298e1f, research/study-table-work; clean exact-source handoff.
+- DLL: SourceEligibilityProbe-0.1.1.dll, assembly/file version 0.1.1.0, plugin version 0.1.1.
+- SHA-256: 067fb2a69daf0328abb351dca6cbe20c37176052b302dba03c2322048e8b0d4d.
+- Local deterministic C# 7.3 warnings-as-errors compile and handoff identity/version checks pass. Source inspection confirms no Harmony patch attributes/calls, no automatic host reads in Update before positive F9 and no GameBalance.me access. This structural containment does not prove the cause of 0.1.0's freeze or actual runtime correction.
+
+Minimum procedure after the user-confirmed successful observer-free baseline: install only this Source Eligibility Probe version, load the same save, open the keeper's house room-decoration builder and press F9 once while its window is shown. Return LogOutput.log; success requires READY patches=0, TRIGGER, completed query before/after pairs, native card counts and DONE. If load fails without F9, no census/native balance read has been requested. If it fails after F9, the last before/after pair bounds the native query. Remove the observer whenever desired; no save cleanup is needed. Do not reinstall frozen 0.1.0. Formula persistence tests are not repeated. Source availability and corrected observer acceptance remain pending.
