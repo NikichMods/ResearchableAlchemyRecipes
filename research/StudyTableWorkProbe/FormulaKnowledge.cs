@@ -142,18 +142,19 @@ namespace NikichMods.Research
             private static void Postfix(GameSave __instance, CraftDefinition craft, ref bool __result)
             {
                 if (craft.id == StudyTableWorkProbe.JobId) __result = false;
-                if (craft.id == Job) __result = __result && StudyTableWorkProbe.enabledProbe && Has(__instance, Prepared) && Known(__instance) < formulas.Count;
+                // Frozen synthetic experiment remains registered only for old-save cleanup/resolution.
+                if (craft.id == Job) __result = false;
             }
         }
         [HarmonyPatch(typeof(GameSave), "PrepareAfterLoad")]
         private static class Loaded
         {
-            private static void Postfix(GameSave __instance) { Status("native_prepare_after_load", __instance); }
+            private static void Postfix(GameSave __instance) { Status("native_prepare_after_load", __instance); SourceResearch.Status("native_prepare_after_load", __instance); }
         }
         [HarmonyPatch(typeof(GameSave), "ToBinary")]
         private static class Saving
         {
-            private static void Postfix(GameSave __instance) { Status("native_to_binary_returned", __instance); }
+            private static void Postfix(GameSave __instance) { Status("native_to_binary_returned", __instance); SourceResearch.Status("native_to_binary_returned", __instance); }
         }
         [HarmonyPatch(typeof(CraftGUI), "OpenAsAlchemy")]
         private static class NativeCards

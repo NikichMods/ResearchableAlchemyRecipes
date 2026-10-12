@@ -21,6 +21,7 @@ namespace NikichMods.Research
         {
             var save = MainGame.me.save;
             return Allow(component.is_crafting, save.completed_one_time_crafts.Contains(craft.id),
+                SourceResearch.IsJob(craft.id) ? SourceResearch.ReadyToStart(craft.id, save) :
                 craft.id != FormulaKnowledge.Job || FormulaKnowledge.HasRemaining(save));
         }
         internal static int RemoveQueued(List<CraftComponent.CraftQueueItem> queue)

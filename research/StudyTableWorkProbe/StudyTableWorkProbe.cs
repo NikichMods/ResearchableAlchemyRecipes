@@ -10,8 +10,8 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.9.0")]
-[assembly: AssemblyFileVersion("0.1.9.0")]
+[assembly: AssemblyVersion("0.1.10.0")]
+[assembly: AssemblyFileVersion("0.1.10.0")]
 
 namespace NikichMods.Research
 {
@@ -19,7 +19,7 @@ namespace NikichMods.Research
     [BepInDependency("p1xel8ted.gyk.maxbuttonsredux", BepInDependency.DependencyFlags.SoftDependency)]
     public sealed class StudyTableWorkProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.9";
+        public const string Version = "0.1.10";
         internal const string JobId = "rar_probe_work_010";
         private const string TableId = "mf_alchemy_survey";
         private const string Technology = "The Beginning Of Alchemy";
@@ -67,7 +67,7 @@ namespace NikichMods.Research
             try
             {
                 DumpActive("RAR_WORK_STATUS");
-                if (enabledProbe) FormulaKnowledge.Menu();
+                if (enabledProbe) SourceResearch.Menu();
                 else GUIElements.me.dialog.Open("Пробник отключён после ошибки", "Убрать тестовое состояние", Cleanup,
                     "Закрыть", null, null, GameKey.Select, GameKey.Back, "Очистка доступна. После неё сохраните игру.");
             }
@@ -82,7 +82,7 @@ namespace NikichMods.Research
             if (Log != null) Log.LogError("RAR_WORK_ERROR action=disabled fallback=vanilla " + ex);
         }
         internal static bool IsJob(CraftDefinition craft) { return craft != null && IsJobId(craft.id); }
-        internal static bool IsJobId(string id) { return id == JobId || id == FormulaKnowledge.Job; }
+        internal static bool IsJobId(string id) { return id == JobId || id == FormulaKnowledge.Job || SourceResearch.IsJob(id); }
         private static bool IsTable(WorldGameObject table) { return table != null && table.obj_id == TableId; }
 
         internal static void Cleanup()
@@ -103,6 +103,8 @@ namespace NikichMods.Research
                 }
                 int removed = MainGame.me.save.completed_one_time_crafts.RemoveAll(id => id == JobId);
                 FormulaKnowledge.Restore(MainGame.me.save);
+                int sourceMarkers = SourceResearch.Cleanup(MainGame.me.save);
+                Write("RAR_TOPICS_CLEANUP job_markers_removed=" + sourceMarkers + " earned_native_knowledge_preserved=True");
                 Write("RAR_WORK_CLEANUP canceled=" + canceled + " last_cleared=" + cleared + " markers_removed=" + removed + " queued_entries_removed=" + queued);
                 DumpActive("RAR_WORK_CLEAN");
                 GUIElements.me.dialog.OpenOK("Тестовое состояние убрано. Сохраните игру перед удалением пробника.");
@@ -175,6 +177,7 @@ namespace NikichMods.Research
                         });
                     }
                     FormulaKnowledge.Register(balance);
+                    SourceResearch.Register(balance);
                     registrationSeen = true;
                     Write("RAR_WORK_REGISTER phase=before_id_cache added=" + (existing == null));
                 }
@@ -185,7 +188,11 @@ namespace NikichMods.Research
                 if (!enabledProbe || !(__instance is GameBalance)) return;
                 if (__instance.GetDataOrNull<CraftDefinition>(JobId) == null || __instance.GetDataOrNull<CraftDefinition>(FormulaKnowledge.Job) == null)
                     Fail(new InvalidOperationException("Registered job is not resolvable through native ID cache"));
-                else Write("RAR_WORK_REGISTER phase=after_id_cache resolved=True");
+                else
+                {
+                    try { SourceResearch.VerifyCache((GameBalance)__instance); Write("RAR_WORK_REGISTER phase=after_id_cache resolved=True"); }
+                    catch (Exception ex) { Fail(ex); }
+                }
             }
         }
 
@@ -202,6 +209,7 @@ namespace NikichMods.Research
                     if (!unlocked || craftery_wgo.components.craft.is_crafting) return true;
                     if (!registrationSeen || GameBalance.me.GetDataOrNull<CraftDefinition>(JobId) == null)
                         throw new InvalidOperationException("Job registration missed the real load lifecycle");
+                    SourceResearch.Refresh(MainGame.me.save);
                     StudyTabs.Open(craftery_wgo);
                     return false;
                 }
@@ -257,7 +265,8 @@ namespace NikichMods.Research
                 if (!enabledProbe || !IsJob(craft)) return;
                 try
                 {
-                    if (craft.id == FormulaKnowledge.Job) FormulaKnowledge.Complete(__instance);
+                    if (SourceResearch.IsJob(craft.id)) SourceResearch.Complete(craft.id, __instance);
+                    else if (craft.id == FormulaKnowledge.Job) FormulaKnowledge.Complete(__instance);
                     else Write("RAR_WORK_COMPLETE native_marker=" + __instance.completed_one_time_crafts.Contains(JobId) + " formulas=0");
                 }
                 catch (Exception ex) { Fail(ex); }
