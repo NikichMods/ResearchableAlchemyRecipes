@@ -116,3 +116,11 @@ Research-only Source Eligibility Probe 0.1.0 measures those native loaded inputs
 ## Source observer regression limit
 
 Returned Source Eligibility Probe 0.1.0 run fails to finish loading; removing only it restores loading per user report and native successful-baseline log. No source census is reached. Thus the current-source eligibility hypothesis is still unverified; prior static graph/visibility/disclosure findings are unaffected. 0.1.0 is withdrawn. GameBalance.me can invoke native loading/cache construction when its instance is absent, so it must not be used as a harmless readiness check. That source fact identifies a risk, not the demonstrated cause of this freeze. Zero-patch manual 0.1.1 containment uses the already-loaded field and explicit post-load trigger, with installed execution pending. Exact evidence/candidate identity belongs to TEST_LOG.md.
+
+## Loaded source agreement — Source Eligibility Probe 0.1.1
+
+Returned exact-DLL/log evidence in TEST_LOG.md confirms successful native loading and one completed manual F9 census. Native IsCraftVisible room-blueprint counts and already-rendered OpenAsBuild cards agree for all 26 records/seven paint products on this save. Actual shown room builder confirms the exercised positive access boundary. Two products are natively known and five remain researchable within this measured source subset. Spices has one known formula and a completed Merchant task, so no missing formula remains.
+
+This closes the bounded positive room-source reconstruction dependency: read native unlocked technology, actual available room builder and its native blueprint visibility, then subtract existing formula knowledge. It does not establish negative/early states, every possible physical/source gate, all 34 product sources or production automatic-topic behavior. Manual containment avoids the prior load freeze in this returned run; original freeze cause remains unknown.
+
+The same log reveals 78 repeated MaxButtonsRedux gamepad-input null-reference stacks after our Study window opens and before F9. Actual interaction/input state must be inspected before source-topic/UI expansion; root cause is not assigned. This compatibility gate is separate from the verified source-card agreement and is not a clean-vanilla result.
