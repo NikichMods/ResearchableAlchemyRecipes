@@ -1,5 +1,20 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.2 — icon/close correction candidate, 2026-10-12
+
+**Status:** local compile/identity and deterministic key-map regression passed; installed verification pending. No production or final-art acceptance.
+
+- Exact compiled source: `e8c0d4da66ec1280340113ba3d7bedb956a5f2a8`, research/study-table-work.
+- Artifact: `StudyTableWorkProbe-0.1.2.dll`; SHA-256 `7b914ee5e4904241e8e4a0ea0aebd25f56d550c2399e93c2a2ea3141c708ad0f`. Assembly/file versions `0.1.2.0`, plugin version `0.1.2`.
+- Build: clean exact source, same SDK 6.0.406 Roslyn/verified references, optimized deterministic output, warnings as errors; assembly/file versions asserted. Numbered 0.1.1 remains frozen.
+- Changes: native quill/scroll and paired-flask tab icons via book / ?alch; removes the caption patch and nonexistent sprite requests. Installs a separate key-map copy and restores the field reference without modifying the live enumerated dictionary. Rollback assertion now checks original dictionary identity too.
+- Local regression: .NET Framework reproduces the old existing-value mutation exception in the BaseGUI-style key loop; replacement completes the loop and restores the exact original map. This proves collection semantics, not Unity/Harmony integration.
+- Diagnostic job ID, costs, 2-unit work time, no formula reward and F8 cleanup remain unchanged. Starting a job is save-persistent; use the test save, clean beside the table and save after cleanup before removal.
+
+Minimum user check: replace the previous installed copy, retaining one probe DLL. Open the table, inspect both icons/selected tint and switch by mouse and LB/RB. Open/select/cancel the Study picker; close/reopen from each page with Back/Esc and also test right-click closing. Return an icon screenshot and LogOutput.log. No repeat of established mid-work save/load or long work is needed; a job is optional for launch-close coverage.
+
+Acceptance blockers: any Collection was modified/BaseGUI.Update enumeration exception, missing tab sprites, RAR_WORK_ERROR/RAR_TABS_RESTORE_ERROR, layout_restored=False or an owner left shown. Inspect NGUI layer warnings separately: six occurred in 0.1.1 and their cause is unassigned; this candidate does not claim their removal. Native reward/persistence and current source eligibility remain independent future gates.
+
 ## Study Table Work Probe 0.1.1 — two-tab candidate, 2026-10-12
 
 **Status:** local compile/identity gate passed; installed usability demonstrated, but close/key-map errors block UI acceptance. No production UI acceptance.
