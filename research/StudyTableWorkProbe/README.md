@@ -2,7 +2,15 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.13, Study markers and header alignment
+## Current candidate: 0.1.14, measured visible-header alignment
+
+Returned 0.1.13 header alignment fails; marker colour/shared explanation/one-line sulfur route are user-approved. The correction measures final native visible-cell/name/energy UIWidget bounds after native Redraw and converts to the same row-local coordinates; only vertical positions move by their actual center difference. No guessed pixel offset. Original native anchors restore on deselection/close; header residuals are checked/logged in RAR_GUIDANCE_HEADER. Native horizontal geometry, font, wider text and accepted scrolling are preserved. Actual optical alignment remains a user visual gate.
+
+Footer now reads "Для использования отмеченных материалов требуется изучение на исследовательском столе." Preview heading is removed from recipe content; F8 menu/dialog/log still explicitly explain that sulfur-pending preview changes only display while native sulfur is actually studied on the returned save. No persistent flag or mill/knowledge change.
+
+Minimal check: replace with one 0.1.14 DLL, open yellow normally and inspect name/ingredients/energy line; move away/back and close/reopen on gamepad/mouse. F8 preview through the existing path checks the clean source marker/footer without the extra heading. Return one normal/preview screenshot and log with measured header residuals. No paid research, manufacture or restart test needed. If geometric center is insufficient for optical preference, use bounded live calibration on the measured coordinate system rather than another guessed offset.
+
+## Frozen 0.1.13, Study markers and header alignment
 
 Selected known-yellow guidance uses "[не изучено]" on native unstudied decomposition-source routes and one conditional footer directing marked materials to the study table. Ordinary producer paths get no invented Study gate. Native font is unchanged; description extends to the row's right edge below the header. Ingredient widgets and energy have their vertical center anchored to the name label, preserving horizontal geometry and native crafting. Original anchors restore on redraw/deselection/close. Accepted deferred gamepad scroll remains.
 

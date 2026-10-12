@@ -123,7 +123,7 @@ public static class SourceTopicTests
         Assert(pending.Contains("[не изучено]") && pending.Contains("исследовательском столе"), "Unstudied native source lacks marker/instruction");
         catalogue["reagent"].Add(producer);
         var multiplePending = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });
-        Assert(multiplePending.IndexOf("Отмеченные материалы", StringComparison.Ordinal) == multiplePending.LastIndexOf("Отмеченные материалы", StringComparison.Ordinal), "Shared instruction duplicated per alternative");
+        Assert(multiplePending.IndexOf("Для использования", StringComparison.Ordinal) == multiplePending.LastIndexOf("Для использования", StringComparison.Ordinal), "Shared instruction duplicated per alternative");
         catalogue["reagent"].RemoveAt(1);
         host.save.completed_one_time_crafts.Add("surv:source");
         var studied = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });
@@ -132,7 +132,7 @@ public static class SourceTopicTests
         host.save.completed_one_time_crafts.Add("surv:sulfur");
         var baselineKnowledge = new HashSet<string>(host.save.completed_one_time_crafts);
         var preview = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, true });
-        Assert(preview.Contains("Просмотр") && preview.Contains("[не изучено]") && baselineKnowledge.SetEquals(host.save.completed_one_time_crafts), "View preview mutates native knowledge or is unlabelled");
+        Assert(!preview.Contains("Просмотр:") && preview.Contains("[не изучено]") && baselineKnowledge.SetEquals(host.save.completed_one_time_crafts), "Preview changes knowledge or leaks diagnostic heading into recipe");
         producer.craft_type = CraftDefinition.CraftType.None;
         host.save.completed_one_time_crafts.Remove("surv:sulfur");
         var ordinary = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });

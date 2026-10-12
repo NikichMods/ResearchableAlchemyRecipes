@@ -30,6 +30,7 @@ namespace NikichMods.Research
         {
             private readonly Anchor iconTop, iconBottom, energyTop, energyBottom, textRight;
             private readonly UIWidget icons;
+            private bool measured;
             internal Layout(CraftItemGUI row)
             {
                 icons = row.ingredients_table.GetComponent<UIWidget>();
@@ -42,15 +43,43 @@ namespace NikichMods.Research
             { point.target = target; point.relative = relative; point.absolute = absolute; }
             internal void Apply(CraftItemGUI row)
             {
-                // Inspected ingredient-table children have y=0 and centered cells. Keep native
-                // horizontal anchors; pin their center and energy to the name-label center.
-                Set(icons.topAnchor, row.label_name.transform, 0.5f, 1);
-                Set(icons.bottomAnchor, row.label_name.transform, 0.5f, -1);
-                int half = row.txt_spend.height / 2;
-                Set(row.txt_spend.topAnchor, row.label_name.transform, 0.5f, half);
-                Set(row.txt_spend.bottomAnchor, row.label_name.transform, 0.5f, half - row.txt_spend.height);
+                // Vertical group anchors are not the visible-cell geometry after UITable
+                // layout. Preserve horizontal owners and align actual final widgets below.
+                icons.topAnchor.target = null; icons.bottomAnchor.target = null;
+                row.txt_spend.topAnchor.target = null; row.txt_spend.bottomAnchor.target = null;
                 Set(row.label_descr.rightAnchor, row.transform, 1f, -8);
                 row.label_descr.UpdateAnchors();
+            }
+            private static float CenterY(UIWidget widget, Transform common)
+            {
+                var corners = widget.worldCorners;
+                return common.InverseTransformPoint((corners[0] + corners[2]) * 0.5f).y;
+            }
+            private static void MoveY(Transform target, Transform common, float delta)
+            {
+                target.localPosition += target.parent.InverseTransformVector(common.TransformVector(new Vector3(0, delta, 0)));
+            }
+            internal void AlignFinal(CraftItemGUI row)
+            {
+                var cells = row.ingredients_table.GetComponentsInChildren<BaseItemCellGUI>();
+                UIWidget cell = null;
+                foreach (var candidate in cells)
+                    if (candidate.gameObject.activeInHierarchy) { cell = candidate.GetComponent<UIWidget>(); if (cell != null) break; }
+                if (cell == null) throw new InvalidOperationException("No visible native ingredient widget to measure");
+                float desired = CenterY(row.label_name, row.transform);
+                float ingredientBefore = CenterY(cell, row.transform) - desired;
+                float energyBefore = CenterY(row.txt_spend, row.transform) - desired;
+                MoveY(icons.transform, row.transform, -ingredientBefore);
+                MoveY(row.txt_spend.transform, row.transform, -energyBefore);
+                float ingredientError = CenterY(cell, row.transform) - desired;
+                float energyError = CenterY(row.txt_spend, row.transform) - desired;
+                if (Math.Abs(ingredientError) > 0.1f || Math.Abs(energyError) > 0.1f)
+                    throw new InvalidOperationException("Measured header alignment did not converge");
+                if (!measured && row.label_descr.width > 40)
+                {
+                    measured = true;
+                    StudyTableWorkProbe.Write("RAR_GUIDANCE_HEADER ingredient_before=" + ingredientBefore + " energy_before=" + energyBefore + " ingredient_after=" + ingredientError + " energy_after=" + energyError + " owner=final_widget_bounds");
+                }
             }
             internal void Restore(CraftItemGUI row)
             {
@@ -108,7 +137,6 @@ namespace NikichMods.Research
         {
             var text = new StringBuilder("[C9D8DC]Как получить ингредиенты[-]");
             bool pending = false;
-            if (preview) text.Append("\n[E5B86D]Просмотр: сера не изучена[-]");
             foreach (var ingredient in formula.needs)
             {
                 text.Append("\n\n").Append(name(ingredient.id)).Append(":");
@@ -134,7 +162,7 @@ namespace NikichMods.Research
                     if (route.condition.has_expression) text.Append(" (есть дополнительное условие)");
                 }
             }
-            if (pending) text.Append("\n\n[E5B86D]Отмеченные материалы сначала изучите на исследовательском столе.[-]");
+            if (pending) text.Append("\n\n[E5B86D]Для использования отмеченных материалов требуется изучение на исследовательском столе.[-]");
             return text.ToString();
         }
         private static string Text(CraftDefinition formula) { return BuildText(formula, routes, MainGame.me.save, Name, previewUnstudied); }
@@ -227,6 +255,11 @@ namespace NikichMods.Research
             private static Exception Finalizer(CraftItemGUI __instance, Exception __exception, CraftDefinition __state)
             {
                 describing = __state;
+                if (__exception == null && StudyTableWorkProbe.enabledProbe && __instance == selected)
+                {
+                    try { layouts[__instance].AlignFinal(__instance); }
+                    catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
+                }
                 if (__exception != null && __instance == selected) StudyTableWorkProbe.Fail(__exception);
                 return __exception;
             }

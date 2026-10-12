@@ -39,7 +39,7 @@ For an alchemical product known to the character, the player can follow a predic
 - Product -> ingredient -> acquisition methods supplies the relevant material information; an unrelated all-material encyclopedia is not required.
 - Display remaining vanilla material-study requirements clearly and account for completed studies.
 - For a source blocked by native material Study, identify the material and make the next action clear: study that source at the study table before processing. Do not automatically study it as part of recipe research.
-- Use a compact "не изучено" marker on each affected source route and one conditional instruction below the block: marked materials must first be studied at the study table. Keep source/equipment/marker together on one line when the available width permits; first use the available width without shrinking the native font. Final long-row behavior remains subject to visual evaluation.
+- Use a compact "не изучено" marker on each affected source route and one conditional instruction below the block: using marked materials requires prior study at the study table. The shared note explains this condition rather than commanding the player to study every alternative. Keep source/equipment/marker together on one line when the available width permits; first use the available width without shrinking the native font. Final long-row behavior remains subject to visual evaluation.
 - In the selected recipe card, ingredient widgets sit opposite the product name, with energy on the same horizontal line as the ingredients; source guidance follows below.
 - Tooltip vs detail-panel presentation and the exact mouse/gamepad layout remain subject to inspection and usability verification.
 
