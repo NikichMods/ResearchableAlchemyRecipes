@@ -108,6 +108,26 @@ namespace NikichMods.Research
                     StudyTableWorkProbe.Write("RAR_GUIDANCE_SHOW native_description=True height=" + next.GetComponent<UIWidget>().height + " text_width=" + next.label_descr.width + " text_height=" + next.label_descr.height);
                 }
                 GUIElements.me.craft.craft_list_grid.Reposition();
+                if (next != null && BaseGUI.for_gamepad)
+                {
+                    // Native OnOver scrolls before our postfix grows the card. Native detail
+                    // opening likewise waits 0.03s for anchors before scrolling its new bounds.
+                    var requested = next;
+                    GJTimer.AddTimer(0.03f, delegate
+                    {
+                        if (requested == null || !ReferenceEquals(selected, requested) || !StudyTableWorkProbe.enabledProbe || !BaseGUI.for_gamepad || !GUIElements.me.craft.is_shown) return;
+                        try
+                        {
+                            requested.Redraw();
+                            GUIElements.me.craft.craft_list_grid.Reposition();
+                            GUIElements.me.craft.scroll_view.InvalidateBounds();
+                            if (requested.auto_scroll == null) throw new InvalidOperationException("Missing native card autoscroll");
+                            requested.auto_scroll.Perform(false);
+                            StudyTableWorkProbe.Write("RAR_GUIDANCE_SCROLL phase=after final_height=" + requested.GetComponent<UIWidget>().height + " native_bounds=True");
+                        }
+                        catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
+                    });
+                }
             }
             catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
             finally { changing = false; }

@@ -2,7 +2,13 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.11, visible known-recipe guidance
+## Current candidate: 0.1.12, expanded-card gamepad scroll correction
+
+Returned 0.1.11 establishes visible/mouse-readable source guidance, but the selected last row grows after the game's original auto-scroll and stays clipped on gamepad. 0.1.12 schedules one native-style 0.03s layout settle, redoes the selected row/grid, invalidates scroll bounds and calls the row's native PanelAutoScroll.Perform(false). It aborts for a destroyed/changed selection, closed window, disabled probe or changed input mode. No custom scrolling, Y workaround, recurring Update or ingredient/energy alignment change.
+
+Minimum test: replace the study-probe DLL with one 0.1.12 copy. With gamepad, open the known tier-II list and focus the last yellow row: the entire source block should enter the viewport without Y. Move up/back down and close/reopen; check mouse scroll remains usable. Return one screenshot and LogOutput.log (RAR_GUIDANCE_SCROLL plus final native geometry). Do not repeat paid research, formula persistence or manufacture just for this scroll correction. Native producer/description scope remains one already-known yellow recipe.
+
+## Frozen 0.1.11, visible known-recipe guidance
 
 Research only. The accepted automatic-topic/reward baseline remains 0.1.10; new UI acceptance is pending. Native selected-card description displays "Как получить ингредиенты" for already-known yellow paint at Alchemy Workbench II, with source alternatives, required equipment, native material-study indication and native recipe lock/extra-condition notes. Sources are authored manual decomposition and ordinary production, excluding automated mirrors; this is not a complete graph for every ingredient. Costs/research/formula knowledge are unchanged. Paint topic icons now use ItemDefinition.GetIcon instead of guessed IDs.
 
