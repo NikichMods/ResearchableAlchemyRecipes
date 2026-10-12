@@ -26,6 +26,8 @@ namespace NikichMods.Research
         private static CraftGUI Craft { get { return GUIElements.me.craft; } }
         private static ResourceBasedCraftGUI Study { get { return GUIElements.me.resource_based_craft; } }
         private static bool Active { get { return table != null && snapshot != null; } }
+        internal static bool CanCalibrate { get { return Active && Craft.is_shown && !GUIElements.me.resource_picker.is_shown &&
+            (Craft.is_shown_and_top || Study.is_shown_and_top); } }
         private static bool Owns(CraftGUI gui) { return Active && gui == Craft && gui.GetCrafteryWGO() == table; }
 
         internal static void Open(WorldGameObject owner)
@@ -104,6 +106,7 @@ namespace NikichMods.Research
         internal static void Restore()
         {
             if (snapshot == null || restoring) return;
+            IconCalibration.Hide("table_closed");
             restoring = true;
             try
             {
@@ -122,6 +125,52 @@ namespace NikichMods.Research
                 StudyTableWorkProbe.Write("RAR_TABS_RESTORE_ERROR action=disabled " + ex);
             }
             finally { restoring = false; }
+        }
+
+        internal static void ShowCalibrationTab(bool material)
+        {
+            if (CanCalibrate) Switch(material ? StudyTab : ResearchTab);
+        }
+
+        internal static void RefreshIconPositions()
+        {
+            if (!Active) return;
+            foreach (CraftTabGUI tab in (List<CraftTabGUI>)Tabs.GetValue(Craft)) PositionIcon(tab, tab.tab_id);
+        }
+
+        private static void PositionIcon(CraftTabGUI tab, string id)
+        {
+            if (id != StudyTab && id != ResearchTab) return;
+            var icon = tab.spr_icon;
+            var background = tab.tab_back.GetComponent<UI2DSprite>();
+            if (background == null || background.pivot != UIWidget.Pivot.Center || icon.pivot != UIWidget.Pivot.Center ||
+                background.transform.parent != icon.transform.parent)
+                throw new InvalidOperationException("Unexpected native tab centering anchor");
+            Vector3 offset = id == StudyTab ? new Vector3(-3f, 1f, 0f) : new Vector3(-0.5f, 0.5f, 0f);
+            offset += IconCalibration.Extra(id == StudyTab);
+            Vector3 center = background.transform.localPosition;
+            center.z = icon.transform.localPosition.z;
+            icon.transform.localPosition = center + offset;
+        }
+
+        [HarmonyPatch(typeof(BaseGUI), "Update")]
+        private static class CalibrationKeys
+        {
+            private static bool Prefix(BaseGUI __instance)
+            {
+                // IMGUI owns calibration input; retain native dictionary/stack unchanged.
+                return !(Active && IconCalibration.Capturing && (__instance == Craft || __instance == Study));
+            }
+        }
+
+        [HarmonyPatch(typeof(ResourceBasedCraftGUI), "Update")]
+        private static class CalibrationStudyKeys
+        {
+            private static bool Prefix(ResourceBasedCraftGUI __instance)
+            {
+                // Survey checks keyboard Interaction before calling BaseGUI.Update.
+                return !(Active && IconCalibration.Capturing && __instance == Study);
+            }
         }
 
         private sealed class KeyMap
@@ -212,16 +261,9 @@ namespace NikichMods.Research
                     icon.sprite2D = TabArtwork.Get(tab_id == StudyTab);
                     icon.width = 40;
                     icon.height = 26;
-                    var background = __instance.tab_back.GetComponent<UI2DSprite>();
-                    if (background == null || background.pivot != UIWidget.Pivot.Center || icon.pivot != UIWidget.Pivot.Center ||
-                        background.transform.parent != icon.transform.parent)
-                        throw new InvalidOperationException("Unexpected native tab centering anchor");
-                    // Verified PNG opaque bounds: material (9,3)-(37,25), recipe (5,2)-(36,25).
-                    // PNG Y points down; native UI Y points up. Both complete 40x26 canvases remain intact.
-                    Vector3 offset = tab_id == StudyTab ? new Vector3(-3f, 1f, 0f) : new Vector3(-0.5f, 0.5f, 0f);
-                    Vector3 center = background.transform.localPosition;
-                    center.z = icon.transform.localPosition.z;
-                    icon.transform.localPosition = center + offset;
+                    PositionIcon(__instance, tab_id);
+                    Vector3 offset = (tab_id == StudyTab ? new Vector3(-3f, 1f, 0f) : new Vector3(-0.5f, 0.5f, 0f)) +
+                        IconCalibration.Extra(tab_id == StudyTab);
                     StudyTableWorkProbe.Write("RAR_TAB_ART_DRAW tab=" + tab_id + " canvas=" + icon.width + "x" + icon.height +
                         " offset_x=" + offset.x.ToString(System.Globalization.CultureInfo.InvariantCulture) +
                         " offset_y=" + offset.y.ToString(System.Globalization.CultureInfo.InvariantCulture));

@@ -2,7 +2,15 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.4, visible-art centering
+## Current candidate: 0.1.5, F2 live calibration
+
+Open the study table and press F2. The mouse-operated panel has independent X/Y sliders and +/- buttons for both icons, integer corrections -8..+8 relative to 0.1.4. +X moves right, +Y moves up; units are native UI pixels. Use panel page buttons to inspect active/dim states, Reset to return to the baseline, and Done to log selected values and close. F2 also closes. Values persist across table reopen during this process, not across game restarts or in saves/config.
+
+Question: choose user-approved optical alignment now that the exact alpha-bounds centering path is proved but perceptually unsatisfactory. No PNG, scale, science-header, work, costs, reward or save change. The panel uses IMGUI while the native table stays visible. Native NGUI mouse events and table keys are temporarily contained, including Survey's direct Interaction shortcut. Original input flag is restored after mouse release or immediately on plugin destruction. UICamera.ignoreAllEvents and its early-return consumer were verified in the installed firstpass assembly; compile binds against the installed IMGUI module. No new GUI stack entries, key dictionary mutation, object scans or per-frame logging.
+
+Minimum check: adjust both icons, compare pages using the panel buttons, press Done, then switch/close/reopen normally. Return RAR_TAB_CALIBRATION_VALUES reason=chosen, screenshots and the log including RAR_TAB_CALIBRATION_INPUT restored=True. No test job necessary. Final chosen values will be frozen and the calibration tool removed. Existing picker-layer warning ownership remains open. Exact candidate/log identities are in docs/TEST_LOG.md.
+
+## Frozen 0.1.4 visible-art centering baseline
 
 User-approved original icon appearance is preserved. The 0.1.3 screenshot reveals that centering full canvases leaves asymmetric opaque artwork off-center. Place each icon relative to the native background center, compensating exact alpha bounds: Material Study (-3,+1), Recipe Research (-0.5,+0.5) native UI units. Keep complete PNGs and native tint; no crop, scaling, new art, science-header or input/work change.
 

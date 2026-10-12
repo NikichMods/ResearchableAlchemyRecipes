@@ -1,8 +1,19 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.5 — F2 icon calibration candidate
+
+**Status:** local compile gate passed; exact handoff identity to be recorded after clean build. Installed tool input/visual operation pending.
+
+- Goal: let the user choose optical alignment live rather than issue another guessed fixed offset. Native geometry/placement path is already established by 0.1.4.
+- F2 opens an IMGUI panel only on the shown two-tab study-table composition, without an active resource picker/other modal. Four independent sliders and +/- buttons adjust Material Study and Recipe Research X/Y, step 1, bounded to -8..+8 native UI pixels relative to 0.1.4. +X is right, +Y is up. Both icons update immediately; panel buttons can show either native page for selected/dim comparison.
+- Session-only values survive table closing/reopening, not process restart. No game-save/config writes. Reset returns to 0.1.4; Done logs corrections and resulting absolute offsets as RAR_TAB_CALIBRATION_VALUES reason=chosen and closes. F2 closing also records current values. Final accepted values will replace defaults and the temporary tool will be removed at a later candidate boundary.
+- Input containment: the inspected public static UICamera.ignoreAllEvents early-return guard pauses native NGUI events while IMGUI owns input. Scoped BaseGUI.Update and ResourceBasedCraftGUI.Update prefixes suppress table keys (Survey handles Interaction before its base call). No native dictionaries/stack changes. Closing retains the guard until a later frame after mouse buttons are released, preventing click-through; the original flag is restored. Plugin destruction restores immediately. Failure/table loss closes the panel and releases capture through the next Update.
+- API evidence: Assembly-CSharp-firstpass.dll SHA-256 9dc6def3b7715dd27eeb168ddc0af47e31c6f38d3fbee24bf592899392026498, exact UICamera.Update IL entry checks ignoreAllEvents and returns when true. Same verified host references plus installed UnityEngine.IMGUIModule.dll; no dependency binaries distributed. No recurring object scans or slider-change log spam.
+- Runtime check: open table, F2; adjust each icon using sliders/buttons and compare both pages using panel buttons. Reset once if useful, choose final values and Done, then verify normal switching/close/reopen with mouse/gamepad. Return chosen-values log and final screenshots. RAR_TAB_CALIBRATION_INPUT restored=True and no probe errors are required. No work/save-load repetition. Existing diagnostic job remains save-persistent only if started; F8 cleanup rules unchanged.
+
 ## Study Table Work Probe 0.1.4 — visible-art centering candidate
 
-**Status:** clean-source compile/identity gate passed; installed centering acceptance pending.
+**Status:** clean-source compile/identity gate passed; returned log confirms the placement path, but user screenshots still find the icons too low/slightly left. Fixed placement is not accepted; next step is user-requested F2 calibration.
 
 - Exact source: 850daeea753e85c164ddde1c8f1a355003944d0b, research/study-table-work.
 - Artifact: StudyTableWorkProbe-0.1.4.dll; SHA-256 49344e23e386a7ee84148dbfe03539af8685f0ace0812da62083c3eada044cee. Plugin 0.1.4, assembly/file 0.1.4.0; optimized deterministic SDK 6.0.406 build with warnings as errors and both version checks. Frozen 0.1.3 is unchanged.
@@ -12,6 +23,10 @@
 - Corrected absolute offsets from the native tab-background center: Material Study x=-3/y=+1; Recipe Research x=-0.5/y=+0.5 UI units. Exact bounds centering; not a claim of subjective optical acceptance.
 - Direct scene evidence: back/icon share parent and Center pivot; back 66x32, icon unanchored. Postfix validates same-parent/center-pivot contract, preserves icon Z and uses absolute placement. Missing anchors fail the probe rather than guess. Native SetSelectedState changes tint/background sprites, not icon position.
 - Small installed check: open both tabs, inspect centering/clarity in selected and dim states, switch and close/reopen once. Return screenshots and log. Expected RAR_TAB_ART_DRAW offsets above and unchanged restore/close markers. No diagnostic job or repeated save/reload required. Existing picker warnings remain outside this correction.
+
+### Returned 0.1.4 evidence
+
+Log SHA-256: 537ecfc8c4beb905f5535fc48c6affd7525a2415e2ed2e31a489e961a4297340. Startup identifies 0.1.4/accepted host. Art READY once; 16 art draws record expected 0.1.4 offsets. Eight opens, forty switches and seven observed paired closes/layout_restored=True; the final open has no closing marker in the returned capture. No RAR_WORK_ERROR, RAR_TABS_RESTORE_ERROR or Collection was modified exception. Six picker layer warnings persist with unassigned cause. User reports slight improvement but still too low/slightly left and explicitly requests F2 sliders. This does not accept fixed positioning. Science-header roughness is no longer a requested change: user leaves the vanilla icon as it is.
 
 ## Study Table Work Probe 0.1.3 — original tab artwork candidate
 
