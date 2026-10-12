@@ -31,6 +31,7 @@ For an alchemical product known to the character, the player can follow a predic
 
 ## Contextual recipe guidance
 
+- Final mod presentation must support all game languages and the complete supported ingredient population. Current research prototypes use Russian; localization implementation is deferred, not removed from final scope. Visual grouping must not depend on Russian names or one representative reagent's colours/line lengths.
 - First-version guidance lives with known formula components at the native alchemy tables; a standalone journal/character-window tab is deferred and is not required for the initial feature. Reconsider it later as optional consolidated browsing, not a prerequisite.
 - Research starts at the study table. Known formulas remain available through ordinary alchemy-table lists.
 - Ingredient guidance must be available for repeated reference while inspecting a known formula: reagent -> source alternatives -> processing method/equipment/conditions -> remaining material-study requirement.
