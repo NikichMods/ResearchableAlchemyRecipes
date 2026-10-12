@@ -2,7 +2,10 @@
 
 ## Study Table Work Probe 0.1.4 — visible-art centering candidate
 
-**Status:** compile check passed; exact handoff identity to be recorded after clean-source build. Installed centering acceptance pending.
+**Status:** clean-source compile/identity gate passed; installed centering acceptance pending.
+
+- Exact source: 850daeea753e85c164ddde1c8f1a355003944d0b, research/study-table-work.
+- Artifact: StudyTableWorkProbe-0.1.4.dll; SHA-256 49344e23e386a7ee84148dbfe03539af8685f0ace0812da62083c3eada044cee. Plugin 0.1.4, assembly/file 0.1.4.0; optimized deterministic SDK 6.0.406 build with warnings as errors and both version checks. Frozen 0.1.3 is unchanged.
 
 - Scope: icon placement only; original PNG bytes, 40x26 canvases, size, native tint, work/input/close paths and science header remain unchanged.
 - Root cause: 0.1.3 centered complete PNGs. Material opaque bounds (9,3)-(37,25) center at (23,14) inside a (20,13) canvas center; recipe (5,2)-(36,25) centers at (20.5,13.5). PNG Y is inverted relative to UI Y.
