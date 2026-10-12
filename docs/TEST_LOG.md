@@ -2,7 +2,10 @@
 
 ## Study Table Work Probe 0.1.5 — F2 icon calibration candidate
 
-**Status:** local compile gate passed; exact handoff identity to be recorded after clean build. Installed tool input/visual operation pending.
+**Status:** clean-source compile/identity gate passed; installed tool input/visual operation pending.
+
+- Exact source: 737d4cd3c591eb47d2d55c7515a5cd3286bb51ed, research/study-table-work.
+- Artifact: StudyTableWorkProbe-0.1.5.dll; SHA-256 771a4f3012fbed8c4f8113f0330b50e9d83772f3aa6589d8d6f06312a75583f2. Plugin 0.1.5, assembly/file 0.1.5.0; optimized deterministic SDK 6.0.406 build, warnings as errors, both versions asserted. Previous numbered artifacts unchanged.
 
 - Goal: let the user choose optical alignment live rather than issue another guessed fixed offset. Native geometry/placement path is already established by 0.1.4.
 - F2 opens an IMGUI panel only on the shown two-tab study-table composition, without an active resource picker/other modal. Four independent sliders and +/- buttons adjust Material Study and Recipe Research X/Y, step 1, bounded to -8..+8 native UI pixels relative to 0.1.4. +X is right, +Y is up. Both icons update immediately; panel buttons can show either native page for selected/dim comparison.
