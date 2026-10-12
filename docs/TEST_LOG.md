@@ -420,7 +420,9 @@ The log has 42 repeated foreign-checker NullReferenceException stacks despite gu
 
 ## Study Table Work Probe 0.1.17 — window scope and native focus projection
 
-Status: compile and actual foreign-DLL regression checks passed. Clean source/artifact identity to follow; installed gamepad/transition acceptance pending. Visual layout stays at user-accepted +9/palette/footer.
+Status: compile/actual foreign-DLL regressions and clean-source identity gate passed. Exact DLL installed with game closed; installed gamepad/transition acceptance pending. Visual layout stays at user-accepted +9/palette/footer.
+
+- Source 84075151908d1e9c84513f476f1559509b74af31, research/study-table-work. DLL StudyTableWorkProbe-0.1.17.dll; plugin 0.1.17, assembly/file 0.1.17.0; SHA-256 907d2d4e07b5ee195b442780b444149c255e411d87768646cccd72041010fe97. Existing SDK deterministic identity/art gate; installed bytes verified, prior exact 0.1.16 hash checked and installed copy removed. Previous numbered artifacts remain immutable.
 
 - READY for bounded research correction: OpenAsAlchemy finishes its native list before the probe postfix; capture the supported known-yellow window then and release ownership on Hide. Ownership persists across every row in that window, on either input mode, and rechecks shown table identity. This closes the proved selected-row scope gap without changing other workbenches or native navigation keys.
 - Exact foreign OnOver observer is a HarmonyPostfix, not a prefix; bounded IL shows it only copies native current_overed to _craftItemGui and the actual CraftGUI craftery to _crafteryWgo. Native CraftItemGUI.Update also changes current_overed during mouse hover without calling OnOver; native OnMouseOvered only sets a hover flag. This establishes independent native/foreign selection channels, not the exact sequence that occurred in the returned session. Static authored known-yellow recipe flags one_time/force_multi/disable_multi are all false; no adopted requirement to suppress its ordinary quantity controls exists.
