@@ -167,3 +167,24 @@ Returned LogOutput.log snapshot SHA-256: `c21fcb3a4c23589b85ac25b1ccddff00b9c72f
 Installed environment includes Alchemy Research Redux 0.1.8, Decomp Delight! 0.1.9 and Save Now! 2.5.14. These are representative coexistence observations, not a clean-vanilla run or general compatibility guarantee. The user tested controller menu actions A/B; mouse input and pre-alchemy access were not independently demonstrated.
 
 UX feedback: the diagnostic work is too long for comfortable play; its 30 work units/10 energy remain test inputs, not adopted balance. Ending without a reward dialog is expected because this probe has no reward/notification. The modal A/B chooser works but is not desired final UX. Preferred next design is two tabs, normal Study and recipe research, with native-style tab navigation; exact integration remains to be verified. Do not rebuild 0.1.0 with changed timing or tabs.
+
+## Candidate 0.1.7 — native formula knowledge reward (installed evidence pending)
+
+- Source: b9721dd1ad169f7561a6ac31e47ecd0477d631c3, research/study-table-work; clean exact-source handoff build.
+- DLL: StudyTableWorkProbe-0.1.7.dll, assembly/file version 0.1.7.0.
+- SHA-256: 439ab0329b37298d4efe932dee4a087fab5a991ce8bc0f1766a3ce1993d1bdfe.
+- Build: existing deterministic SDK 6.0.406 / C# 7.3 warnings-as-errors gate; verified local 1.407 references and unchanged embedded artwork. No production toolchain or release is selected.
+- Shared static evidence: GraveyardKeeperResearch commit 967a21d, native known-formula list/disclosure/save boundaries; pinned decompile identity remains in VERIFIED_RUNTIME_DATA.md.
+- Automated state checks: 8 original-known/unknown-vs-partial setup combinations, remaining-only reward, duplicate reward/cleanup, original restoration from a fresh native save object's copied list, unrelated knowledge preservation and missing-snapshot rejection pass. Compilation passes. Native serializer, UI and process-restart operation are not tested by these checks.
+- Changes: one pot_heal research topic after explicit F8 setup; real job completion grants remaining native exact formulas; grouped native forced pseudotech dialog; independent native card-count observer and save/load boundary logging. No ingredient formulas in probe logs/public docs; no native material Study or formula definitions changed. Final selected icon placement from 0.1.5 is carried forward without F2.
+- Synthetic preparation can enter saves. Neutral registered metadata preserves original knowledge for cleanup across launches, not a production knowledge ledger. Keep DLL installed until cleanup + save. During the test do not independently unlock/manufacture this product or change the installed balance-mod set. F8 cleanup stays reachable if the probe disables itself after an error. Refund economics and unloaded-table cleanup scope remain as documented for prior probe.
+
+Minimum installed procedure on a disposable save with foundational alchemy unlocked, existing study table and tier-I alchemy table:
+
+1. Replace the previous probe DLL; retain one installed StudyTableWorkProbe.dll. F8 -> Actions -> Prepare -> Both unknown. F8's first status logs the original known count; setup logs known=0.
+2. Finish the short recipe-research job. Expect native popup, learned=2, known=2 and native tier-I recipe list cards=2. No material sample is needed.
+3. Save, preserve this launch's LogOutput.log, fully exit the game, relaunch/load with the same probe, open the tier-I list and F8 status. Expect known=2 and cards=2; no repeat paid research topic.
+4. F8 -> Actions -> Remove test state; expect the original formula count restored. Then prepare One known, finish research; reward learned=1, known=2, native cards=2. Remove test state again and save.
+5. Return both launch logs and notes/screenshots about native reward/list appearance. Preserve a second log before any further launch. Keep the test cleaned and saved before removing DLL.
+
+No separate repetition of ordinary Study/input calibration is required for this downstream test. RAR_WORK_ERROR, an absent reward/list seam or incorrect cleanup/load state blocks this candidate's acceptance. Existing source-awareness, ingredient-guidance presentation, pricing/refunds and picker-layer-warning gates remain independent.
