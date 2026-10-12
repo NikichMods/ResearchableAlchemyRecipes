@@ -258,7 +258,10 @@ namespace NikichMods.Research
             private static void Postfix(CraftGUI __instance, bool __state)
             {
                 if (__state)
+                {
+                    QuantityInputCompatibility.OnOurFrameClosed();
                     StudyTableWorkProbe.Write("RAR_TABS_CLOSED outer=" + __instance.is_shown + " study=" + Study.is_shown);
+                }
             }
         }
 

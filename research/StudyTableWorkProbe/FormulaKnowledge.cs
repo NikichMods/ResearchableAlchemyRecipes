@@ -60,6 +60,7 @@ namespace NikichMods.Research
         {
             int count = 0; foreach (var c in formulas) if (Has(save, c.id)) count++; return count;
         }
+        internal static bool HasRemaining(GameSave save) { return Has(save, Prepared) && Known(save) < formulas.Count; }
         internal static void Status(string phase, GameSave save)
         {
             if (formulas.Count != 2) return;

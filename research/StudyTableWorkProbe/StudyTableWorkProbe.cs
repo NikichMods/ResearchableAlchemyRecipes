@@ -10,15 +10,16 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.8.0")]
-[assembly: AssemblyFileVersion("0.1.8.0")]
+[assembly: AssemblyVersion("0.1.9.0")]
+[assembly: AssemblyFileVersion("0.1.9.0")]
 
 namespace NikichMods.Research
 {
     [BepInPlugin("nikichmods.research.studytablework", "Study Table Work Probe", Version)]
+    [BepInDependency("p1xel8ted.gyk.maxbuttonsredux", BepInDependency.DependencyFlags.SoftDependency)]
     public sealed class StudyTableWorkProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.8";
+        public const string Version = "0.1.9";
         internal const string JobId = "rar_probe_work_010";
         private const string TableId = "mf_alchemy_survey";
         private const string Technology = "The Beginning Of Alchemy";
@@ -80,8 +81,8 @@ namespace NikichMods.Research
             StudyTabs.Restore();
             if (Log != null) Log.LogError("RAR_WORK_ERROR action=disabled fallback=vanilla " + ex);
         }
-        private static bool IsJob(CraftDefinition craft) { return craft != null && IsJobId(craft.id); }
-        private static bool IsJobId(string id) { return id == JobId || id == FormulaKnowledge.Job; }
+        internal static bool IsJob(CraftDefinition craft) { return craft != null && IsJobId(craft.id); }
+        internal static bool IsJobId(string id) { return id == JobId || id == FormulaKnowledge.Job; }
         private static bool IsTable(WorldGameObject table) { return table != null && table.obj_id == TableId; }
 
         internal static void Cleanup()
@@ -90,17 +91,19 @@ namespace NikichMods.Research
             {
                 int canceled = 0;
                 int cleared = 0;
+                int queued = 0;
                 foreach (WorldGameObject table in UnityEngine.Object.FindObjectsOfType<WorldGameObject>())
                 {
                     if (!IsTable(table)) continue;
                     CraftComponent cc = table.components.craft;
+                    queued += ResearchRepetitionGuard.RemoveQueued(cc.craft_queue);
                     if (cc.is_crafting && IsJob(cc.current_craft)) { cc.Cancel(); canceled++; }
                     if (IsJobId((string)Last.GetValue(cc))) { Last.SetValue(cc, ""); cleared++; }
                     if (IsJobId((string)Last2.GetValue(cc))) { Last2.SetValue(cc, ""); cleared++; }
                 }
                 int removed = MainGame.me.save.completed_one_time_crafts.RemoveAll(id => id == JobId);
                 FormulaKnowledge.Restore(MainGame.me.save);
-                Write("RAR_WORK_CLEANUP canceled=" + canceled + " last_cleared=" + cleared + " markers_removed=" + removed);
+                Write("RAR_WORK_CLEANUP canceled=" + canceled + " last_cleared=" + cleared + " markers_removed=" + removed + " queued_entries_removed=" + queued);
                 DumpActive("RAR_WORK_CLEAN");
                 GUIElements.me.dialog.OpenOK("Тестовое состояние убрано. Сохраните игру перед удалением пробника.");
             }

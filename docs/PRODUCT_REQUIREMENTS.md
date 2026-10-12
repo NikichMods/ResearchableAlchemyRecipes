@@ -20,6 +20,7 @@ For an alchemical product known to the character, the player can follow a predic
 - Show all source alternatives within the supported host-data scope, each material, processing method, equipment and required conditions. Include ordinary producer paths where relevant, not just alchemical decomposition. Do not explain world acquisition of the source material itself.
 - Show alternative sources without automatically completing their vanilla studies or charging for all of them.
 - Respect previously known formulas and material studies, irrespective of whether knowledge came from crafting, vanilla authored disclosure or this mod.
+- Recipe research is a single work operation. Quantity/queue extensions must not charge for repeated copies of the same research, and fully known products must not start another paid investigation.
 - One product research reveals its remaining formulas. If some are already known, display them immediately and label the remaining topic as studying other manufacturing methods.
 - Knowledge remains available for repeated reference and across recipes. Ordinary repeat manufacture pays production costs, not another information fee.
 - Research uses faith, science, energy and work time in the style of vanilla study. Exact values are deferred. Recipe knowledge and guidance are the reward; additional red/green/blue technology-point rewards are not required.

@@ -12,6 +12,7 @@ namespace NikichMods.Research
         private const string VerifiedHash = "e811fc228ece102e389759d278bb66569884898b827369f99e11c984ffc2af30";
         private static Func<bool> unavailable;
         private static bool reported;
+        private static MethodInfo closed;
         internal static void Install(Harmony harmony, Func<bool> scope)
         {
             Assembly installed = null;
@@ -22,12 +23,20 @@ namespace NikichMods.Research
             using (var sha = SHA256.Create()) using (var stream = File.OpenRead(installed.Location))
                 hash = BitConverter.ToString(sha.ComputeHash(stream)).Replace("-", "").ToLowerInvariant();
             var target = installed.GetType("MaxButtonsRedux.Plugin", true).GetMethod("IsCraftGuiInputValid", BindingFlags.Static | BindingFlags.NonPublic);
-            if (hash != VerifiedHash || target == null || target.ReturnType != typeof(bool) || target.GetParameters().Length != 0)
+            closed = installed.GetType("MaxButtonsRedux.Patches", true).GetMethod("CraftGUI_OnClosePressed", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+            if (hash != VerifiedHash || target == null || target.ReturnType != typeof(bool) || target.GetParameters().Length != 0 || closed == null || closed.GetParameters().Length != 0)
                 throw new InvalidOperationException("Unverified MaxButtonsRedux quantity-input contract: " + hash);
             unavailable = scope;
             reported = false;
             harmony.Patch(target, prefix: new HarmonyMethod(typeof(QuantityInputCompatibility), "Prefix"));
             StudyTableWorkProbe.Write("RAR_QUANTITY_COMPAT status=bound hash=" + hash + " scope=study_table_composition");
+        }
+        internal static void OnOurFrameClosed()
+        {
+            if (closed == null) return;
+            // Our native Hide path is a real close but bypasses the mod's OnClosePressed observer.
+            closed.Invoke(null, null);
+            StudyTableWorkProbe.Write("RAR_QUANTITY_COMPAT status=own_frame_close_notified");
         }
         private static bool Prefix(ref bool __result)
         {
