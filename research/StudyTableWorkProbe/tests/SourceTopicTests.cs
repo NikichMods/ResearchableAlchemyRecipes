@@ -114,6 +114,29 @@ public static class SourceTopicTests
         var hidden = new CraftDefinition { id = "hidden", hidden = true, craft_in = producer.craft_in, needs = producer.needs, output = producer.output };
         var found = (List<CraftDefinition>)guidance.GetMethod("FindRoutes", Private).Invoke(null, new object[] { new[] { automatic, producer, mixed, hidden }, "reagent" });
         Assert(found.Count == 1 && ReferenceEquals(found[0], producer), "Guidance includes hidden/mixed/automated routes");
+        var render = guidance.GetMethod("BuildText", Private);
+        var formula = new CraftDefinition { needs = new List<Item> { new Item("reagent", 1) } };
+        var catalogue = new Dictionary<string, List<CraftDefinition>> { { "reagent", new List<CraftDefinition> { producer } } };
+        host.save = Save();
+        Func<string, string> names = id => id;
+        var pending = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });
+        Assert(pending.Contains("[не изучено]") && pending.Contains("исследовательском столе"), "Unstudied native source lacks marker/instruction");
+        catalogue["reagent"].Add(producer);
+        var multiplePending = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });
+        Assert(multiplePending.IndexOf("Отмеченные материалы", StringComparison.Ordinal) == multiplePending.LastIndexOf("Отмеченные материалы", StringComparison.Ordinal), "Shared instruction duplicated per alternative");
+        catalogue["reagent"].RemoveAt(1);
+        host.save.completed_one_time_crafts.Add("surv:source");
+        var studied = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });
+        Assert(!studied.Contains("[не изучено]") && !studied.Contains("исследовательском столе"), "Studied native source still marked");
+        producer.needs = new List<Item> { new Item("sulfur", 1) };
+        host.save.completed_one_time_crafts.Add("surv:sulfur");
+        var baselineKnowledge = new HashSet<string>(host.save.completed_one_time_crafts);
+        var preview = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, true });
+        Assert(preview.Contains("Просмотр") && preview.Contains("[не изучено]") && baselineKnowledge.SetEquals(host.save.completed_one_time_crafts), "View preview mutates native knowledge or is unlabelled");
+        producer.craft_type = CraftDefinition.CraftType.None;
+        host.save.completed_one_time_crafts.Remove("surv:sulfur");
+        var ordinary = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });
+        Assert(!ordinary.Contains("[не изучено]"), "Ordinary production incorrectly requires material Study");
         // UI method detours cannot be compiled by the standalone CLR: Unity ECalls require
         // the real engine. Resolve exact contracts here; installed patching remains a live gate.
         foreach (string name in new[] { "Redraw", "OnOver", "OnMouseOvered" })

@@ -2,7 +2,15 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current bounded accepted candidate: 0.1.12, expanded-card gamepad scroll correction
+## Current candidate: 0.1.13, Study markers and header alignment
+
+Selected known-yellow guidance uses "[не изучено]" on native unstudied decomposition-source routes and one conditional footer directing marked materials to the study table. Ordinary producer paths get no invented Study gate. Native font is unchanged; description extends to the row's right edge below the header. Ingredient widgets and energy have their vertical center anchored to the name label, preserving horizontal geometry and native crafting. Original anchors restore on redraw/deselection/close. Accepted deferred gamepad scroll remains.
+
+Minimum visual check: install one 0.1.13 DLL replacing 0.1.12; open known yellow on Alchemy Workbench II. Check ingredients/energy share the name's line, source text uses the available width, mouse/gamepad scrolling and selection/close still work. Close menus, press F8 -> Actions -> Study marker check -> sulfur unstudied preview, then reopen yellow. The preview must show its labelled mode, sulfur's marker and one shared instruction; specifically inspect whether sulfur/equipment/marker stays on one line. F8 through the same path -> Normal view restores actual display. Return screenshots of both views and LogOutput.log.
+
+Preview is presentation-only and session-only: it never changes native survey/knowledge IDs or mill availability; no cleanup/save needed for it, restart also clears it. Logs report native sulfur study separately. If sulfur is already studied, normal view must remove the artificial marker; any genuinely unstudied alternatives retain theirs. Native state tests cover both actual predicates outside Unity; preview only proves visible formatting. Do not research/restart/manufacture or alter real material studies just for this check. Final line wrapping/shrinking and all-recipe layout are not accepted by compilation.
+
+## Bounded accepted 0.1.12, expanded-card gamepad scroll correction
 
 Returned exact DLL/log plus user screenshot accept the last-row gamepad correction. Do not repeat this matrix for recovery. Next open presentation work is the adopted name/ingredients/energy alignment and clear unstudied-source instructions with a representative native negative-state check; current native prerequisite code alone is not installed display acceptance.
 

@@ -156,9 +156,15 @@ namespace NikichMods.Research
         internal static void Menu()
         {
             Status("F8", MainGame.me.save);
-            GUIElements.me.dialog.Open("Исследования красок: тестовая сборка", "Убрать тестовые работы", StudyTableWorkProbe.Cleanup,
+            GUIElements.me.dialog.Open("Исследования красок: тестовая сборка", "Действия", MenuActions,
                 "Закрыть", null, null, GameKey.Select, GameKey.Back,
                 "Темы появляются автоматически по доступным чертежам комнаты. Полученные формулы сохраняются как обычные знания; очистка их не отменяет. Для проверки используйте тестовое сохранение.");
+        }
+        private static void MenuActions()
+        {
+            GUIElements.me.dialog.Open("Действия пробника", "Проверка отметки изучения", RecipeGuidance.PreviewMenu,
+                "Убрать тестовые работы", StudyTableWorkProbe.Cleanup, null, GameKey.Select, GameKey.Option2,
+                "Просмотр не меняет знания. Очистка удаляет только тестовые работы; полученные формулы сохраняются.");
         }
         [HarmonyPatch(typeof(GameSave), "IsCraftVisible")]
         private static class Visibility

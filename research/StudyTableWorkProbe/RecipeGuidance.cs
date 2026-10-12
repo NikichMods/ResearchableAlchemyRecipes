@@ -16,6 +16,50 @@ namespace NikichMods.Research
         private static CraftDefinition describing;
         private static readonly Dictionary<CraftItemGUI, int> anchors = new Dictionary<CraftItemGUI, int>();
         private static bool changing;
+        private static bool previewUnstudied;
+        private static readonly Dictionary<CraftItemGUI, Layout> layouts = new Dictionary<CraftItemGUI, Layout>();
+        private sealed class Anchor
+        {
+            private readonly Transform target;
+            private readonly float relative;
+            private readonly int absolute;
+            internal Anchor(UIRect.AnchorPoint point) { target = point.target; relative = point.relative; absolute = point.absolute; }
+            internal void Restore(UIRect.AnchorPoint point) { point.target = target; point.relative = relative; point.absolute = absolute; }
+        }
+        private sealed class Layout
+        {
+            private readonly Anchor iconTop, iconBottom, energyTop, energyBottom, textRight;
+            private readonly UIWidget icons;
+            internal Layout(CraftItemGUI row)
+            {
+                icons = row.ingredients_table.GetComponent<UIWidget>();
+                if (icons == null || row.txt_spend == null) throw new InvalidOperationException("Missing inspected recipe header widgets");
+                iconTop = new Anchor(icons.topAnchor); iconBottom = new Anchor(icons.bottomAnchor);
+                energyTop = new Anchor(row.txt_spend.topAnchor); energyBottom = new Anchor(row.txt_spend.bottomAnchor);
+                textRight = new Anchor(row.label_descr.rightAnchor);
+            }
+            private static void Set(UIRect.AnchorPoint point, Transform target, float relative, int absolute)
+            { point.target = target; point.relative = relative; point.absolute = absolute; }
+            internal void Apply(CraftItemGUI row)
+            {
+                // Inspected ingredient-table children have y=0 and centered cells. Keep native
+                // horizontal anchors; pin their center and energy to the name-label center.
+                Set(icons.topAnchor, row.label_name.transform, 0.5f, 1);
+                Set(icons.bottomAnchor, row.label_name.transform, 0.5f, -1);
+                int half = row.txt_spend.height / 2;
+                Set(row.txt_spend.topAnchor, row.label_name.transform, 0.5f, half);
+                Set(row.txt_spend.bottomAnchor, row.label_name.transform, 0.5f, half - row.txt_spend.height);
+                Set(row.label_descr.rightAnchor, row.transform, 1f, -8);
+                row.label_descr.UpdateAnchors();
+            }
+            internal void Restore(CraftItemGUI row)
+            {
+                iconTop.Restore(icons.topAnchor); iconBottom.Restore(icons.bottomAnchor);
+                energyTop.Restore(row.txt_spend.topAnchor); energyBottom.Restore(row.txt_spend.bottomAnchor);
+                textRight.Restore(row.label_descr.rightAnchor);
+                row.label_descr.UpdateAnchors();
+            }
+        }
         internal static void Register(GameBalance balance)
         {
             routes.Clear();
@@ -60,15 +104,16 @@ namespace NikichMods.Research
                 save.unlocked_techs.Contains(SourceResearch.Technology) && save.completed_one_time_crafts.Contains(row.current_craft.id);
         }
         private static string Name(string id) { return GJL.L(id); }
-        private static string Text(CraftDefinition formula)
+        internal static string BuildText(CraftDefinition formula, Dictionary<string, List<CraftDefinition>> catalogue, GameSave save, Func<string, string> name, bool preview)
         {
             var text = new StringBuilder("[C9D8DC]Как получить ингредиенты[-]");
-            var save = MainGame.me.save;
+            bool pending = false;
+            if (preview) text.Append("\n[E5B86D]Просмотр: сера не изучена[-]");
             foreach (var ingredient in formula.needs)
             {
-                text.Append("\n\n").Append(Name(ingredient.id)).Append(":");
+                text.Append("\n\n").Append(name(ingredient.id)).Append(":");
                 List<CraftDefinition> producers;
-                if (!routes.TryGetValue(ingredient.id, out producers) || producers.Count == 0)
+                if (!catalogue.TryGetValue(ingredient.id, out producers) || producers.Count == 0)
                 { text.Append("\nИсточник пока не проверен"); continue; }
                 foreach (var route in producers)
                 {
@@ -76,19 +121,33 @@ namespace NikichMods.Research
                     for (int i = 0; i < route.needs.Count; i++)
                     {
                         if (i > 0) text.Append(" + ");
-                        text.Append(Name(route.needs[i].id));
+                        text.Append(name(route.needs[i].id));
                         if (route.needs[i].value > 1) text.Append(" ×").Append(route.needs[i].value);
                     }
                     text.Append(" → ");
                     for (int i = 0; i < route.craft_in.Count; i++)
-                    { if (i > 0) text.Append(", "); text.Append(Name(route.craft_in[i])); }
-                    if (route.craft_type == CraftDefinition.CraftType.AlchemyDecompose && !save.IsSurveyComplete(CraftDefinition.CraftSubType.Alchemy, route.needs[0].id))
-                        text.Append(" [E5B86D](сначала изучить материал)[-]");
+                    { if (i > 0) text.Append(", "); text.Append(name(route.craft_in[i])); }
+                    bool unstudied = route.craft_type == CraftDefinition.CraftType.AlchemyDecompose &&
+                        ((!save.IsSurveyComplete(CraftDefinition.CraftSubType.Alchemy, route.needs[0].id)) || (preview && route.needs[0].id == "sulfur"));
+                    if (unstudied) { pending = true; text.Append(" [E5B86D][не изучено][-]"); }
                     if (!save.IsCraftVisible(route)) text.Append(" (рецепт закрыт)");
                     if (route.condition.has_expression) text.Append(" (есть дополнительное условие)");
                 }
             }
+            if (pending) text.Append("\n\n[E5B86D]Отмеченные материалы сначала изучите на исследовательском столе.[-]");
             return text.ToString();
+        }
+        private static string Text(CraftDefinition formula) { return BuildText(formula, routes, MainGame.me.save, Name, previewUnstudied); }
+        internal static void PreviewMenu()
+        {
+            GUIElements.me.dialog.Open("Проверка отметки изучения", previewUnstudied ? "Обычный вид" : "Сера не изучена: просмотр",
+                delegate {
+                    previewUnstudied = !previewUnstudied;
+                    bool nativeStudied = MainGame.me.save.IsSurveyComplete(CraftDefinition.CraftSubType.Alchemy, "sulfur");
+                    StudyTableWorkProbe.Write("RAR_GUIDANCE_PREVIEW enabled=" + previewUnstudied + " native_sulfur_studied=" + nativeStudied + " save_mutation=False");
+                    GUIElements.me.dialog.OpenOK("Откройте известный рецепт жёлтой краски. Изменён только просмотр; знания сохранения и доступность на мельнице остаются настоящими.");
+                }, "Закрыть", null, null, GameKey.Select, GameKey.Back,
+                "Временный просмотр добавляет отметку только к сере и исчезает после перезапуска. Он не заменяет проверку настоящего изучения.");
         }
         private static void Select(CraftItemGUI row)
         {
@@ -106,6 +165,7 @@ namespace NikichMods.Research
                         throw new InvalidOperationException("Missing native description/auto-height contract");
                     next.Redraw();
                     StudyTableWorkProbe.Write("RAR_GUIDANCE_SHOW native_description=True height=" + next.GetComponent<UIWidget>().height + " text_width=" + next.label_descr.width + " text_height=" + next.label_descr.height);
+                    StudyTableWorkProbe.Write("RAR_GUIDANCE_STUDY native_sulfur_studied=" + MainGame.me.save.IsSurveyComplete(CraftDefinition.CraftSubType.Alchemy, "sulfur") + " preview=" + previewUnstudied);
                 }
                 GUIElements.me.craft.craft_list_grid.Reposition();
                 if (next != null && BaseGUI.for_gamepad)
@@ -138,6 +198,7 @@ namespace NikichMods.Research
             var old = selected; selected = null;
             if (old != null) old.Redraw();
             anchors.Clear();
+            layouts.Clear();
         }
         [HarmonyPatch(typeof(CraftItemGUI), "Redraw")]
         private static class Draw
@@ -145,6 +206,8 @@ namespace NikichMods.Research
             private static void Prefix(CraftItemGUI __instance, out CraftDefinition __state)
             {
                 __state = describing; describing = null;
+                Layout layout;
+                if (layouts.TryGetValue(__instance, out layout)) layout.Restore(__instance);
                 if (__instance.label_descr != null)
                 {
                     var parent = __instance.label_descr.transform.parent.GetComponent<UIWidget>();
@@ -156,6 +219,8 @@ namespace NikichMods.Research
                     var parent = __instance.label_descr.transform.parent.GetComponent<UIWidget>();
                     if (parent == null) throw new InvalidOperationException("Missing native description parent");
                     if (!anchors.ContainsKey(__instance)) anchors.Add(__instance, parent.bottomAnchor.absolute);
+                    if (!layouts.TryGetValue(__instance, out layout)) { layout = new Layout(__instance); layouts.Add(__instance, layout); }
+                    layout.Apply(__instance);
                     describing = __instance.current_craft;
                 }
             }
