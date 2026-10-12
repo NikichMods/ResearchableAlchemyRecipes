@@ -383,7 +383,9 @@ Returned 0.1.14 log SHA-256 1b131f072d1363f2b644e6648f771ef8504483e5ff849cdbb67b
 
 ## Study Table Work Probe 0.1.15 — heading palette and header calibration
 
-Status: local compile/regression checks passed; exact source/artifact identity to be recorded after the clean build. Installed visual/calibration acceptance pending.
+Status: local compile/regression and clean-source identity gates passed. Exact DLL installed with game closed; installed visual/calibration acceptance pending.
+
+- Exact source 36a0708257d0e4aaf1739e9e540fe6b4e406df4a, research/study-table-work. DLL StudyTableWorkProbe-0.1.15.dll; plugin 0.1.15, assembly/file 0.1.15.0; SHA-256 3afc00073c1290bd6c2ed070de49f57f6500bab75c8e3b71efc6e58e1ce57faa. Existing SDK deterministic gate/original artwork, plus host IMGUI reference used by the temporary panel. Installed bytes verified; exact prior 0.1.14 hash checked and old installed copy removed. Prior immutable artifact remains.
 
 - User explicitly approves the complete 35-ingredient native-ID palette and the Russian footer "Получение ингредиентов из отмеченных материалов требует их изучения на исследовательском столе." Palette applies only to headings in the existing known-yellow guidance slice, with neutral source rows and existing amber Study marks. NGUI heading colour scopes close before source text; unverified future IDs keep plain headings rather than guessed colours. No other mod dependency or new localization implementation.
 - F2 on the selected supported card opens a mouse-operated single common vertical slider/buttons (-12..+12 native UI pixels, integer step, positive down). Zero retains 0.1.14 measured centers; every final native redraw remeasures and reapplies the chosen correction without accumulation. Reset and Done/export are explicit. Session-only correction survives card reopen; no save/config write.
