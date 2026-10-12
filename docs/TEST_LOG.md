@@ -2,7 +2,7 @@
 
 ## Study Table Work Probe 0.1.2 — icon/close correction candidate, 2026-10-12
 
-**Status:** local compile/identity and deterministic key-map regression passed; installed verification pending. No production or final-art acceptance.
+**Status:** local compile/identity and deterministic key-map regression passed; returned 0.1.2 run confirms close correction and native icon rendering/usability. Remaining NGUI layer-warning investigation and final semantic icon choice are open. No production acceptance.
 
 - Exact compiled source: `e8c0d4da66ec1280340113ba3d7bedb956a5f2a8`, research/study-table-work.
 - Artifact: `StudyTableWorkProbe-0.1.2.dll`; SHA-256 `7b914ee5e4904241e8e4a0ea0aebd25f56d550c2399e93c2a2ea3141c708ad0f`. Assembly/file versions `0.1.2.0`, plugin version `0.1.2`.
@@ -14,6 +14,16 @@
 Minimum user check: replace the previous installed copy, retaining one probe DLL. Open the table, inspect both icons/selected tint and switch by mouse and LB/RB. Open/select/cancel the Study picker; close/reopen from each page with Back/Esc and also test right-click closing. Return an icon screenshot and LogOutput.log. No repeat of established mid-work save/load or long work is needed; a job is optional for launch-close coverage.
 
 Acceptance blockers: any Collection was modified/BaseGUI.Update enumeration exception, missing tab sprites, RAR_WORK_ERROR/RAR_TABS_RESTORE_ERROR, layout_restored=False or an owner left shown. Inspect NGUI layer warnings separately: six occurred in 0.1.1 and their cause is unassigned; this candidate does not claim their removal. Native reward/persistence and current source eligibility remain independent future gates.
+
+### Returned 0.1.2 evidence
+
+Log snapshot SHA-256: `efd6f0ac9cd7234723ada05e0137560c315d859b79bad7433184f13226942682`. Startup reports version 0.1.2 and the accepted host hash. No probe DLL is present in the plugins directory at inspection, so the installed binary digest cannot be independently rechecked in this segment; the immutable handed artifact identity above is preserved.
+
+- User reports good layout/native visual style; switching and selection with mouse/gamepad, diagnostic start and F8 cancellation. Screenshots show native selected/dim tab icons and both pages.
+- 11 completed opens, 34 switches, 11 layout_restored=True restorations and 11 outer=False/study=False paired closes. Zero Collection was modified exceptions, missing tab sprites or RAR_WORK_ERROR/RAR_TABS_RESTORE_ERROR. This closes the identified close/key-map defect for this returned run.
+- Start remains sample_free=True/output_count=0; faith 5 -> 4, station science 19 -> 18. F8 observes progress 0.401, native cancellation leaves active=False/science=18, then clears one last-craft reference; final active=0/completed=False. No formula disclosure.
+- 30 widget/panel layer warnings remain around native picker interactions. No visible issue reported; ownership/cause not established. Do not call the entire log clean or infer that the remaining warning is harmless.
+- User accepts icon presentation style but asks to review alternatives: existing writing/mixing symbols are semantically ambiguous on the study table. Swapping their meanings is a tentative suggestion, not an instruction to ship that reversal. A local preview catalogue of 49 native tab sprites and nine extra book/scroll/science candidates was prepared from verified resources.assets; no public extracted artwork. Final pair remains open.
 
 ## Study Table Work Probe 0.1.1 — two-tab candidate, 2026-10-12
 

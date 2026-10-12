@@ -6,7 +6,7 @@ Research only. No production mod or final interface. Original code is MPL-2.0.
 
 Question: retain the user-tested two-tab Survey/craft-card composition while eliminating the identified close-time Dictionary enumeration failure and missing-icon errors. Native formula reward remains excluded. 0.1.1 source/artifact stays frozen; its returned results and limits are in docs/TEST_LOG.md.
 
-Method: pinned BaseGUI.Update enumerates gamekey_delegates.Keys and invokes callbacks that can close the window. The old restoration replaced dictionary values inside that enumeration. 0.1.2 installs a cloned map and restores the original field reference; neither enumerated map is mutated on close. Layout restoration now also verifies original map identity. A .NET Framework regression reproduces the original exception and verifies the field-replacement strategy; installed patch/lifecycle confirmation remains necessary.
+Method: pinned BaseGUI.Update enumerates gamekey_delegates.Keys and invokes callbacks that can close the window. The old restoration replaced dictionary values inside that enumeration. 0.1.2 installs a cloned map and restores the original field reference; neither enumerated map is mutated on close. Layout restoration now also verifies original map identity. A .NET Framework regression reproduces the original exception and verifies the field-replacement strategy; the returned 0.1.2 run also confirms eleven paired restores/closes without the old enumeration failure.
 
 Native icon presentation uses book / ?alch, resolving tab_book / tab_custom_alch via unchanged CraftTabGUI.Draw; native SetSelectedState supplies selected/dim tint. No cloned caption labels or extracted art are distributed. The table-local SwitchTab interception still handles both pages, so the icon ID does not activate vanilla MixedCraftGUI content. The quill/scroll and paired-flask pair remains subject to visual acceptance.
 
@@ -14,7 +14,7 @@ The composition retains the real ResourceBasedCraftGUI Survey owner, native pick
 
 Minimum procedure: replace the installed 0.1.1 copy with 0.1.2, keeping one probe DLL. Open the table, switch the quill/flask tabs using mouse and LB/RB, and close from each page using Back/Esc; reopen and also try right-click closing. On Study select/cancel the material picker and switch again. Provide a screenshot with the icons and LogOutput.log. Repeating the established work/save-load lifecycle is unnecessary. If any diagnostic job is started, use F8 cleanup beside the table and save afterwards as below.
 
-Expected: native icons visible with selected tint, no tab_rar_* missing sprites, no Collection was modified exception, and RAR_TABS_RESTORE layout_restored=True plus RAR_TABS_CLOSED outer=False study=False. The old log's six NGUI layer warnings around a picker opening have no assigned cause: inspect the returned log before accepting the UI; this change does not claim to fix them. No production UI acceptance from compilation alone.
+Expected: native icons visible with selected tint, no tab_rar_* missing sprites, no Collection was modified exception, and RAR_TABS_RESTORE layout_restored=True plus RAR_TABS_CLOSED outer=False study=False. The returned 0.1.2 log still contains thirty NGUI layer warnings around picker interactions, with no assigned cause or reported visual malfunction. Their owner remains to be investigated before closing UI readiness. No production UI acceptance from compilation alone.
 
 ## Frozen 0.1.0 work-lifecycle baseline
 
@@ -54,4 +54,4 @@ Return BepInEx `LogOutput.log` and note whether both menus were usable. No exact
 
 `build.ps1 -GameRoot <installation> -DotnetRoot <dotnet installation> -ExpectedSource <commit SHA>` invokes SDK 6.0.406 Roslyn directly against local host/BepInEx references, without package restore. `-CheckOnly` permits a development-tree compilation and writes an explicitly unnumbered check artifact; that output is never handed as a candidate. The handoff mode requires the exact commit and clean tree, refuses to overwrite numbered output, verifies the assembly version and records hashes of its local references. No proprietary references are copied into the repository or output. Output is under ignored `artifacts/`; the installed filename is `StudyTableWorkProbe.dll`, the handed filename `StudyTableWorkProbe-0.1.0.dll`.
 
-The frozen 0.1.0 lifecycle was runtime-verified; the current correction candidate still needs installed UI verification. The compile gate proves binding only.
+The frozen 0.1.0 lifecycle was runtime-verified; the 0.1.2 close correction and native icon style are now runtime-observed; remaining NGUI warnings and the user's semantic icon choice remain open. The compile gate proves binding only.
