@@ -10,22 +10,21 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyVersion("0.1.1.0")]
+[assembly: AssemblyFileVersion("0.1.1.0")]
 
 namespace NikichMods.Research
 {
     [BepInPlugin("nikichmods.research.studytablework", "Study Table Work Probe", Version)]
     public sealed class StudyTableWorkProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.0";
+        public const string Version = "0.1.1";
         internal const string JobId = "rar_probe_work_010";
         private const string TableId = "mf_alchemy_survey";
         private const string Technology = "The Beginning Of Alchemy";
         private const string HostHash = "e72e4270e4b88dd0a87ca23c9cf1750aec4c4a0fedb40b6d2dae7902fc9c7fd8";
         private static ManualLogSource Log;
-        private static bool enabledProbe;
-        private static bool normalDispatch;
+        internal static bool enabledProbe;
         private static bool registrationSeen;
         private static readonly FieldInfo Last = AccessTools.Field(typeof(CraftComponent), "_last_craft_id");
         private static readonly FieldInfo Last2 = AccessTools.Field(typeof(CraftComponent), "_last_craft_id_2");
@@ -53,6 +52,7 @@ namespace NikichMods.Research
         private void OnDestroy()
         {
             enabledProbe = false;
+            StudyTabs.Restore();
             if (harmony != null) harmony.UnpatchSelf();
         }
 
@@ -63,7 +63,7 @@ namespace NikichMods.Research
             try
             {
                 DumpActive("RAR_WORK_STATUS");
-                GUIElements.me.dialog.Open("Проверка работы на столе 0.1.0", "Убрать тестовое состояние", Cleanup,
+                GUIElements.me.dialog.Open("Проверка работы на столе 0.1.1", "Убрать тестовое состояние", Cleanup,
                     "Закрыть", null, null, GameKey.Select, GameKey.Back,
                     "Тест может сохраняться в игре. Очистка удаляет только тестовое задание и его отметку; потраченные ресурсы не возвращает. После очистки сохраните игру перед удалением DLL.");
             }
@@ -74,6 +74,7 @@ namespace NikichMods.Research
         internal static void Fail(Exception ex)
         {
             enabledProbe = false;
+            StudyTabs.Restore();
             if (Log != null) Log.LogError("RAR_WORK_ERROR action=disabled fallback=vanilla " + ex);
         }
         private static bool IsJob(CraftDefinition craft) { return craft != null && craft.id == JobId; }
@@ -154,14 +155,15 @@ namespace NikichMods.Research
                             needs_from_wgo = new List<Item> { new Item("science", 1) },
                             output = new List<Item>(),
                             condition = Constant(1),
-                            craft_time = Constant(30),
+                            craft_time = Constant(2),
                             energy = Constant(10),
                             sanity = Constant(0),
                             is_auto = false,
                             one_time_craft = true,
                             disable_multi_craft = true,
                             enqueue_type = CraftDefinition.EnqueueType.NeverEnqueue,
-                            hide_quality_icon = true
+                            hide_quality_icon = true,
+                            tab_id = StudyTabs.ResearchTab
                         });
                     }
                     registrationSeen = true;
@@ -183,7 +185,7 @@ namespace NikichMods.Research
         {
             private static bool Prefix(GUIElements __instance, WorldGameObject craftery_wgo)
             {
-                if (!enabledProbe || normalDispatch || !IsTable(craftery_wgo)) return true;
+                if (!enabledProbe || !IsTable(craftery_wgo)) return true;
                 try
                 {
                     bool unlocked = MainGame.me.save.unlocked_techs.Contains(Technology);
@@ -191,18 +193,7 @@ namespace NikichMods.Research
                     if (!unlocked || craftery_wgo.components.craft.is_crafting) return true;
                     if (!registrationSeen || GameBalance.me.GetDataOrNull<CraftDefinition>(JobId) == null)
                         throw new InvalidOperationException("Job registration missed the real load lifecycle");
-                    __instance.dialog.Open("Исследовательский стол: проверка 0.1.0", "Обычное изучение", delegate {
-                        try { normalDispatch = true; __instance.OpenCraftGUI(craftery_wgo); }
-                        catch (Exception ex) { Fail(ex); }
-                        finally { normalDispatch = false; }
-                    }, "Проверка исследования", delegate {
-                        try {
-                            Write("RAR_WORK_UI before=native_cards");
-                            __instance.craft.OpenCraftList(craftery_wgo);
-                            Write("RAR_WORK_UI after=native_cards shown=" + __instance.craft.is_shown);
-                        } catch (Exception ex) { Fail(ex); }
-                    }, null, GameKey.Select, GameKey.Back,
-                        "Это диагностическая работа: 1 вера, 1 наука, без образца и без раскрытия рецептов. Используйте тестовое сохранение. F8 после закрытия меню — очистка.");
+                    StudyTabs.Open(craftery_wgo);
                     return false;
                 }
                 catch (Exception ex) { Fail(ex); return true; }

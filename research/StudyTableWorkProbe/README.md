@@ -1,6 +1,22 @@
-# Study Table Work Probe 0.1.0
+# Study Table Work Probe
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
+
+## Current candidate: 0.1.1, two-tab composition
+
+Question: can the existing Survey panel and craft-card list share a native CraftGUI frame/tabs with correct controller/mouse focus, resource-picker return and close/rollback? Work execution is already verified by 0.1.0; do not repeat its full save/cancel lifecycle just to test tabs.
+
+Method: native tab creation/selection and BaseGUI stack semantics plus direct level2 inspection establish the static owners and geometry. Installed focus/layout with the user's mod set still requires observation. This candidate composes the existing ResourceBasedCraftGUI as a native top-of-stack subwindow, like MixedCraftGUI on the native alchemy tab; it does not clone Survey logic or replace its sample filter. It temporarily hides its outer frame/header/dimmer and positions its content inside the outer craft frame. Native picker remains a separate modal. Scoped next/previous-tab delegates and paired window close handlers bridge the two owners; originals and layout are restored on close/failure.
+
+Inspected scene: level2 SHA-256 `1f75a0328dc4987f3020688a0feb0d310c2bf3f6e288c6e4a64ad09db1f39041`, matching installed host assembly identity. GUIElements owns CraftGUI component 24109 and ResourceBasedCraftGUI 22567; tab prefab width/height is 66/32 UI units. Paths/component existence are checked at entry; missing contracts disable this diagnostic rather than guess a hierarchy.
+
+Minimum procedure: replace 0.1.0 with 0.1.1 (one installed copy under StudyTableWorkProbe.dll). Open the study table after alchemy unlock. Switch Изучение/Рецепты with LB/RB and, if available, mouse. On Изучение, open the real material picker, select an item or cancel, then switch again. Close the complete window from each tab and reopen. Check an unrelated workbench's original tabs. A short test job can be started to verify automatic window closing; it keeps the diagnostic 1 faith/1 science/10 energy inputs but now uses 2 work units. No recipe reward. After any job, F8 cleanup and save remain required as below.
+
+Return a screenshot of each tab and LogOutput.log. Look for RAR_TABS_OPEN, SWITCH, RESTORE layout_restored=True and CLOSED outer=False study=False. RAR_WORK_ERROR or RAR_TABS_RESTORE_ERROR prevents acceptance. This is a two-tab candidate, not proof that its layout/focus is correct before the user test. Caption strings and final presentation remain diagnostic.
+
+## Frozen 0.1.0 work-lifecycle baseline
+
+The sections below describe the immutable first probe, source `6f4fd3bd21e6fee2247c0edfdc372bb1e1f988ef`; its artifact is not rebuilt. Returned evidence and current pending UI candidate identities are owned by docs/TEST_LOG.md.
 
 ## Question and method
 
