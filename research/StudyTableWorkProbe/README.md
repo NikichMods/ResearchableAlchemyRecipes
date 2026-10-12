@@ -2,7 +2,13 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current candidate: 0.1.5, F2 live calibration
+## Current candidate: 0.1.6, fixed chosen icon placement
+
+The returned 0.1.5 panel screenshot and last two Done exports select Material Study correction (+1,+1) and Recipe Research (+2,+1). Fixed absolute offsets from native tab-background center are now (-2,+2) and (+1.5,+1.5). Full PNG canvases, native size/tint, key-map rollback, ordinary Study and work/save behavior remain unchanged.
+
+The temporary F2 panel, session offsets, IMGUI reference and input-capture/Update guards are removed. F8 diagnostic job cleanup remains. Source review and compilation passed; this exact new binary is not installed-runtime accepted merely because the same positions were chosen in 0.1.5. A fresh-launch visual glance can confirm matching placement; no repeat of work/payment/save-load or calibration is required. Exact identity and remaining UI/reward/source gates are in docs/TEST_LOG.md and docs/DESIGN.md.
+
+## Frozen 0.1.5 F2 live calibration baseline
 
 Open the study table and press F2. The mouse-operated panel has independent X/Y sliders and +/- buttons for both icons, integer corrections -8..+8 relative to 0.1.4. +X moves right, +Y moves up; units are native UI pixels. Use panel page buttons to inspect active/dim states, Reset to return to the baseline, and Done to log selected values and close. F2 also closes. Values persist across table reopen during this process, not across game restarts or in saves/config.
 

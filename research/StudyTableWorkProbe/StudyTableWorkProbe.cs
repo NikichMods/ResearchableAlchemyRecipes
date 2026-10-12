@@ -10,15 +10,15 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.5.0")]
-[assembly: AssemblyFileVersion("0.1.5.0")]
+[assembly: AssemblyVersion("0.1.6.0")]
+[assembly: AssemblyFileVersion("0.1.6.0")]
 
 namespace NikichMods.Research
 {
     [BepInPlugin("nikichmods.research.studytablework", "Study Table Work Probe", Version)]
     public sealed class StudyTableWorkProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.5";
+        public const string Version = "0.1.6";
         internal const string JobId = "rar_probe_work_010";
         private const string TableId = "mf_alchemy_survey";
         private const string Technology = "The Beginning Of Alchemy";
@@ -53,7 +53,6 @@ namespace NikichMods.Research
         private void OnDestroy()
         {
             enabledProbe = false;
-            IconCalibration.Shutdown();
             StudyTabs.Restore();
             if (harmony != null) harmony.UnpatchSelf();
             TabArtwork.Dispose();
@@ -61,8 +60,6 @@ namespace NikichMods.Research
 
         private void Update()
         {
-            try { IconCalibration.Tick(); }
-            catch (Exception ex) { Fail(ex); }
             if (!enabledProbe || !Input.GetKeyDown(KeyCode.F8) || !MainGame.game_started || !BaseGUI.all_guis_closed)
                 return;
             try
@@ -72,12 +69,6 @@ namespace NikichMods.Research
                     "Закрыть", null, null, GameKey.Select, GameKey.Back,
                     "Тест может сохраняться в игре. Очистка удаляет только тестовое задание и его отметку; потраченные ресурсы не возвращает. После очистки сохраните игру перед удалением DLL.");
             }
-            catch (Exception ex) { Fail(ex); }
-        }
-
-        private void OnGUI()
-        {
-            try { IconCalibration.Draw(); }
             catch (Exception ex) { Fail(ex); }
         }
 

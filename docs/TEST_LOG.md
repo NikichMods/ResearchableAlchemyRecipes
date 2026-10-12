@@ -1,8 +1,16 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.6 — fixed user-selected icon position
+
+**Status:** local compile gate passed; exact clean-source handoff identity to be recorded after build. Selected placement was observed in 0.1.5; exact 0.1.6 binary is not yet runtime-tested.
+
+- Freeze final 0.1.5 calibration corrections: Material Study +1/+1 -> absolute (-2,+2); Recipe Research +2/+1 -> absolute (+1.5,+1.5), relative to native tab-background center. The last two chosen records agree.
+- Remove IconCalibration, F2 polling/OnGUI, native input-capture flags/Update guards, page/tuning callbacks and IMGUI-module reference. F8 job cleanup remains. No PNG, size, native tint, ordinary Study, work/cost/save or science-header change.
+- Static review/compile confirms no calibration class, F2 polling or input guards remain; offsets are constants applied at native Draw as before. No need to repeat the established work/save-load lifecycle. A fresh-launch glance can confirm the fixed placement matches the selected screenshot; whole UI/production acceptance remains separate.
+
 ## Study Table Work Probe 0.1.5 — F2 icon calibration candidate
 
-**Status:** clean-source compile/identity gate passed; installed tool input/visual operation pending.
+**Status:** exact installed DLL matched; returned screenshot/log demonstrate the F2 panel, repeated chosen-value export and restoration/close path. Final optical corrections selected: material +1/+1, recipe +2/+1 relative to 0.1.4. This does not accept the whole production mod.
 
 - Exact source: 737d4cd3c591eb47d2d55c7515a5cd3286bb51ed, research/study-table-work.
 - Artifact: StudyTableWorkProbe-0.1.5.dll; SHA-256 771a4f3012fbed8c4f8113f0330b50e9d83772f3aa6589d8d6f06312a75583f2. Plugin 0.1.5, assembly/file 0.1.5.0; optimized deterministic SDK 6.0.406 build, warnings as errors, both versions asserted. Previous numbered artifacts unchanged.
@@ -13,6 +21,15 @@
 - Input containment: the inspected public static UICamera.ignoreAllEvents early-return guard pauses native NGUI events while IMGUI owns input. Scoped BaseGUI.Update and ResourceBasedCraftGUI.Update prefixes suppress table keys (Survey handles Interaction before its base call). No native dictionaries/stack changes. Closing retains the guard until a later frame after mouse buttons are released, preventing click-through; the original flag is restored. Plugin destruction restores immediately. Failure/table loss closes the panel and releases capture through the next Update.
 - API evidence: Assembly-CSharp-firstpass.dll SHA-256 9dc6def3b7715dd27eeb168ddc0af47e31c6f38d3fbee24bf592899392026498, exact UICamera.Update IL entry checks ignoreAllEvents and returns when true. Same verified host references plus installed UnityEngine.IMGUIModule.dll; no dependency binaries distributed. No recurring object scans or slider-change log spam.
 - Runtime check: open table, F2; adjust each icon using sliders/buttons and compare both pages using panel buttons. Reset once if useful, choose final values and Done, then verify normal switching/close/reopen with mouse/gamepad. Return chosen-values log and final screenshots. RAR_TAB_CALIBRATION_INPUT restored=True and no probe errors are required. No work/save-load repetition. Existing diagnostic job remains save-persistent only if started; F8 cleanup rules unchanged.
+
+### Returned 0.1.5 evidence and chosen values
+
+Log SHA-256: 4a48481db590b8d0556e8c572167deabc4e3cc3502ff5907588f17bd088e88f8. Installed DLL SHA-256 matches the handed 0.1.5 artifact above. Screenshot shows the panel and selected corrections material_dx=1/material_dy=1/recipe_dx=2/recipe_dy=1.
+
+- Four panel opens and four RAR_TAB_CALIBRATION_INPUT restored=True markers; six opens/paired closes/layout restorations and 25 tab switches. No probe errors or Collection was modified exceptions. This records the actual calibration/export/close path; no separate verbal input-mode acceptance is inferred.
+- Earlier chosen recipe_dx=1 is superseded by the last two reason=chosen records, both material_dx=1/material_dy=1/recipe_dx=2/recipe_dy=1. Resulting offsets: material_x=-2/material_y=2/recipe_x=1.5/recipe_y=1.5. Treat explicit Done action plus returned screenshot/log as the selected working placement, not stable production approval.
+- No NGUI layer warnings in this capture; native picker opening is not exercised. This does not resolve the earlier picker warning owner.
+- Freeze values in 0.1.6 and remove the temporary calibration tool as previously agreed.
 
 ## Study Table Work Probe 0.1.4 — visible-art centering candidate
 
