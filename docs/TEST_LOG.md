@@ -602,3 +602,19 @@ The user explicitly selects B throughout the 36-input comparison, without outlin
 - Existing SDK 6.0.406 clean-source deterministic build/identity gate passed. Existing knowledge, actual installed quantity-checker and source-topic suites passed. Source inspection confirms adopted B mappings and existing localized-heading colour-scope formatting.
 - Installed with game closed. Prior 0.1.26 hash verified before replacement; new installed bytes verified before previous DLL removal. Exactly one study probe remains. Previous handed artifacts are retained unchanged.
 - Minimum user check: inspect a few familiar tooltips for palette comfort, especially light-associated headings and coloured families. No paid research, source-coverage audit or persistence repetition is required for this colour-only change. No universal language/layout or production acceptance is inferred.
+
+### Returned 0.1.27 — palette B accepted
+
+The user explicitly accepts the installed result and requests a separate selected-outline experiment. This accepts current palette appearance, not universal language/layout coverage or production promotion.
+
+## Study Table Work Probe 0.1.28 — selected outlines and secondary goo sources
+
+Status: clean-source compile/identity gate and existing local suites passed; exact DLL installed with game closed, installed visual acceptance pending.
+
+- Source: 6cc345f38e488963569fc5ee51827f940e16f4b3, research/study-table-work.
+- Artifact: StudyTableWorkProbe-0.1.28.dll; plugin 0.1.28, assembly/file 0.1.28.0; SHA-256 9fa47f98c8c907a92c929b111fb86e7912efc8132c9bebc91fe49a94917dc320.
+- Existing SDK 6.0.406 deterministic clean-source build and installed hash verification passed. Previous 0.1.27 installed hash verified before replacement; exactly one study probe remains. Earlier numbered artifacts remain immutable.
+- Eight requested headings use C colours and native Outline at distance (0.5, 0.5), colour #4B3422. Native text-widget partition preserves complete text and blank lines in RU/EN fixture cases; other headings stay B. Font eligibility is evaluated before light text is applied; unknown/packed font paths retain B without a global failure. Bubble is rebuilt on language change through native font selection. Actual multilingual appearance and split-widget spacing still need installed evidence.
+- Failed-experiment goo_ source rows are stably moved behind ordinary rows within equipment groups and wrapped in native [AA]/[FF] alpha tags. Tests verify source catalogue is not reordered, monster jelly is not dimmed, Study marks remain atomic under wrapping, and alpha reset precedes the next equipment row.
+- Existing knowledge/source/actual installed foreign quantity-checker suites pass. Shared static font/layout/alpha evidence is recorded at GraveyardKeeperResearch ec41cbe. These tests do not prove live glyph appearance or all source-route layouts.
+- User check: inspect light headings (white/life/silver/gold/salt/oil), ordinary headings, section spacing and the legibility of final goo rows. No repeat paid-research/source-coverage/persistence run for this display-only experiment.
