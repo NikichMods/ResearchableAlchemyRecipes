@@ -22,3 +22,6 @@ The candidate remains research-only; localization does not select a production t
 
 
 Returned 0.1.32 feedback: user approves visible RU/EN localization and reports Italian appearance good; JA/ZH/KO screenshots show glyph-complete visible excerpts and preserved hierarchy, without editorial acceptance. Selected recipes jitter horizontally on several languages; this opens geometry acceptance independently of string/glyph checks. Candidate 0.1.33 preserves the table/resource and native font ownership, aligns the owned geometry to NGUI integer pixels/even content widths and allows the shared introductory subtitle to wrap without inflating short source lists. Its installed motion/width acceptance is pending.
+
+
+Returned 0.1.33 acceptance: user switched all eleven native languages and reports no visual problems. Current font/layout/language-switch presentation is accepted for the observed session; native-speaker editorial validation and exhaustive resolutions/content remain outside that claim. TEST_LOG.md records exact candidate and bounded zero-motion observations.

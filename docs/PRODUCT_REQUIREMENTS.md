@@ -35,7 +35,7 @@ For an alchemical product known to the character, the player can follow a predic
 
 - Adopted Russian source wording: "Использование предмета" above the native item name; "Извлечение из тела" / "Сожжение тела" below the applicable equipment; "Покупка" above the native NPC name. Preserve all availability/technology annotations. Avoid duplicating "Тело" and a parenthetical description of the same action.
 
-- Final mod presentation must support all game languages and the complete supported ingredient population. Current research prototypes use Russian; localization implementation is deferred, not removed from final scope. Visual grouping must not depend on Russian names or one representative reagent's colours/line lengths.
+- Final mod presentation must support all game languages and the complete supported ingredient population. Current research guidance implements all 11 native locales, with bounded installed visual acceptance in 0.1.33. Visual grouping must not depend on Russian names or one representative reagent's colours/line lengths.
 - First-version guidance lives with known formula components at the native alchemy tables; a standalone journal/character-window tab is deferred and is not required for the initial feature. Reconsider it later as optional consolidated browsing, not a prerequisite.
 - Research starts at the study table. Known formulas remain available through ordinary alchemy-table lists.
 - Ingredient guidance must be available for repeated reference while inspecting a known formula: reagent -> source alternatives -> processing method/equipment/conditions -> remaining material-study requirement.
