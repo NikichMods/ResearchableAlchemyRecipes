@@ -14,10 +14,12 @@ namespace NikichMods.Research
         private static UIWidget frame;
         private static Camera camera;
         private static float gap;
-        private static bool logged;
+        private static bool revealed;
+        private static UIWidget background;
         private static UIWidget[] chrome;
         private static UIWidget[] amountWidgets;
-        private static int lastWidth, lastHeight, settled;
+        private static Vector4 lastLayout;
+        private static int settled;
         internal static void Show(CraftGUI gui, CraftItemGUI row)
         {
             if (bubble != null && selected == row && ReferenceEquals(formula, row.current_craft)) return;
@@ -36,21 +38,23 @@ namespace NikichMods.Research
             bubble = TooltipBubbleGUI.Show(data, true, collider);
             if (bubble == null) throw new InvalidOperationException("Native tooltip creation failed");
             bubble.widget.alpha = 0f;
-            // Native index LD: the bubble grows up/right from its lower-left tail.
-            for (int i = 0; i < bubble.corners.Length; i++) bubble.corners[i].SetActive(i == 0);
-            // Exact native tooltip prefab leaves BaseBubbleGUI.back_spr unset.
-            // Its four corner families own the frame; cache them once, measure only the
-            // currently active family plus the native content widget after native layout.
-            var widgets = new List<UIWidget> { bubble.widget };
-            foreach (var corner in bubble.corners)
-                widgets.AddRange(corner.GetComponentsInChildren<UIWidget>(true));
-            chrome = widgets.ToArray();
+            // Verified 1.407 corner groups contain only tails/attachment points.
+            // The rectangular background is independent, despite back_spr being null.
+            foreach (var corner in bubble.corners) corner.SetActive(false);
+            var back = bubble.transform.Find("back and points/back");
+            background = back == null ? null : back.GetComponent<UIWidget>();
+            if (background == null) throw new InvalidOperationException("Missing native tooltip background");
+            chrome = bubble.GetComponentsInChildren<UIWidget>(true);
             amountWidgets = row.amount_buttons == null ? new UIWidget[0] : row.amount_buttons.GetComponentsInChildren<UIWidget>(true);
             float scale = PixelsPerUnit(bubble.transform);
             gap = row.label_descr.fontSize * scale * 0.5f;
-            Rect rect = Bounds(frame);
-            float right = Screen.width - RightEdge(rect) - gap * 2f;
-            int width = Mathf.FloorToInt(Mathf.Min(row.GetComponent<UIWidget>().width, right / scale - row.label_descr.fontSize));
+            UpdateAnchors();
+            // Measure the actual title/section headings with the current native font.
+            // Long source/condition lines wrap; they do not dictate empty panel width.
+            int preferred = MeasureHeadings();
+            float padding = (Bounds(background).width - Bounds(bubble.widget).width) / scale;
+            float right = Screen.width - RightEdge(Bounds(frame)) - gap * 2f;
+            int width = Mathf.FloorToInt(Mathf.Min(preferred, right / scale - padding));
             if (width < row.label_descr.fontSize * 4) { Hide(); StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP status=hidden reason=insufficient_side_space"); return; }
             foreach (var label in bubble.GetComponentsInChildren<UILabel>(true))
             {
@@ -63,8 +67,34 @@ namespace NikichMods.Research
                 label.ProcessText(false, true);
             }
             bubble.UpdateSizeAndWidgetsPositions();
-            Place();
+            UpdateAnchors();
             StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP product=" + formula.GetFirstRealOutput().id + " text_width=" + width + " renderer=native independent_list=True");
+        }
+        private static int MeasureHeadings()
+        {
+            float width = 0f;
+            foreach (var label in bubble.GetComponentsInChildren<UILabel>(true))
+            {
+                string original = label.text;
+                var headings = new List<string>();
+                string[] lines = original.Split('\n');
+                headings.Add(lines[0]);
+                foreach (string line in lines)
+                    if (line.StartsWith("  ", StringComparison.Ordinal) && !line.StartsWith("    ", StringComparison.Ordinal)) headings.Add(line);
+                label.overflowMethod = UILabel.Overflow.ResizeFreely;
+                label.text = string.Join("\n", headings.ToArray());
+                label.ProcessText(false, true);
+                width = Mathf.Max(width, label.printedSize.x);
+                label.text = original;
+            }
+            return Mathf.CeilToInt(width);
+        }
+        private static void UpdateAnchors()
+        {
+            foreach (var widget in chrome)
+                if (widget != null && widget.gameObject.activeInHierarchy) widget.UpdateAnchors();
+            foreach (var widget in amountWidgets)
+                if (widget != null && widget.gameObject.activeInHierarchy) widget.UpdateAnchors();
         }
         private static string Name(CraftDefinition craft) { return GJL.L(craft.GetNameNonLocalized()); }
         private static float PixelsPerUnit(Transform transform)
@@ -83,17 +113,10 @@ namespace NikichMods.Research
             }
             return Rect.MinMaxRect(minX, minY, maxX, maxY);
         }
-        private static void Place()
+        private static void PrepareGeometry()
         {
-            if (bubble == null || frame == null) return;
-            Rect box = Bounds(bubble.widget), host = Bounds(frame);
-            foreach (var widget in chrome)
-                if (widget != null && widget.gameObject.activeInHierarchy)
-                {
-                    Rect part = Bounds(widget);
-                    box = Rect.MinMaxRect(Mathf.Min(box.xMin, part.xMin), Mathf.Min(box.yMin, part.yMin),
-                        Mathf.Max(box.xMax, part.xMax), Mathf.Max(box.yMax, part.yMax));
-                }
+            UpdateAnchors();
+            Rect box = Bounds(background), host = Bounds(frame);
             float x = RightEdge(host) + gap;
             x = Mathf.Clamp(x, gap, Mathf.Max(gap, Screen.width - gap - box.width));
             float bottom = host.yMin;
@@ -101,10 +124,14 @@ namespace NikichMods.Research
             var current = camera.WorldToScreenPoint(bubble.transform.position);
             var desired = current + new Vector3(x - box.xMin, bottom - box.yMin, 0f);
             bubble.transform.position += camera.ScreenToWorldPoint(desired) - camera.ScreenToWorldPoint(current);
-            if (!logged)
+            var layout = new Vector4(Mathf.Round(x), Mathf.Round(bottom), Mathf.Round(box.width), Mathf.Round(box.height));
+            settled = layout == lastLayout ? settled + 1 : 0;
+            lastLayout = layout;
+            bubble.widget.alpha = settled > 0 ? 1f : 0f;
+            if (settled > 0 && !revealed)
             {
-                logged = true;
-                StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP_POSITION anchor=window_lower_right tail=LD height_screen=" + box.height + " exceeds_screen=" + (box.height > Screen.height - gap * 2f));
+                revealed = true;
+                StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP_READY phase=before_geometry anchor=window_lower_right tail=False x=" + layout.x + " y=" + layout.y + " width=" + layout.z + " height=" + layout.w + " exceeds_screen=" + (box.height > Screen.height - gap * 2f));
             }
         }
         private static float RightEdge(Rect host)
@@ -117,8 +144,8 @@ namespace NikichMods.Research
         internal static void Hide()
         {
             var old = bubble; bubble = null;
-            selected = null; formula = null; frame = null; camera = null; chrome = null; amountWidgets = null; logged = false;
-            lastWidth = lastHeight = settled = 0;
+            selected = null; formula = null; frame = null; camera = null; chrome = null; amountWidgets = null; background = null; revealed = false;
+            lastLayout = Vector4.zero; settled = 0;
             if (old != null) old.DestroyBubble();
         }
         [HarmonyPatch(typeof(WidgetsBubbleGUI), "Update")]
@@ -128,7 +155,9 @@ namespace NikichMods.Research
             private static void Postfix(WidgetsBubbleGUI __instance)
             {
                 if (!ReferenceEquals(__instance, bubble)) return;
-                try { Place(); bubble.widget.alpha = settled > 0 ? 1f : 0f; }
+                // Native collider-mode Update raises zero alpha. Keep creation hidden;
+                // only the render-geometry consumer may reveal the settled instance.
+                try { bubble.widget.alpha = settled > 0 ? 1f : 0f; }
                 catch (Exception ex) { Hide(); StudyTableWorkProbe.Fail(ex); }
             }
         }
@@ -139,21 +168,19 @@ namespace NikichMods.Research
             // follows collider-driven native corner/position selection.
             private static bool Prefix(BaseBubbleGUI __instance) { return !ReferenceEquals(__instance, bubble); }
         }
-        [HarmonyPatch(typeof(WidgetsBubbleGUI), "LateUpdate")]
+        [HarmonyPatch(typeof(UIPanel), "UpdateSelf")]
         private static class Ready
         {
             [HarmonyPriority(Priority.Last)]
-            private static void Postfix(WidgetsBubbleGUI __instance)
+            private static void Prefix(UIPanel __instance)
             {
-                if (!ReferenceEquals(__instance, bubble)) return;
+                // 1.407 UpdateSelf builds widget geometry/draw calls. A bubble's LateUpdate
+                // is not that final consumer; placement there can miss this frame's mesh.
+                // Other panel contents and the native UpdateSelf are left intact.
+                if (bubble == null || background == null || !ReferenceEquals(__instance, background.panel)) return;
                 try
                 {
-                    int width = bubble.widget.width, height = bubble.widget.height;
-                    settled = width == lastWidth && height == lastHeight ? settled + 1 : 0;
-                    lastWidth = width; lastHeight = height;
-                    Place();
-                    bubble.widget.alpha = settled > 0 ? 1f : 0f;
-                    if (settled == 1) StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP_READY phase=visible width=" + width + " height=" + height);
+                    PrepareGeometry();
                 }
                 catch (Exception ex) { Hide(); StudyTableWorkProbe.Fail(ex); }
             }

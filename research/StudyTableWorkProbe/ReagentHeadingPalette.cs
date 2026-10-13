@@ -10,16 +10,16 @@ namespace NikichMods.Research
         private static Dictionary<string, string> Create()
         {
             var result = new Dictionary<string, string> {
-                { "alchemy_1_yellow_electro", "403D0F" }, { "ash", "3B3A43" },
-                { "blood", "601F24" }, { "drop_alcohol", "2E3C4C" }, { "drop_oil", "463913" },
-                { "powder_gold", "493910" }, { "powder_graphite", "313D46" },
-                { "powder_silver", "2D3E48" }, { "powder_white", "3C3C2A" },
-                { "taste_booster:salt", "3F3C2A" }, { "water", "1A4051" }
+                { "alchemy_1_yellow_electro", "504C11" }, { "ash", "4B4955" },
+                { "blood", "871D25" }, { "drop_alcohol", "3B4C61" }, { "drop_oil", "5A4813" },
+                { "powder_gold", "5D4814" }, { "powder_graphite", "3E4D58" },
+                { "powder_silver", "394E5B" }, { "powder_white", "4C4C36" },
+                { "taste_booster:salt", "504C35" }, { "water", "17516B" }
             };
             var families = new Dictionary<string, string> {
-                { "brown", "50361B" }, { "d_blue", "1F2C60" }, { "d_green", "2C4029" },
-                { "d_violet", "452C54" }, { "green", "2F401B" }, { "red", "63231C" },
-                { "violet", "421E62" }, { "yellow", "433A0F" }
+                { "brown", "6B4217" }, { "d_blue", "1D3287" }, { "d_green", "395235" },
+                { "d_violet", "5F1D87" }, { "green", "365412" }, { "red", "87271D" },
+                { "violet", "551D87" }, { "yellow", "564A12" }
             };
             foreach (var family in families)
                 for (int type = 1; type <= 3; type++) result.Add("alchemy_" + type + "_" + family.Key, family.Value);

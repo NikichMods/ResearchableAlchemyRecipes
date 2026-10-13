@@ -81,29 +81,43 @@ namespace NikichMods.Research
             List<Route> sources;
             if (!routes.TryGetValue(ingredient, out sources) || sources.Count == 0) return false;
             var remaining = new List<Route>(sources);
+            var headings = new List<string>();
+            var sections = new Dictionary<string, List<string>>();
             while (remaining.Count > 0)
             {
                 var source = remaining[0]; remaining.RemoveAt(0);
                 Route paired = remaining.Find(other => CanCombine(source, other, save));
                 if (paired != null) remaining.Remove(paired);
-                text.Append("\n• ").Append(name(source.source)).Append(" → ");
+                string equipment;
                 if (source.equipment != null)
                 {
-                    string equipment = name(source.equipment);
+                    equipment = name(source.equipment);
                     if (paired != null)
                     {
                         string first = name("mf_preparation_1"), second = name("mf_preparation_2");
-                        equipment = second == first + " II" ? first + " I–II" : first + " / " + second;
+                        equipment = second == first + " II" ? first + " 1, 2" : first + " / " + second;
                     }
-                    text.Append(equipment).Append(" (").Append(source.method).Append(")");
                 }
-                else text.Append(source.method);
-                if (source.yield > 1) text.Append(" — ").Append(source.yield).Append(" ед.");
+                else equipment = source.method;
+                if (source.yield > 1) equipment += " — " + source.yield + " ед.";
+                var line = new StringBuilder(name(source.source));
+                if (source.equipment != null) line.Append(" (").Append(source.method).Append(")");
                 if (source.extraction != null)
                 {
-                    if (!save.IsCraftVisible(source.extraction)) Closed(text, source, save, name, "рецепт закрыт");
+                    if (!save.IsCraftVisible(source.extraction)) Closed(line, source, save, name, "рецепт закрыт");
                 }
-                if (source.blueprint != null && !save.IsCraftVisible(source.blueprint)) Closed(text, source, save, name, "чертёж закрыт");
+                if (source.blueprint != null && !save.IsCraftVisible(source.blueprint)) Closed(line, source, save, name, "чертёж закрыт");
+                List<string> entries;
+                if (!sections.TryGetValue(equipment, out entries))
+                {
+                    entries = new List<string>(); sections.Add(equipment, entries); headings.Add(equipment);
+                }
+                entries.Add(line.ToString());
+            }
+            foreach (string heading in headings)
+            {
+                text.Append("\n  ").Append(heading).Append(":");
+                foreach (string line in sections[heading]) text.Append("\n    ").Append(line);
             }
             return true;
         }

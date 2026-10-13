@@ -242,7 +242,7 @@ public static class SourceTopicTests
             var formula = new CraftDefinition { needs = new List<Item> { new Item(ingredient, 1) } };
             string text = (string)core.Invoke(null, new object[] { formula, empty, save, names, false, true });
             Assert(!text.Contains("Источник пока") && !text.Contains("[не изучено]"), "Procedural source absent or incorrectly needs material Study");
-            if (ingredient == "water") Assert(text.Contains("fixture_water_container") && text.Contains("20 ед.") && !text.Contains("fixture_not_usable"), "Item-use eligibility/yield wrong");
+            if (ingredient == "water") Assert(text.Contains("\n  Использовать в инвентаре — 20 ед.:\n    fixture_water_container") && !text.Contains("fixture_not_usable"), "Item-use equipment/source grouping or yield wrong");
             if (ingredient == "blood") Assert(text.Contains("извлечение") && text.Contains("извлечение из тела") && text.Contains("fixture_required_skill"), "Body-part or declared technology condition absent");
             if (ingredient == "ash") Assert(text.Contains("сожжение") && text.Contains("mf_pyre_placed") && text.Contains("mf_crematorium"), "Hidden native automatic channels missing or incorrectly shown as menu recipes");
         }
@@ -263,10 +263,10 @@ public static class SourceTopicTests
         Func<string, string> preparationNames = id => id == "mf_preparation_1" ? "fixture table" : id == "mf_preparation_2" ? "fixture table II" : id;
         var bloodFormula = new CraftDefinition { needs = new List<Item> { new Item("blood", 1) } };
         string combined = (string)core.Invoke(null, new object[] { bloodFormula, empty, save, preparationNames, false, true });
-        Assert(combined.Contains("fixture table I–II"), "Available equivalent preparation tiers not combined");
+        Assert(combined.Contains("\n  fixture table 1, 2:\n    body (извлечение из тела)") && !combined.Contains("I–II"), "Available preparation tiers/source format or readable numbering wrong");
         save.locked_crafts.Add(extraction2.id);
         string separate = (string)core.Invoke(null, new object[] { bloodFormula, empty, save, preparationNames, false, true });
-        Assert(!separate.Contains("fixture table I–II") && separate.Contains("рецепт закрыт"), "Closed extraction tier hidden in combined label");
+        Assert(!separate.Contains("fixture table 1, 2") && separate.Contains("рецепт закрыт"), "Closed extraction tier hidden in combined label");
         save.locked_crafts.Remove(extraction2.id);
     }
 }

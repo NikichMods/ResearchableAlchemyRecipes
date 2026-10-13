@@ -129,7 +129,7 @@ namespace NikichMods.Research
                             yields[0] == yields[1] && name(stations[1]) == name(stations[0]) + " II";
                         if (tiers)
                         {
-                            equipment.Append(name(stations[0])).Append(" I–II");
+                            equipment.Append(name(stations[0])).Append(" 1, 2");
                             if (yields[0] > 1) equipment.Append(" — ").Append(yields[0]).Append(" ед.");
                         }
                         else for (int i = 0; i < stations.Count; i++)

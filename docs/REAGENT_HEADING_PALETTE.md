@@ -1,33 +1,33 @@
 # Reagent heading palette — proposal
 
-## Parchment adaptation — 0.1.23 candidate
+## Parchment adaptation — 0.1.24 candidate
 
-The accepted dark-card colours below are historical after switching to native parchment tooltip. User requests readable colours on the new light background. The 0.1.23 candidate keeps each stable ID/hue family, lowers HLS lightness and stores explicit dark RGB values; no colour computation runs during display. White/ash/silver become distinguishable dark neutrals rather than white text on beige. Calculated contrast for all 35 headings is >=4.50 against conservative #C59F69; central returned background samples are approximately #C9A877/#CAA97A. This is a numeric comparison, not live visual acceptance or a universal background guarantee. Native font ownership remains; owned text labels have white tint, body foreground #4B3422, title #241A13 and study marks/footer #693606.
+The accepted dark-card colours below are historical after switching to native parchment tooltip. Returned 0.1.23 was readable but the user judged it too dark/almost black. Candidate 0.1.24 raises HLS lightness toward 0.32 and strengthens saturation for coloured families; lightness is bounded by calculated contrast >=3.50 against conservative #C59F69. This is an explicit candidate tradeoff: stronger visible colour, less contrast than 0.1.23's >=4.50; it requires user readability acceptance. All 35 stable IDs remain, with static RGB values and no runtime colour computation. White/ash/silver remain distinguishable dark neutrals. Central returned background samples are approximately #C9A877/#CAA97A. Native font ownership and body #4B3422, title #241A13, study marks/footer #693606 remain unchanged; labels have white tint. Numeric contrast is not live visual acceptance or an all-background guarantee.
 
 | Family | Parchment RGB |
 | --- | --- |
-| brown | #50361B |
-| d_blue | #1F2C60 |
-| d_green | #2C4029 |
-| d_violet | #452C54 |
-| green | #2F401B |
-| red | #63231C |
-| violet | #421E62 |
-| yellow | #433A0F |
+| brown | #6B4217 |
+| d_blue | #1D3287 |
+| d_green | #395235 |
+| d_violet | #5F1D87 |
+| green | #365412 |
+| red | #87271D |
+| violet | #551D87 |
+| yellow | #564A12 |
 
 | Other ingredient | Parchment RGB |
 | --- | --- |
-| alchemy_1_yellow_electro | #403D0F |
-| ash | #3B3A43 |
-| blood | #601F24 |
-| drop_alcohol | #2E3C4C |
-| drop_oil | #463913 |
-| powder_gold | #493910 |
-| powder_graphite | #313D46 |
-| powder_silver | #2D3E48 |
-| powder_white | #3C3C2A |
-| taste_booster:salt | #3F3C2A |
-| water | #1A4051 |
+| alchemy_1_yellow_electro | #504C11 |
+| ash | #4B4955 |
+| blood | #871D25 |
+| drop_alcohol | #3B4C61 |
+| drop_oil | #5A4813 |
+| powder_gold | #5D4814 |
+| powder_graphite | #3E4D58 |
+| powder_silver | #394E5B |
+| powder_white | #4C4C36 |
+| taste_booster:salt | #504C35 |
+| water | #17516B |
 
 ## Historical dark-card palette
 
