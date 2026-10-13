@@ -8,6 +8,8 @@ Local compile and knowledge/quantity/source/localization suites pass. New checks
 
 Minimum observation: open research and inspect an already partially known topic (black paint in the returned 0.1.34 state), confirm a readable explanation below the native name and inspect one wholly unknown topic without that explanation. Optionally switch language and reopen the research tab. No paid research, synthetic knowledge reset or full restart matrix is requested. Codex installs directly with host closed and reads the local log after the user checks appearance; exact identity follows the clean build.
 
+Clean compiled source `a49b9b85355d456193c84cad3d1b39d5689c214b`, SDK 6.0.406 Roslyn. Immutable artifact `artifacts/StudyTableWorkProbe-0.1.35/StudyTableWorkProbe-0.1.35.dll`, SHA-256 `231136b019f66e95d5d91864813f1337899a7aeed8cf7ea26150943b2d47b80b`; assembly/file/plugin versions agree. Installed directly with game closed under canonical filename StudyTableWorkProbe.dll; installed hash matches. Old 0.1.34 payload hash matched its record, was preserved outside the plugin directory and removed from the installed location only after new-copy verification. One active probe DLL remains. Pre-upgrade log snapshot hash `dfe8b9d7ef47d5c597a83c5d9cd64752abbec6af92abe483ae76cc11d0546735`; private backup/evidence paths are in LOCAL_ENVIRONMENT.md. This establishes installation identity, not new-loader/runtime/appearance acceptance.
+
 ## 0.1.34 room-blueprint source extension — 2026-10-14
 
 ### Returned partial-knowledge result — 2026-10-14
