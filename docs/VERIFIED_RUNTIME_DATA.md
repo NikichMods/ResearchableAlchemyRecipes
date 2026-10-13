@@ -1,5 +1,9 @@
 # Verified host evidence
 
+## Overlapping tooltip render groups — 1.407 static evidence
+
+Returned 0.1.29 screenshot shows native ingredient tooltip overlapping independent guidance, with text visible across the front parchment. Direct level2 inspection: TooltipBubbleGUI root 25244/GO 2872 has no UIPanel and shares Above-any-gui bubbles 37556 (depth 5000, Automatic render queue, useSortingOrder=false); root widget depth 0 and background 33075 depth 1. Both copied instances therefore sort widgets in the same panel, allowing backgrounds/text to interleave across bubbles. Native UIPanel.CompareFunc sorts panels by depth; LateUpdate builds each panel then allocates consecutive Automatic render queues to its complete draw-call group. UIWidget.RemoveFromPanel clears prior ownership/drawCall; CreatePanel finds the nearest parent panel when started, otherwise native Start joins it later. Native panel disable removes its draw calls/registration. Candidate 0.1.30 adds a panel only to guidance, one depth below the shared native tooltip group, preserving its sorting settings and layout owner. Compilation proves APIs; installed overlap/lifetime acceptance remains pending. Private level2/IL stays work/palette and the previously pinned host identities apply.
+
 This document records reusable evidence pointers and limits, not new production readiness claims. The canonical shared owner is [NikichMods/GraveyardKeeperResearch](https://github.com/NikichMods/GraveyardKeeperResearch), starting with its AGENTS.md and docs/RESEARCH_INDEX.md.
 
 ## Host identity

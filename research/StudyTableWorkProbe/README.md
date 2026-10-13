@@ -2,7 +2,11 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current presentation candidate: 0.1.29
+## Current presentation candidate: 0.1.30
+
+Retains accepted 0.1.29 colours/source hierarchy. An owned native UIPanel groups the entire guidance bubble immediately below the ordinary tooltip panel, preventing cross-bubble background/text interleaving. Native bubble destruction owns panel cleanup. Check ingredient-hover overlap, pointer-away restoration and close/reopen; actual render ordering remains an installed acceptance gate.
+
+## Accepted presentation candidate: 0.1.29
 
 Applies the accepted selected light colours without outlines. Goo rows use approximately 35% opacity and follow ordinary sources in mixed equipment lists. Goo-only equipment sections have dim headings too and follow ordinary sections; station order is not hard-coded. Uses the original native single-body text widget with language-change rebuild retained. Inspect colours, complete goo-only blocks and mixed-block readability in familiar tooltips. TEST_LOG.md owns identity and installed acceptance.
 

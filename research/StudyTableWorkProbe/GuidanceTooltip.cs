@@ -23,6 +23,7 @@ namespace NikichMods.Research
         private static Vector4 lastLayout;
         private static int settled;
         private static string language;
+        private static UIPanel renderPanel;
         internal static void Show(CraftGUI gui, CraftItemGUI row)
         {
             string currentLanguage = GJL.GetCurLng();
@@ -43,6 +44,18 @@ namespace NikichMods.Research
             bubble = TooltipBubbleGUI.Show(data, true, collider);
             if (bubble == null) throw new InvalidOperationException("Native tooltip creation failed");
             bubble.widget.alpha = 0f;
+            // The ordinary tooltip panel otherwise batches both bubbles' backgrounds
+            // before both text groups. Keep this bubble's complete draw-call group below it.
+            var sharedPanel = bubble.GetComponentInParent<UIPanel>();
+            if (sharedPanel == null || frame.panel == null || sharedPanel.renderQueue != UIPanel.RenderQueue.Automatic ||
+                bubble.GetComponent<UIPanel>() != null || sharedPanel.depth <= frame.panel.depth + 1)
+                throw new InvalidOperationException("Missing verified native tooltip panel ordering");
+            renderPanel = bubble.gameObject.AddComponent<UIPanel>();
+            renderPanel.depth = sharedPanel.depth - 1;
+            renderPanel.renderQueue = UIPanel.RenderQueue.Automatic;
+            renderPanel.useSortingOrder = sharedPanel.useSortingOrder;
+            renderPanel.sortingOrder = sharedPanel.sortingOrder;
+            renderPanel.sortingLayerName = sharedPanel.sortingLayerName;
             // Verified 1.407 corner groups contain only tails/attachment points.
             // The rectangular background is independent, despite back_spr being null.
             foreach (var corner in bubble.corners) corner.SetActive(false);
@@ -50,6 +63,13 @@ namespace NikichMods.Research
             background = back == null ? null : back.GetComponent<UIWidget>();
             if (background == null) throw new InvalidOperationException("Missing native tooltip background");
             chrome = bubble.GetComponentsInChildren<UIWidget>(true);
+            foreach (var widget in chrome)
+            {
+                widget.RemoveFromPanel();
+                // Not-yet-started widgets join this nearest panel in their native Start.
+                widget.CreatePanel();
+            }
+            StudyTableWorkProbe.Write("RAR_GUIDANCE_RENDER_GROUP guidance_depth=" + renderPanel.depth + " native_tooltip_depth=" + sharedPanel.depth);
             amountWidgets = row.amount_buttons == null ? new UIWidget[0] : row.amount_buttons.GetComponentsInChildren<UIWidget>(true);
             float scale = PixelsPerUnit(bubble.transform);
             gap = row.label_descr.fontSize * scale * 0.5f;
@@ -178,6 +198,7 @@ namespace NikichMods.Research
             selected = null; formula = null; frame = null; camera = null; chrome = null; amountWidgets = null; background = null; revealed = false;
             textLabels = null; expectedStudyMarkers = 0;
             language = null;
+            renderPanel = null;
             lastLayout = Vector4.zero; settled = 0;
             if (old != null) old.DestroyBubble();
         }
