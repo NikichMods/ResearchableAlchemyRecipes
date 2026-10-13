@@ -40,7 +40,7 @@ namespace NikichMods.Research
                 string member = ResolveFamilyMember(input.id, definitions);
                 if (member != null) familyNames[input.id] = member;
             }
-            AdditionalSources.Register(balance, new HashSet<string>(routes.Keys), DLCEngine.IsDLCAvailable(DLCEngine.DLCVersion.Souls));
+            AdditionalSources.Register(balance, new HashSet<string>(routes.Keys), DLCEngine.IsDLCAvailable(DLCEngine.DLCVersion.Souls), DLCEngine.IsDLCAvailable(DLCEngine.DLCVersion.Refugees));
             StudyTableWorkProbe.Write("RAR_GUIDANCE_REGISTER formulas=" + catalogueEntries.Count + " products=" + products.Count + " ingredients=" + routes.Count + " scope=known_native_list");
         }
         internal static bool IsListCandidate(CraftDefinition craft)

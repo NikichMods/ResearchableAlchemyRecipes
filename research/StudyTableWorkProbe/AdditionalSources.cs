@@ -10,17 +10,20 @@ namespace NikichMods.Research
     {
         internal sealed class Route
         {
-            internal string source, equipment, method;
+            internal string source, equipment, method, phrase;
             internal int yield;
             internal CraftDefinition extraction;
             internal ObjectCraftDefinition blueprint;
             internal readonly List<string> technologies = new List<string>();
         }
         private static readonly Dictionary<string, List<Route>> routes = new Dictionary<string, List<Route>>();
-        internal static void Register(GameBalance balance, HashSet<string> ingredients, bool soulsAvailable)
+        internal static void Register(GameBalance balance, HashSet<string> ingredients, bool soulsAvailable, bool croneAvailable)
         {
             routes.Clear();
             foreach (string id in ingredients) routes.Add(id, new List<Route>());
+            // Verified npc_witch root answer #18: dialogue purchase, not vendor stock.
+            if (croneAvailable && ingredients.Contains("memory_powder") && balance.items_data.Exists(item => item.id == "memory_powder"))
+                routes["memory_powder"].Add(new Route { source = "npc_witch", method = "Покупка в диалоге", phrase = "@buy_memory_powder" });
             foreach (var item in balance.items_data)
                 if (item.can_be_used && !item.autouse && string.IsNullOrEmpty(item.on_use_script))
                     foreach (var output in item.drop_on_use)
@@ -43,10 +46,10 @@ namespace NikichMods.Research
                     if (unlock == null) continue;
                     foreach (var technology in balance.techs_data) if (technology.crafts.Contains(unlock)) source.technologies.Add(technology.id);
                 }
-            int uses = 0, extractions = 0, cremations = 0;
+            int uses = 0, extractions = 0, cremations = 0, purchases = 0;
             foreach (var sources in routes.Values) foreach (var source in sources)
-                if (source.extraction != null) extractions++; else if (source.blueprint != null) cremations++; else uses++;
-            StudyTableWorkProbe.Write("RAR_GUIDANCE_EXTRA_REGISTER item_use=" + uses + " extraction=" + extractions + " cremation=" + cremations + " world_load=False");
+                if (source.phrase != null) purchases++; else if (source.extraction != null) extractions++; else if (source.blueprint != null) cremations++; else uses++;
+            StudyTableWorkProbe.Write("RAR_GUIDANCE_EXTRA_REGISTER item_use=" + uses + " extraction=" + extractions + " cremation=" + cremations + " dialogue_purchase=" + purchases + " world_load=False");
         }
         private static void AddCremation(GameBalance balance, HashSet<string> ingredients, string craftId, string station, string blueprintId)
         {
@@ -100,6 +103,8 @@ namespace NikichMods.Research
                 }
                 else equipment = source.method;
                 var line = new StringBuilder(name(source.source));
+                if (source.phrase != null && (!save.unlocked_phrases.Contains(source.phrase) || save.black_list_of_phrases.Contains(source.phrase)))
+                    line.Append(" (покупка пока недоступна)");
                 if (source.equipment != null) line.Append(" (").Append(source.method).Append(")");
                 if (source.extraction != null)
                 {

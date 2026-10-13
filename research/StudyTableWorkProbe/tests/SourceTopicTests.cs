@@ -22,6 +22,7 @@ public static class SourceTopicTests
         save.completed_one_time_crafts = new List<string> { "unrelated_knowledge" };
         save.unlocked_techs = new List<string> { "The Beginning Of Alchemy" };
         save.unlocked_crafts = new List<string>(); save.locked_crafts = new List<string>();
+        save.unlocked_phrases = new List<string>(); save.black_list_of_phrases = new List<string>();
         return save;
     }
     public static int Main(string[] args)
@@ -233,7 +234,7 @@ public static class SourceTopicTests
         };
         balance.techs_data = new List<TechDefinition> { new TechDefinition { id = "fixture_required_skill", crafts = new List<string> { "ex:fixture:blood" } } };
         var extras = asm.GetType("NikichMods.Research.AdditionalSources", true);
-        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "water", "blood", "ash" }, true });
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "water", "blood", "ash" }, true, true });
         var core = guidance.GetMethod("BuildTextCore", Private);
         var empty = new Dictionary<string, List<CraftDefinition>>();
         Func<string, string> names = id => id;
@@ -255,14 +256,14 @@ public static class SourceTopicTests
         first.needs[0].value = 4;
         string quantityFree = (string)guidance.GetMethod("BuildText", Private).Invoke(null, new object[] { tierFormula, sameEquipment, save, tierNames, false });
         Assert(!quantityFree.Contains("×") && !quantityFree.Contains("ед.") && first.needs[0].value == 4, "Guide retains quantities or mutates native source input");
-        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "ash" }, false });
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "ash" }, false, true });
         var ashFormula = new CraftDefinition { needs = new List<Item> { new Item("ash", 1) } };
         string noDlc = (string)core.Invoke(null, new object[] { ashFormula, empty, save, names, false, true });
         Assert(noDlc.Contains("mf_pyre_placed") && !noDlc.Contains("mf_crematorium"), "Absent DLC source displayed or ordinary cremation lost");
         var extraction1 = new CraftDefinition { id = "ex:fixture_I:blood", craft_in = new List<string> { "mf_preparation_1" }, output = new List<Item> { new Item("blood", 1) } };
         var extraction2 = new CraftDefinition { id = "ex:fixture_II:blood", craft_in = new List<string> { "mf_preparation_2" }, output = extraction1.output };
         balance.craft_data.Add(extraction1); balance.craft_data.Add(extraction2);
-        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "blood" }, true });
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "blood" }, true, true });
         Func<string, string> preparationNames = id => id == "mf_preparation_1" ? "fixture table" : id == "mf_preparation_2" ? "fixture table II" : id;
         var bloodFormula = new CraftDefinition { needs = new List<Item> { new Item("blood", 1) } };
         string combined = (string)core.Invoke(null, new object[] { bloodFormula, empty, save, preparationNames, false, true });
@@ -290,5 +291,19 @@ public static class SourceTopicTests
         Assert(narrow.Contains("\n    (closed route)"), "Source condition discarded or left-aligned by wrapping");
         string wide = (string)layout.Invoke(null, new object[] { "    石灰石 " + marker, 40f, marker, measure, wrap });
         Assert(wide == "    石灰石 " + marker, "Localized source name or fitting marker modified");
+        balance.items_data.Add(new ItemDefinition { id = "memory_powder" });
+        var memoryFormula = new CraftDefinition { needs = new List<Item> { new Item("memory_powder", 1) } };
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "memory_powder" }, false, true });
+        string memory = (string)core.Invoke(null, new object[] { memoryFormula, empty, save, names, false, true });
+        Assert(memory.Contains("Покупка в диалоге") && memory.Contains("npc_witch") && memory.Contains("покупка пока недоступна") && !memory.Contains("Источник пока") && !memory.Contains("[не изучено]"), "Dialogue source/closed state missing or incorrectly needs Study");
+        save.unlocked_phrases.Add("@buy_memory_powder");
+        memory = (string)core.Invoke(null, new object[] { memoryFormula, empty, save, names, false, true });
+        Assert(memory.Contains("npc_witch") && !memory.Contains("покупка пока недоступна"), "Unlocked purchase remains marked closed");
+        save.black_list_of_phrases.Add("@buy_memory_powder");
+        memory = (string)core.Invoke(null, new object[] { memoryFormula, empty, save, names, false, true });
+        Assert(memory.Contains("покупка пока недоступна"), "Blacklisted dialogue purchase appears available");
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "memory_powder" }, false, false });
+        memory = (string)core.Invoke(null, new object[] { memoryFormula, empty, save, names, false, true });
+        Assert(!memory.Contains("npc_witch"), "Absent Game of Crone still shows DLC dialogue source");
     }
 }

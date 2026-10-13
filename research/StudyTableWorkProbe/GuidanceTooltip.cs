@@ -18,6 +18,8 @@ namespace NikichMods.Research
         private static UIWidget background;
         private static UIWidget[] chrome;
         private static UIWidget[] amountWidgets;
+        private static UILabel[] textLabels;
+        private static int expectedStudyMarkers;
         private static Vector4 lastLayout;
         private static int settled;
         internal static void Show(CraftGUI gui, CraftItemGUI row)
@@ -61,6 +63,7 @@ namespace NikichMods.Research
                 label.topAnchor.target = null; label.bottomAnchor.target = null;
                 label.ResetAnchors();
                 string original = label.text;
+                expectedStudyMarkers += Count(original, RecipeGuidance.StudyMarker);
                 if (original.Contains(RecipeGuidance.StudyMarker))
                 {
                     float minimum = Measure(label, "    " + RecipeGuidance.StudyMarker);
@@ -76,10 +79,14 @@ namespace NikichMods.Research
             }
             bubble.UpdateSizeAndWidgetsPositions();
             UpdateAnchors();
+            textLabels = bubble.GetComponentsInChildren<UILabel>(true);
             StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP product=" + formula.GetFirstRealOutput().id + " text_width=" + width + " renderer=native independent_list=True");
         }
         private static float Measure(UILabel label, string text)
         {
+            // Native text-widget prefab has overflowWidth=150. ResizeFreely still wraps
+            // at that ceiling; clear it on this owned label before natural-width sizing.
+            label.overflowWidth = 0;
             label.overflowMethod = UILabel.Overflow.ResizeFreely;
             label.text = text;
             label.ProcessText(false, true);
@@ -148,8 +155,13 @@ namespace NikichMods.Research
             {
                 revealed = true;
                 StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP_READY phase=before_geometry anchor=window_lower_right tail=False x=" + layout.x + " y=" + layout.y + " width=" + layout.z + " height=" + layout.w + " exceeds_screen=" + (box.height > Screen.height - gap * 2f));
+                int intact = 0;
+                foreach (var label in textLabels)
+                    if (label != null && label.gameObject.activeInHierarchy) intact += Count(label.processedText, "[не изучено]");
+                StudyTableWorkProbe.Write("RAR_GUIDANCE_TEXT markers=" + expectedStudyMarkers + " rendered_whole=" + intact + " intact=" + (intact == expectedStudyMarkers));
             }
         }
+        private static int Count(string text, string value) { return (text.Length - text.Replace(value, "").Length) / value.Length; }
         private static float RightEdge(Rect host)
         {
             float right = host.xMax;
@@ -161,6 +173,7 @@ namespace NikichMods.Research
         {
             var old = bubble; bubble = null;
             selected = null; formula = null; frame = null; camera = null; chrome = null; amountWidgets = null; background = null; revealed = false;
+            textLabels = null; expectedStudyMarkers = 0;
             lastLayout = Vector4.zero; settled = 0;
             if (old != null) old.DestroyBubble();
         }
