@@ -511,7 +511,9 @@ User reports nothing displayed. Archived private work/evidence/work-0.1.21-retur
 
 ## Study Table Work Probe 0.1.22 — measure actual native tooltip chrome
 
-Status: local compile/knowledge/source/actual-foreign regressions pass. Exact handoff identity to follow; actual rendering/placement/navigation acceptance pending.
+Status: local compile/knowledge/source/actual-foreign regressions and clean-source build gate pass. Exact DLL installed with game closed; actual rendering/placement/navigation acceptance pending.
+
+- Exact source 8958176308720b0aa839539375e46dbc558a1b3a, research/study-table-work. DLL StudyTableWorkProbe-0.1.22.dll; plugin 0.1.22, assembly/file 0.1.22.0; SHA-256 7a5acad84711df5ead92ee5db6f7515a65ef16a7b0c702c3a4006e3a586f7ba2. Existing deterministic SDK/art/reference gate. Prior installed 0.1.21 hash checked before replacement; installed 0.1.22 bytes verified, one study DLL remains. Earlier numbered artifacts stay immutable.
 
 - Direct same-level2 metadata: GUIElements.tooltip_bubble points to 25244, widget 25242; inherited back_spr is null, corners reference four native frame groups (706/1986/371/1347). 0.1.21 mistakenly treated the optional inherited field as the actual tooltip backing. That unverified assumption caused the returned null dereference. This is a local geometry-owner defect, not a reason to replace the adopted native-tooltip family.
 - Cache native corner-group UIWidget references once when our tooltip is created; after native Update, union the content widget and currently active corner-family world bounds. Use that measured envelope for adjacent positioning/screen clamp. No guessed frame border, hierarchy search in the frame hook, imported asset, new global patch, scroll/list mutation or control change. All other 0.1.21 display/knowledge/name policy stays intact.
