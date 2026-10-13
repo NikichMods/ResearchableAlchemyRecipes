@@ -19,3 +19,6 @@ The existing guidance bubble is recreated on native language change. Its current
 - These checks do not establish installed glyph rendering, every resolution/input/font-switch sequence or native-speaker editorial acceptance. Minimum combined runtime check: one familiar Russian tooltip, switch to English and inspect the same recipe; optionally switch back. This also covers the user's deferred 0.1.31 text inspection. Do not ask for eleven separate acceptance runs or repeat research/payment/persistence tests for localization alone.
 
 The candidate remains research-only; localization does not select a production toolchain or promote runtime behavior to main.
+
+
+Returned 0.1.32 feedback: user approves visible RU/EN localization and reports Italian appearance good; JA/ZH/KO screenshots show glyph-complete visible excerpts and preserved hierarchy, without editorial acceptance. Selected recipes jitter horizontally on several languages; this opens geometry acceptance independently of string/glyph checks. Candidate 0.1.33 preserves the table/resource and native font ownership, aligns the owned geometry to NGUI integer pixels/even content widths and allows the shared introductory subtitle to wrap without inflating short source lists. Its installed motion/width acceptance is pending.
