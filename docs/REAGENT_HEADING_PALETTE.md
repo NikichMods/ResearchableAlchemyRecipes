@@ -2,6 +2,8 @@
 
 ## Selected outline experiment — 0.1.28
 
+Returned screenshot feedback: outlined oil visually changes the perceived font, and 170/255 goo alpha is not sufficiently secondary. The user requests an offline preview before another DLL: keep C light colours but remove outlines; reduce goo/Study-row opacity further. Private Light-Headings-No-Outline-Preview.png compares current reconstruction against unoutlined C with 40% opacity and an additional 25% source-row sample. Includes all eight selected heading names. Native glyphs/parchment are reused; this is an offline reconstruction, not a modified screenshot or live rendering acceptance. No new palette/opacity value is adopted yet; installed 0.1.28 remains unchanged.
+
 Installed 0.1.27 B is explicitly accepted by the user. The next requested comparison applies C only to alchemy_1_yellow, alchemy_2_yellow, alchemy_3_yellow, powder_white, taste_booster:salt, powder_silver, powder_gold and drop_oil. Other headings retain B. Each selected heading is a separate native text widget; its Outline effect is #4B3422 at (0.5, 0.5) native units. Unsupported/unknown font paths retain B and no outline locally; colour fallback does not disable the mod. This is an adopted experiment, not installed visual acceptance of C.
 
 Direct installed 1.407 inspection finds all default fonts and the GJL Japanese/Chinese ch_jp_12 and Korean korean fonts are atlas-backed, without replacements. UIFont.packedFontShader returns false on this atlas path, so no built-in language is statically excluded. Actual multilingual outline appearance remains untested. A language change rebuilds the bubble through native current-language font selection. Shared UI_INPUT_TIME_AND_ENVIRONMENT.md owns reusable font/layout/alpha evidence.
