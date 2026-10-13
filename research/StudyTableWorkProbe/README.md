@@ -2,6 +2,10 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
+## Current correction: 0.1.22
+
+Returned 0.1.21 failed at first placement because the native tooltip leaves inherited back_spr unset. Measure native content plus active corner-frame widget bounds instead; all independent-tooltip policy and vanilla-list geometry remain unchanged. Local suites pass; appearance/placement/interaction require installed inspection. Exact identity is in TEST_LOG.md.
+
 ## Current prototype: 0.1.21, separate native tooltip
 
 Native TooltipBubbleGUI renders source guidance beside the unchanged vanilla alchemy list/window. Mouse hover/gamepad focus updates an independent owned bubble, with content-height sizing and no scrolling implementation. Inline description/row geometry, deferred autoscroll, amount/header adjustments and enlarged viewport are removed. Known visible nonstandard recipes (including memory potion) are eligible; exact formula knowledge/station/alchemy gates remain. Crop-family names resolve through native item members, without quality notes. Unverified acquisition sources are identified as such. Paid research criteria remain unchanged.

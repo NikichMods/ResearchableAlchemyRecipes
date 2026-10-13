@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 using System;
+using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ namespace NikichMods.Research
         private static bool onLeft;
         private static float gap;
         private static bool logged;
+        private static UIWidget[] chrome;
         internal static void Show(CraftGUI gui, CraftItemGUI row)
         {
             if (bubble != null && selected == row && ReferenceEquals(formula, row.current_craft)) return;
@@ -32,6 +34,13 @@ namespace NikichMods.Research
             // is independent of the manager's ordinary item tooltip and never takes focus.
             bubble = TooltipBubbleGUI.Show(data, true, collider);
             if (bubble == null) throw new InvalidOperationException("Native tooltip creation failed");
+            // Exact native tooltip prefab leaves BaseBubbleGUI.back_spr unset.
+            // Its four corner families own the frame; cache them once, measure only the
+            // currently active family plus the native content widget after native layout.
+            var widgets = new List<UIWidget> { bubble.widget };
+            foreach (var corner in bubble.corners)
+                widgets.AddRange(corner.GetComponentsInChildren<UIWidget>(true));
+            chrome = widgets.ToArray();
             float scale = PixelsPerUnit(bubble.transform);
             gap = row.label_descr.fontSize * scale * 0.5f;
             Rect rect = Bounds(frame);
@@ -72,7 +81,14 @@ namespace NikichMods.Research
         private static void Place()
         {
             if (bubble == null || frame == null) return;
-            Rect box = Bounds(bubble.back_spr), host = Bounds(frame);
+            Rect box = Bounds(bubble.widget), host = Bounds(frame);
+            foreach (var widget in chrome)
+                if (widget != null && widget.gameObject.activeInHierarchy)
+                {
+                    Rect part = Bounds(widget);
+                    box = Rect.MinMaxRect(Mathf.Min(box.xMin, part.xMin), Mathf.Min(box.yMin, part.yMin),
+                        Mathf.Max(box.xMax, part.xMax), Mathf.Max(box.yMax, part.yMax));
+                }
             float x = onLeft ? host.xMin - gap - box.width : host.xMax + gap;
             x = Mathf.Clamp(x, gap, Mathf.Max(gap, Screen.width - gap - box.width));
             float top = Mathf.Min(host.yMax, Screen.height - gap);
@@ -89,7 +105,7 @@ namespace NikichMods.Research
         internal static void Hide()
         {
             var old = bubble; bubble = null;
-            selected = null; formula = null; frame = null; camera = null; logged = false;
+            selected = null; formula = null; frame = null; camera = null; chrome = null; logged = false;
             if (old != null) old.DestroyBubble();
         }
         [HarmonyPatch(typeof(WidgetsBubbleGUI), "Update")]
