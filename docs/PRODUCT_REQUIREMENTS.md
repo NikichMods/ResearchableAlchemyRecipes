@@ -63,6 +63,7 @@ For an alchemical product known to the character, the player can follow a predic
 - Installing the mod after progression must not require restarting or replaying technology unlocks merely to register research topics. Reconstruct current eligibility and knowledge from verified save-backed/native state on load.
 - Read the existing technology unlock state on old saves; opening access must not depend solely on observing a new Clotho conversation or a future unlock event.
 - Awareness of a past disappeared item or interaction cannot be promised unless a persistent host record is established. Current-source eligibility is the selected rule.
+- Temporary crafting activity at an otherwise accessible church workbench does not hide research topics derived from its unlocked recipes. User adopts this on 2026-10-14. Preserve physical presence/removal/disable/tutorial and native recipe visibility gates; target-input ownership and station idle state are not awareness prerequisites.
 - Preserve vanilla source-material study and ordinary manufacturing. Unknown formulas are not automatically revealed just because the product becomes a research topic.
 - Targeted recipe purchasing from Clotho is a separate possible future mod, outside initial scope.
 - No logic minigame, deduction requirement, generator or UI is inherited from AlchemyRiddle.

@@ -5,21 +5,25 @@ using HarmonyLib;
 
 namespace NikichMods.Research
 {
-    // Bounded room-blueprint research, not a global product catalogue or encounter ledger.
+    // Bounded room/church research, not a global product catalogue or encounter ledger.
     internal static class SourceResearch
     {
         internal const string Builder = "keeper_room_builddesk";
+        internal const string Church = "table_book_constr";
         internal const string Technology = "The Beginning Of Alchemy";
         private const string JobPrefix = "rar_probe_source_paint_0110_";
         // Preserve the handed paint job IDs; new groups reuse the same verified source owner.
-        private static readonly string[] Products = { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint", "black_paint", "blue_paint", "white_paint", "glue" };
-        private static readonly int[] FormulaCounts = { 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 1 };
+        private static readonly string[] Products = { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint", "black_paint", "blue_paint", "white_paint", "glue", "acid", "alkali", "aromatizer", "dark_elixir", "energy_elixir", "flask_green_l_plus", "flavor_enhancer", "freshener", "golden_elixir", "growth_enhancer", "preservative", "silver_elixir", "tanning_agent" };
+        private static readonly int[] FormulaCounts = { 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 2, 1 };
         private sealed class Topic
         {
             internal string product;
             internal CraftDefinition job;
             internal readonly List<CraftDefinition> formulas = new List<CraftDefinition>();
             internal readonly List<ObjectCraftDefinition> sources = new List<ObjectCraftDefinition>();
+            internal readonly List<CraftDefinition> churchSources = new List<CraftDefinition>();
+            internal int roomVisible;
+            internal int churchVisible;
             internal int visible;
         }
         private static readonly Dictionary<string, Topic> topics = new Dictionary<string, Topic>();
@@ -49,9 +53,11 @@ namespace NikichMods.Research
                 }
                 foreach (var craft in balance.craft_obj_data)
                     if (craft.builder_ids.Contains(Builder) && craft.needs.Exists(item => item.id == product)) topic.sources.Add(craft);
+                foreach (var craft in balance.craft_data)
+                    if (craft.craft_in.Contains(Church) && craft.craft_type == CraftDefinition.CraftType.None && craft.needs.Exists(item => item.id == product)) topic.churchSources.Add(craft);
                 // Explicit audited groups; do not silently generalize to other product outputs.
-                if (topic.formulas.Count != FormulaCounts[productIndex] || topic.sources.Count == 0)
-                    throw new InvalidOperationException("Verified room-source group changed: " + product);
+                if (topic.formulas.Count != FormulaCounts[productIndex] || (topic.sources.Count == 0 && topic.churchSources.Count == 0))
+                    throw new InvalidOperationException("Verified source group changed: " + product);
                 topic.job = new CraftDefinition {
                     id = JobPrefix + product, craft_in = new List<string> { "mf_alchemy_survey" },
                     custom_name = product, icon = balance.items_data.Find(item => item.id == product).GetIcon(),
@@ -71,7 +77,7 @@ namespace NikichMods.Research
                 balance.craft_data.Add(topic.job);
             }
             registeredBalance = balance;
-            StudyTableWorkProbe.Write("RAR_TOPICS_REGISTER products=" + topics.Count + " source=room_blueprints synthetic=False");
+            StudyTableWorkProbe.Write("RAR_TOPICS_REGISTER products=" + topics.Count + " source=room_and_church synthetic=False");
         }
         internal static void VerifyCache(GameBalance balance)
         {
@@ -103,21 +109,43 @@ namespace NikichMods.Research
                 __result = Describe(__instance.id, MainGame.me.save, __result);
             }
         }
+        internal static int VisibleSources(bool roomAvailable, int roomVisible, bool churchAvailable, int churchVisible)
+        {
+            return (roomAvailable ? roomVisible : 0) + (churchAvailable ? churchVisible : 0);
+        }
+        internal static bool ChurchPhysical(bool removed, bool removing, bool gdDisabled, bool interactionsDisabled, bool tutorialBlocked, bool hasCrafts, bool craftInteraction)
+        {
+            // Temporary work is deliberately absent from this adopted awareness predicate.
+            return !removed && !removing && !gdDisabled && !interactionsDisabled && !tutorialBlocked && hasCrafts && craftInteraction;
+        }
         internal static void Refresh(GameSave save)
         {
             snapshotSave = null; sourceAvailable = false;
-            StudyTableWorkProbe.Write("RAR_TOPICS_CALL phase=before action=room_source_snapshot");
+            StudyTableWorkProbe.Write("RAR_TOPICS_CALL phase=before action=source_snapshot");
             // Lookup scans the existing WorldMap list; no singleton load, spawn or scene activation.
             var desk = WorldMap.GetWorldGameObjectByObjId(Builder, true);
             bool tutorial = MainGame.me.player.GetParamInt("in_tutorial") == 1 && MainGame.me.player.GetParamInt("tut_shown_tut_1") == 0;
-            sourceAvailable = desk != null && !desk.is_removed && !desk.IsDisabled() && desk.GetParamInt("disabled_interactions") == 0 && !tutorial;
+            bool roomAvailable = desk != null && !desk.is_removed && !desk.IsDisabled() && desk.GetParamInt("disabled_interactions") == 0 && !tutorial;
+            bool churchAvailable = false;
+            var churchInstances = WorldMap.GetWorldGameObjectsByObjId(Church);
+            foreach (var station in churchInstances)
+            {
+                var component = station.components.craft;
+                if (ChurchPhysical(station.is_removed, station.is_removing, station.IsDisabled(), station.GetParamInt("disabled_interactions") != 0,
+                    !station.obj_def.interactive_in_tutorial && save.IsInTutorial(), component != null && component.has_visible_crafts,
+                    station.obj_def.interaction_type == ObjectDefinition.InteractionType.Craft)) churchAvailable = true;
+            }
+            sourceAvailable = roomAvailable || churchAvailable;
             foreach (var topic in topics.Values)
             {
-                topic.visible = 0;
-                foreach (var craft in topic.sources) if (save.IsCraftVisible(craft)) topic.visible++;
+                topic.roomVisible = 0; topic.churchVisible = 0;
+                foreach (var craft in topic.sources) if (save.IsCraftVisible(craft)) topic.roomVisible++;
+                foreach (var craft in topic.churchSources) if (save.IsCraftVisible(craft)) topic.churchVisible++;
+                topic.visible = VisibleSources(roomAvailable, topic.roomVisible, churchAvailable, topic.churchVisible);
             }
             snapshotSave = save;
-            StudyTableWorkProbe.Write("RAR_TOPICS_CALL phase=after action=room_source_snapshot builder_present=" + (desk != null) + " source_available=" + sourceAvailable + " tutorial_blocks=" + tutorial);
+            StudyTableWorkProbe.Write("RAR_TOPICS_CALL phase=after action=source_snapshot builder_present=" + (desk != null) + " room_available=" + roomAvailable +
+                " church_instances=" + churchInstances.Count + " church_available=" + churchAvailable + " busy_ignored=True source_available=" + sourceAvailable + " tutorial_blocks=" + tutorial);
             Status("table_open", save);
         }
         internal static bool Available(string id, GameSave save)
@@ -143,7 +171,7 @@ namespace NikichMods.Research
                 bool eligible = Available(topic.job.id, save) && !save.completed_one_time_crafts.Contains(topic.job.id);
                 if (eligible) offered++;
                 StudyTableWorkProbe.Write("RAR_TOPICS_PRODUCT phase=" + phase + " product=" + topic.product + " native_visible=" + topic.visible +
-                    " remaining=" + Remaining(topic, save) + " offered=" + eligible);
+                    " room_visible=" + topic.roomVisible + " church_visible=" + topic.churchVisible + " remaining=" + Remaining(topic, save) + " offered=" + eligible);
             }
             StudyTableWorkProbe.Write("RAR_TOPICS_STATUS phase=" + phase + " source_snapshot_current=" + ReferenceEquals(snapshotSave, save) + " offered=" + offered + " synthetic=False");
         }

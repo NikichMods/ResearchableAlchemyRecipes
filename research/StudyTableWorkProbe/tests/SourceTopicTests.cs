@@ -56,19 +56,56 @@ public static class SourceTopicTests
         var balance = (GameBalance)FormatterServices.GetUninitializedObject(typeof(GameBalance));
         balance.craft_data = new List<CraftDefinition>(); balance.craft_obj_data = new List<ObjectCraftDefinition>();
         balance.items_data = new List<ItemDefinition>();
-        var products = new[] { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint", "black_paint", "blue_paint", "white_paint", "glue" };
-        foreach (string product in products)
+        var products = new[] { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint", "black_paint", "blue_paint", "white_paint", "glue", "acid", "alkali", "aromatizer", "dark_elixir", "energy_elixir", "flask_green_l_plus", "flavor_enhancer", "freshener", "golden_elixir", "growth_enhancer", "preservative", "silver_elixir", "tanning_agent" };
+        for (int productIndex = 0; productIndex < products.Length; productIndex++)
         {
+            string product = products[productIndex];
             balance.items_data.Add(new ItemDefinition { id = product, icon = "fixture_native_icon_" + product });
-            int variants = product == "black_paint" || product == "white_paint" ? 3 : 1;
+            int variants = product == "black_paint" || product == "white_paint" ? 3 :
+                product == "energy_elixir" || product == "golden_elixir" || product == "preservative" || product == "silver_elixir" ? 2 : 1;
             for (int variant = 0; variant < variants; variant++)
                 balance.craft_data.Add(new CraftDefinition { id = "fixture_" + product + "_" + variant, craft_type = CraftDefinition.CraftType.MixedCraft, output = new List<Item> { new Item(product, 1) } });
-            balance.craft_obj_data.Add(new ObjectCraftDefinition { id = "source_" + product, builder_ids = new List<string> { "keeper_room_builddesk" }, needs = new List<Item> { new Item(product, 1) } });
+            if (productIndex < 11)
+                balance.craft_obj_data.Add(new ObjectCraftDefinition { id = "source_" + product, builder_ids = new List<string> { "keeper_room_builddesk" }, needs = new List<Item> { new Item(product, 1) } });
+            if (productIndex >= 11 || product == "black_paint" || product == "white_paint" || product == "glue")
+                balance.craft_data.Add(new CraftDefinition { id = "church_" + product, craft_in = new List<string> { "table_book_constr" },
+                    needs_unlock = true, needs = new List<Item> { new Item(product, 1) } });
         }
         Call("Register", balance); Call("Register", balance);
-        Assert(balance.craft_data.Count == 26, "Registration duplicated native jobs");
+        Assert(balance.craft_data.Count == 72, "Registration duplicated native jobs");
         var topics = (IDictionary)source.GetField("topics", Private).GetValue(null);
-        Assert(topics.Count == 11, "Bounded registration count");
+        Assert(topics.Count == 24, "Bounded registration count");
+        var churchOnly = topics["rar_probe_source_paint_0110_energy_elixir"];
+        var churchSourceList = (List<CraftDefinition>)churchOnly.GetType().GetField("churchSources", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(churchOnly);
+        Assert(churchSourceList.Count == 1 && ((IList)churchOnly.GetType().GetField("sources", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(churchOnly)).Count == 0, "Church-only topic incorrectly acquires room sources");
+        Assert(!host.save.IsCraftVisible(churchSourceList[0]), "Locked church source visible");
+        host.save.unlocked_crafts.Add(churchSourceList[0].id);
+        Assert(host.save.IsCraftVisible(churchSourceList[0]), "Native unlocked church source hidden");
+        host.save.locked_crafts.Add(churchSourceList[0].id);
+        Assert(!host.save.IsCraftVisible(churchSourceList[0]), "Native locked override ignored");
+        host.save.locked_crafts.Clear();
+        var overlapping = topics["rar_probe_source_paint_0110_glue"];
+        Assert(((IList)overlapping.GetType().GetField("sources", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(overlapping)).Count == 1 &&
+            ((IList)overlapping.GetType().GetField("churchSources", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(overlapping)).Count == 1, "Overlapping source families were lost or made duplicate jobs");
+        Assert((int)Call("VisibleSources", true, 2, false, 3) == 2 && (int)Call("VisibleSources", false, 2, true, 3) == 3 &&
+            (int)Call("VisibleSources", true, 2, true, 3) == 5 && (int)Call("VisibleSources", false, 2, false, 3) == 0, "Unavailable family leaks visible recipes through another source");
+        Assert((bool)Call("ChurchPhysical", false, false, false, false, false, true, true), "Enabled native church source unavailable");
+        foreach (var blocked in new[] {
+            new object[] { true, false, false, false, false, true, true },
+            new object[] { false, true, false, false, false, true, true },
+            new object[] { false, false, true, false, false, true, true },
+            new object[] { false, false, false, true, false, true, true },
+            new object[] { false, false, false, false, true, true, true },
+            new object[] { false, false, false, false, false, false, true },
+            new object[] { false, false, false, false, false, true, false } })
+            Assert(!(bool)Call("ChurchPhysical", blocked), "Unavailable church source contributes topics");
+        var busyFixture = (CraftComponent)FormatterServices.GetUninitializedObject(typeof(CraftComponent));
+        busyFixture.crafts = new List<CraftDefinition> { churchSourceList[0] };
+        foreach (bool busy in new[] { false, true })
+        {
+            busyFixture.is_crafting = busy;
+            Assert((bool)Call("ChurchPhysical", false, false, false, false, false, busyFixture.has_visible_crafts, true), "Temporary native work hides the source");
+        }
         var black = topics["rar_probe_source_paint_0110_black_paint"];
         var blackFormulas = (List<CraftDefinition>)black.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(black);
         string blackId = "rar_probe_source_paint_0110_black_paint";
@@ -113,6 +150,16 @@ public static class SourceTopicTests
             source.GetField("snapshotSave", Private).SetValue(null, save);
             source.GetField("sourceAvailable", Private).SetValue(null, true); visible.SetValue(topic, 1);
             Assert(save.IsCraftVisible(job), "Positive native topic hidden");
+            var churchJob = (CraftDefinition)churchOnly.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(churchOnly);
+            var churchVisibleField = churchOnly.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance);
+            churchVisibleField.SetValue(churchOnly, Call("VisibleSources", true, 0, false, 1));
+            Assert(!save.IsCraftVisible(churchJob), "Room availability enables a church-only topic");
+            churchVisibleField.SetValue(churchOnly, Call("VisibleSources", false, 0, true, 1));
+            Assert(save.IsCraftVisible(churchJob), "Available church-only topic hidden");
+            var churchFormulas = (List<CraftDefinition>)churchOnly.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(churchOnly);
+            save.completed_one_time_crafts.Add(churchFormulas[0].id);
+            Assert(save.IsCraftVisible(churchJob), "Partially known church-only group hidden");
+            Assert(((List<string>)Call("GrantRemaining", save, churchFormulas)).Count == 1 && !save.IsCraftVisible(churchJob), "Church reward repeats known variant or leaves a fully known topic");
             var blackJob = (CraftDefinition)black.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(black);
             black.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(black, 1);
             save.completed_one_time_crafts.Add(blackFormulas[0].id);
@@ -132,6 +179,7 @@ public static class SourceTopicTests
             var reloaded = Save(); reloaded.completed_one_time_crafts = new List<string>(save.completed_one_time_crafts);
             Call("Cleanup", reloaded);
             Assert(reloaded.completed_one_time_crafts.Contains(formulas[0].id) && reloaded.completed_one_time_crafts.Contains("unrelated_knowledge") && !reloaded.completed_one_time_crafts.Contains(job.id), "Cleanup erased real knowledge or left work marker");
+            Assert(reloaded.completed_one_time_crafts.Contains(churchFormulas[1].id), "Cleanup erased earned church-source knowledge");
             Assert((int)Call("Cleanup", reloaded) == 0, "Cleanup not idempotent");
             // Test shared remaining-only grant with partial knowledge and repeated/duplicate definitions.
             var partial = Save(); partial.completed_one_time_crafts.Add("a");

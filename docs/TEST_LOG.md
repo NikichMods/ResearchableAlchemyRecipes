@@ -1,5 +1,13 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.36 — automatic church-source topics, 2026-10-14
+
+Research-only candidate, installed integration acceptance pending. Registers the 24-product room/church union with 32 ordinary native formulas, retaining all handed job IDs and one job for overlapping sources. Church source recipes use exact table_book_constr/None membership and native IsCraftVisible. All existing station instances are considered; removal/removing/GD-disable/disabled-interactions/tutorial/interaction-type/craft-component gates remain. Temporary busy state is deliberately not an awareness gate under the user's adopted rule. Each family's raw recipe counts contribute only when that physical source family is available; another available family cannot unlock a church-only or room-only topic. Snapshot refresh remains on study-table opening and before payment; no loading-time polling or new host hook.
+
+Direct native metadata projection confirms all 24 groups / exact formula counts / nonempty verified sources. Compile and knowledge/actual optional quantity-checker/source/localization suites pass. New assertions cover native locked/unlocked source overrides, room/church/overlap registration, source-family isolation, each independent physical exclusion, idle/busy native CraftComponent inputs, church-only topic visibility, partial knowledge granting only missing variants, full-known exclusion and cleanup retaining earned church knowledge. All 43 keys x 11 locales and 27 font checks pass. Diagnostic menu text now describes recipes/blueprints generally; the accepted OtherMethods text, guidance renderer, costs, material Study and vanilla production are unchanged.
+
+Minimum installed observation on the same save: open study-table research and inspect the three predicted additional church-only topics (energy_elixir, freshener, growth_enhancer), with fully known groups absent and overlapping paints/glue not duplicated. Complete one naturally unknown new topic and inspect its native alchemy cards; no synthetic reset or repeat old paint/full-restart matrix. If convenient, leave ordinary church work in progress and reopen research to observe that topics remain available, without requiring a new purchase/setup solely for that edge. Current knowledge may differ if another save/snapshot is loaded; inspect actual native counts rather than force the predicted list. Codex reads the local log directly. Exact candidate identity follows the clean build; final economics/unfinished-work/cancellation/other-source/production gates remain separate.
+
 ## Source Eligibility Probe 0.1.2 — church-workbench observer, 2026-10-14
 
 ### Returned source/card agreement — 2026-10-14
