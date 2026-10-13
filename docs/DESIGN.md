@@ -4,7 +4,7 @@ Current adopted direction: study-table research plus informational alchemy guida
 
 ## Current recovery entry point — 2026-10-13
 
-The user adopts palette B for all 36 inputs, without outlines. REAGENT_HEADING_PALETTE.md owns exact mappings; candidate 0.1.27 applies only these heading colours, including memory powder. Installed visual acceptance remains pending. Acquisition wording and English/Russian then remaining native-language adaptation remain open.
+The user adopts palette B for all 36 inputs, without outlines. REAGENT_HEADING_PALETTE.md owns exact mappings; candidate 0.1.27 applies only these heading colours, including memory powder. Compile/local suites pass; exact DLL is installed with game closed and its hash verified. Installed visual acceptance remains pending; TEST_LOG.md owns identity. Acquisition wording and English/Russian then remaining native-language adaptation remain open.
 
 Resume on `research/study-table-work` after recovering actual Git state and reading DevRules WORKING_RULES.md / CODEX_WORKFLOW.md plus this repository's AGENTS.md. The stable `main` baseline remains documentation-only; executable work is a research harness, not an accepted production mod or selected production toolchain. Do not restart product comparison or repeat completed tests merely for recovery.
 

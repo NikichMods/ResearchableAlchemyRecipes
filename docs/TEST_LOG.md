@@ -591,3 +591,14 @@ User explicitly says the visible interface is now correct. Memory screenshot sho
 ### 0.1.26 source-coverage audit — no new build
 
 Minimum source criterion and exact audit limits are in VERIFIED_RUNTIME_DATA.md. All 44 ordinary/native quest formulas and their 36 inputs pass non-slime minimum coverage. Exact compiled generator produces 174 applicable formatting cases across four Souls/Refugees combinations with zero unknown-source fallback. 464 auxiliary failed-mix records/21 extra goo inputs are separately reported, not hidden by a new runtime filter; the native completion writer excludes their `:_:` IDs from learned recipes. Private audit input/output hashes are in VERIFIED_RUNTIME_DATA.md. Installed 0.1.26 bytes remain unchanged; no 0.1.27 or production build/toolchain is created. Full acquisition-method completeness, arbitrary save/mod injections, all languages and gameplay availability on every progress state remain outside this result.
+
+## Study Table Work Probe 0.1.27 — adopted parchment palette B
+
+The user explicitly selects B throughout the 36-input comparison, without outlines. This candidate changes only heading RGB mappings, including an explicit memory_powder colour. Existing 0.1.26 text, layout, source semantics, Study marks and mechanics remain unchanged. Palette choice is adopted; installed visual acceptance is pending.
+
+- Source: 048a1a7a2bd607f12ed83d7b54ffacb86707bcbc, research/study-table-work.
+- Artifact: StudyTableWorkProbe-0.1.27.dll; plugin 0.1.27, assembly/file 0.1.27.0.
+- SHA-256: 1b70cf8cd1e094c8d0e8d1ee13a51064965488b7c95fd15f98dfdc39ca9129b2.
+- Existing SDK 6.0.406 clean-source deterministic build/identity gate passed. Existing knowledge, actual installed quantity-checker and source-topic suites passed. Source inspection confirms adopted B mappings and existing localized-heading colour-scope formatting.
+- Installed with game closed. Prior 0.1.26 hash verified before replacement; new installed bytes verified before previous DLL removal. Exactly one study probe remains. Previous handed artifacts are retained unchanged.
+- Minimum user check: inspect a few familiar tooltips for palette comfort, especially light-associated headings and coloured families. No paid research, source-coverage audit or persistence repetition is required for this colour-only change. No universal language/layout or production acceptance is inferred.
