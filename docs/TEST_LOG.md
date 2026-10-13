@@ -658,3 +658,17 @@ User adopts "Использование предмета", action-only extractio
 - Existing SDK 6.0.406 clean-source deterministic compile/identity gate and all local suites pass. Existing source tests exercise new item-use/action/purchase rendering, combined preparation tiers, preserved progression annotations and shared Study footer. No source/technology/DLC/save mechanics change; accepted 0.1.30 render grouping/appearance is retained.
 - Installed with game closed; previous 0.1.30 hash verified before replacement, new installed bytes verified before old removal, exactly one study probe remains. Earlier artifacts remain immutable.
 - Exact text is adopted; installed text-fit/readability acceptance is pending. A familiar item-use/body/memory tooltip and an unstudied-source footer are sufficient; no repeat research/payment/source-coverage/persistence run.
+
+### 0.1.31 installed wording check — explicitly deferred
+
+The user declines a separate run for wording-only 0.1.31 and authorizes localization next. Include its text-fit observation in the next substantive candidate rather than ask for another standalone restart.
+
+## Study Table Work Probe 0.1.32 — eleven-language localization
+
+- Source: ed0825b896a48a68bb28960a2120de304bb00ef8, research/study-table-work.
+- Artifact: StudyTableWorkProbe-0.1.32.dll; plugin 0.1.32, assembly/file 0.1.32.0; SHA-256 50e5cf72ab73171d6135e8cdf98dbfc72e3ac6191f450c671ed5c0bbe24aa5b2.
+- Original embedded Localization.tsv SHA-256 28d5a01775371ae196b6d93817e8fa03a7569a85d0dd879cf509bc6d07bcba73, resource RAR.Localization.tsv; identity manifest includes its hash. 42 custom visible keys x 11 native locales = 462 translations, including diagnostic controls. Native names/fonts are preserved; two diagnostic item-name templates use the current native item dictionary.
+- Existing SDK 6.0.406 deterministic clean-source identity gate and final-source local suites pass. Compiled formatter checks cover all languages, runtime language changes after source registration, namespaced injection preserving native keys, item-name substitution, English fallback, localized marker atomicity/alpha/source ordering and save-knowledge isolation. Existing knowledge and actual installed foreign quantity-checker suites pass.
+- Static glyph audit checks 27 locale/font combinations for all texts and substituted item names, with zero missing glyphs after replacing an unsupported Chinese full-width semicolon. This proves glyph availability, not actual engine layout or native-speaker editorial review. Private raw font/locale data stays ignored; LOCALIZATION.md owns mechanism/limits.
+- Exact DLL installed with game closed; previous 0.1.31 hash verified, new bytes verified before old removal, one study DLL remains. Earlier numbered artifacts unchanged.
+- Installed localization/font-switch/layout acceptance pending. Minimum combined check: same familiar recipe in Russian then English, optionally back; this includes the deferred 0.1.31 wording observation. No eleven separate runs or research/payment/persistence repetition. Retains accepted 0.1.30 render grouping and 0.1.29 palette/source hierarchy; no production promotion.
