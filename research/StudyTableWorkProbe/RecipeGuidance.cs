@@ -146,12 +146,19 @@ namespace NikichMods.Research
                     if (!save.IsCraftVisible(route)) line.Append(" (рецепт закрыт)");
                     if (route.condition.has_expression) line.Append(" (есть дополнительное условие)");
                     bool goo = route.needs.Exists(item => item.id.StartsWith("goo_", StringComparison.Ordinal));
-                    if (goo) section.gooLines.Add("[AA]" + line + "[FF]");
+                    if (goo) section.gooLines.Add("[59]" + line + "[FF]");
                     else section.lines.Add(line.ToString());
                 }
-                foreach (var section in sections)
+                // Stable presentation partition: useful blocks first, goo-only last.
+                // Do not sort by station name or mutate the source catalogue.
+                for (int pass = 0; pass < 2; pass++) foreach (var section in sections)
                 {
-                    text.Append("\n  ").Append(section.equipment).Append(":");
+                    bool onlyGoo = section.lines.Count == 0;
+                    if (onlyGoo != (pass == 1)) continue;
+                    text.Append("\n  ");
+                    if (onlyGoo) text.Append("[59]");
+                    text.Append(section.equipment).Append(":");
+                    if (onlyGoo) text.Append("[FF]");
                     foreach (string line in section.lines) text.Append("\n    ").Append(line);
                     foreach (string line in section.gooLines) text.Append("\n    ").Append(line);
                 }

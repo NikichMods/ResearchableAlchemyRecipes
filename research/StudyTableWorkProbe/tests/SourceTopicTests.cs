@@ -120,7 +120,6 @@ public static class SourceTopicTests
         var found = (List<CraftDefinition>)guidance.GetMethod("FindRoutes", Private).Invoke(null, new object[] { new[] { automatic, producer, mixed, hidden }, "reagent" });
         Assert(found.Count == 1 && ReferenceEquals(found[0], producer), "Guidance includes hidden/mixed/automated routes");
         var render = guidance.GetMethod("BuildText", Private);
-        CheckHeadingEffects(asm);
         var formula = new CraftDefinition { needs = new List<Item> { new Item("reagent", 1) } };
         var catalogue = new Dictionary<string, List<CraftDefinition>> { { "reagent", new List<CraftDefinition> { producer } } };
         host.save = Save();
@@ -140,8 +139,14 @@ public static class SourceTopicTests
         catalogue["reagent"].Add(jellySource);
         string gooText = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });
         Assert(gooText.IndexOf("goo_yellow", StringComparison.Ordinal) > gooText.IndexOf("jelly_green", StringComparison.Ordinal), "Goo must follow ordinary sources even when catalogue order puts it first");
-        Assert(gooText.Contains("[AA]goo_yellow [693606][не изучено][-][FF]") && !gooText.Contains("[AA]jelly_green"), "Goo row must dim its Study mark, preserve alpha scope and leave monster jelly ordinary");
+        Assert(gooText.Contains("[59]goo_yellow [693606][не изучено][-][FF]") && !gooText.Contains("[59]jelly_green"), "Goo row must dim its Study mark, preserve alpha scope and leave monster jelly ordinary");
         Assert(ReferenceEquals(catalogue["reagent"][0], gooSource), "Presentation reorders the native/source catalogue");
+        Assert(!gooText.Contains("[59]mill:"), "Mixed equipment block heading was dimmed");
+        gooSource.craft_in = new List<string> { "goo_station" };
+        string gooOnly = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });
+        Assert(gooOnly.Contains("\n  [59]goo_station:[FF]") &&
+            gooOnly.IndexOf("goo_station", StringComparison.Ordinal) > gooOnly.IndexOf("jelly_green", StringComparison.Ordinal),
+            "Goo-only equipment block must have a dim heading and follow all ordinary sources");
         catalogue["reagent"].Remove(gooSource); catalogue["reagent"].Remove(jellySource);
         host.save.completed_one_time_crafts.Add("surv:source");
         var studied = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });
@@ -162,40 +167,6 @@ public static class SourceTopicTests
             Assert(AccessTools.Method(typeof(CraftItemGUI), name, Type.EmptyTypes) != null, "Missing exact UI method: " + name);
         Assert(AccessTools.Method(typeof(CraftGUI), "OpenAsAlchemy", new[] { typeof(WorldGameObject) }) != null, "Missing alchemy UI entry");
         Assert(AccessTools.Method(typeof(CraftGUI), "Hide", new[] { typeof(bool) }) != null, "Missing UI close contract");
-    }
-    private static void CheckHeadingEffects(Assembly asm)
-    {
-        var effects = asm.GetType("NikichMods.Research.GuidanceHeadingEffects", true);
-        var supports = effects.GetMethod("SupportsOutline", Private);
-        Assert((bool)supports.Invoke(null, new object[] { true, false }), "Atlas font outline rejected");
-        Assert(!(bool)supports.Invoke(null, new object[] { true, true }) && !(bool)supports.Invoke(null, new object[] { false, false }), "Unsupported font must fall back to B");
-        var heading = asm.GetType("NikichMods.Research.ReagentHeadingPalette", true).GetMethod("Heading", Private);
-        string[] selected = { "alchemy_1_yellow", "alchemy_2_yellow", "alchemy_3_yellow", "powder_white", "taste_booster:salt", "powder_silver", "powder_gold", "drop_oil" };
-        foreach (string localized in new[] { "Life powder", "Порошок жизни" })
-        {
-            var formula = new CraftDefinition { needs = new List<Item>() };
-            var original = new System.Text.StringBuilder("[4B3422]Intro");
-            foreach (string id in selected)
-            {
-                formula.needs.Add(new Item(id, 1));
-                original.Append("\n\n").Append((string)heading.Invoke(null, new object[] { id, localized + id }));
-                original.Append("\n  Mill:\n    Material [693606][не изучено][-]");
-            }
-            formula.needs.Add(new Item("blood", 1));
-            original.Append("\n\n").Append((string)heading.Invoke(null, new object[] { "blood", "Blood" })).Append("\n  Ordinary\n\nFooter[-]");
-            Func<string, string> names = id => id == "blood" ? "Blood" : localized + id;
-            var parts = (System.Collections.IEnumerable)effects.GetMethod("Split", Private).Invoke(null, new object[] { original.ToString(), formula, names });
-            var restored = new List<string>(); int outlined = 0;
-            foreach (object part in parts)
-            {
-                var type = part.GetType(); string text = (string)type.GetField("text", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(part);
-                string light = (string)type.GetField("outlined", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(part);
-                restored.Add(text.Substring(8, text.Length - 11));
-                if (light != null) { outlined++; Assert(!light.Contains("\n") && !light.Contains("Material") && !light.Contains("Blood"), "Outline escaped selected heading"); }
-            }
-            Assert(outlined == 8, "Exactly eight adopted IDs must be outlined");
-            Assert("[4B3422]" + string.Join("\n", restored.ToArray()) + "[-]" == original.ToString(), "Native widget split changes text, blank lines or marker scopes");
-        }
     }
     private static void CheckBroadGuidance(Assembly asm, GameSave save)
     {
@@ -337,8 +308,8 @@ public static class SourceTopicTests
         Assert(narrow.Contains("\n    (closed route)"), "Source condition discarded or left-aligned by wrapping");
         string wide = (string)layout.Invoke(null, new object[] { "    石灰石 " + marker, 40f, marker, measure, wrap });
         Assert(wide == "    石灰石 " + marker, "Localized source name or fitting marker modified");
-        string dimmed = (string)layout.Invoke(null, new object[] { "    [AA]long goo source " + marker + "[FF]\n  Next equipment", 18f, marker, measure, wrap });
-        Assert(dimmed.Contains(marker) && dimmed.IndexOf("[AA]", StringComparison.Ordinal) < dimmed.IndexOf(marker, StringComparison.Ordinal) &&
+        string dimmed = (string)layout.Invoke(null, new object[] { "    [59]long goo source " + marker + "[FF]\n  Next equipment", 18f, marker, measure, wrap });
+        Assert(dimmed.Contains(marker) && dimmed.IndexOf("[59]", StringComparison.Ordinal) < dimmed.IndexOf(marker, StringComparison.Ordinal) &&
             dimmed.IndexOf("[FF]", StringComparison.Ordinal) > dimmed.IndexOf(marker, StringComparison.Ordinal) && dimmed.EndsWith("\n  Next equipment", StringComparison.Ordinal),
             "Wrapping loses atomic Study marker or dimming/reset boundary");
         balance.items_data.Add(new ItemDefinition { id = "memory_powder" });

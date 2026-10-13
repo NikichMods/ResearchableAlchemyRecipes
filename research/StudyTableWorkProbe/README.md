@@ -2,7 +2,11 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current presentation candidate: 0.1.28
+## Current presentation candidate: 0.1.29
+
+Applies the accepted selected light colours without outlines. Goo rows use approximately 35% opacity and follow ordinary sources in mixed equipment lists. Goo-only equipment sections have dim headings too and follow ordinary sections; station order is not hard-coded. Uses the original native single-body text widget with language-change rebuild retained. Inspect colours, complete goo-only blocks and mixed-block readability in familiar tooltips. TEST_LOG.md owns identity and installed acceptance.
+
+## Historical presentation candidate: 0.1.28
 
 User accepts installed B. This experiment applies light outlined colours only to life powder/fluid/essence, white/silver/gold powders, salt and oil. Selected headings use native text widgets and a local B fallback for unsupported fonts. Failed-experiment goo source rows appear last within equipment lists at reduced alpha, preserving Study marks. Inspect outline weight, section spacing and goo readability in a few known recipes. Exact identity/acceptance belongs to TEST_LOG.md.
 

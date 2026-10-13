@@ -2,7 +2,7 @@
 
 ## Adopted unoutlined light headings — next candidate
 
-The user accepts the preview's selected light C colours without any outlines and chooses 35% source-row opacity. Other headings retain B. Implementation is pending; installed 0.1.28 remains unchanged. The user proposes dimming the equipment heading and moving the whole section last when it contains only goo, plus always placing the hand mixer last even when it has ordinary sources. The goo-only section rule and a universal hand-mixer ordering rule are being discussed; do not assume either has final acceptance yet.
+The user accepts the preview's selected light C colours without any outlines and chooses 35% source-row opacity. Other headings retain B. Candidate 0.1.29 applies these choices. Mixed equipment sections retain normal headings and place dim goo rows last; goo-only sections dim their headings too and follow ordinary sections, preserving order within each class. The user explicitly accepts this general rule and rejects always placing the hand mixer last. Native [59] alpha is 89/255 (34.9%), the nearest byte to 35%, and [FF] restores full opacity. Installed appearance remains to be checked. The separate heading-effect helper is removed; the native single-body text renderer is restored with language-change rebuild retained.
 
 ## Selected outline experiment — 0.1.28
 
