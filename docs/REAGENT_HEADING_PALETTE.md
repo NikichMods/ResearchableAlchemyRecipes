@@ -1,5 +1,38 @@
 # Reagent heading palette — proposal
 
+## Complete parchment comparison — 2026-10-13, pending user selection
+
+The user requests a comparison of the entire palette, including unseen colours and memory powder, before changing the installed candidate. Four ignored review sheets cover all 36 ingredient names: powders (16), fluids (8), essences (8), and universal ingredients (4). Each compares A: installed colours, B: more expressive unoutlined colours, and C: light colours with a thin dark outline. These are proposals, not adopted colours or a new runtime candidate. StudyTableWorkProbe 0.1.26 remains unchanged.
+
+The sheets use extracted native Russian tiny_font glyphs/advances, native item icons and back_paper02_rounded parchment, with a reconstructed nine-slice background. Glyphs are enlarged 2x by nearest-neighbour sampling; all 36 names fit their cells and have available glyphs. Private sheets/assets and generation scripts stay ignored under work/palette. This is an offline comparison, not a native rendered screenshot. Colours are keyed by item IDs, independent of localization; English and other native language layouts/font effects still require their own checks.
+
+Outline C simulates native Outline's four diagonal copies using #4B3422 at one review pixel (0.5 native font pixel at the review scale). The live UILabel effect covers the entire label, so heading-only effects require separate heading labels. Native OnFill skips effects for packed bitmap-font shaders. The comparison does not establish live outline availability for the current or all language fonts. Whole-label outlines on source text are not adopted.
+
+| Family / special input | B: unoutlined | C: outlined |
+| --- | --- | --- |
+| brown | #905322 | #D49B66 |
+| d_blue | #3049AE | #819CEB |
+| d_green | #477442 | #91C28B |
+| d_violet | #7A2AA5 | #CA8AEB |
+| green | #507B20 | #B3D75E |
+| red | #AA342A | #F17F69 |
+| violet | #7729A3 | #C795EF |
+| yellow | #827019 | #F4D863 |
+| alchemy_1_yellow_electro | #7B751B | #F0ED80 |
+| ash | #686375 | #C3BECD |
+| blood | #B12A39 | #F27787 |
+| drop_alcohol | #486B92 | #AACAE9 |
+| drop_oil | #98721C | #F5DA77 |
+| powder_gold | #966B1E | #EFC35F |
+| powder_graphite | #536C80 | #91ADBF |
+| powder_silver | #547890 | #D4E5EE |
+| powder_white | #777561 | #FFF9E8 |
+| taste_booster:salt | #77704E | #EFE7CF |
+| water | #21799E | #85D3F0 |
+| memory_powder | #955E36 | #EDB69B |
+
+The ordinary eight family colours apply consistently to all three reagent forms. Memory powder currently has no explicit palette entry and inherits body #4B3422 in A. Body/study-marker text remains #4B3422/#693606 in the comparison. A mixed selection (B for coloured families, C for selected light inputs) is possible, but remains a user-owned decision.
+
 ## Parchment adaptation — 0.1.24 candidate
 
 The accepted dark-card colours below are historical after switching to native parchment tooltip. Returned 0.1.23 was readable but the user judged it too dark/almost black. Candidate 0.1.24 raises HLS lightness toward 0.32 and strengthens saturation for coloured families; lightness is bounded by calculated contrast >=3.50 against conservative #C59F69. This is an explicit candidate tradeoff: stronger visible colour, less contrast than 0.1.23's >=4.50; it requires user readability acceptance. All 35 stable IDs remain, with static RGB values and no runtime colour computation. White/ash/silver remain distinguishable dark neutrals. Central returned background samples are approximately #C9A877/#CAA97A. Native font ownership and body #4B3422, title #241A13, study marks/footer #693606 remain unchanged; labels have white tint. Numeric contrast is not live visual acceptance or an all-background guarantee.

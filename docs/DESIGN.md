@@ -4,6 +4,8 @@ Current adopted direction: study-table research plus informational alchemy guida
 
 ## Current recovery entry point — 2026-10-13
 
+Palette review now has four private comparison sheets covering all 36 inputs on native parchment with native Russian glyphs: current, brighter unoutlined, and light outlined proposals. REAGENT_HEADING_PALETTE.md owns exact mappings and rendering limits. User selection is pending; installed 0.1.26 is unchanged. Do not treat the offline outline simulation as live or multilingual font-effect acceptance. After colour selection, acquisition wording and English/Russian then remaining native-language adaptation remain open.
+
 Resume on `research/study-table-work` after recovering actual Git state and reading DevRules WORKING_RULES.md / CODEX_WORKFLOW.md plus this repository's AGENTS.md. The stable `main` baseline remains documentation-only; executable work is a research harness, not an accepted production mod or selected production toolchain. Do not restart product comparison or repeat completed tests merely for recovery.
 
 - Requirements owner: PRODUCT_REQUIREMENTS.md. Adopted flow: awareness from currently available verified sources -> sample-free paid product research at the study table -> all remaining ordinary formulas in native alchemy tables -> contextual ingredient-source/processing/material-study guidance. Standalone journal is deferred and must not become a prerequisite.
