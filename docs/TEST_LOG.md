@@ -648,3 +648,13 @@ The user explicitly accepts the current appearance. Returned screenshot separate
 The user explicitly accepts the correction and says it works correctly. Returned screenshot shows the native ingredient bubble wholly covering guidance, with no guidance text crossing its foreground parchment. The installed DLL still matches a0efb9e18df3875dbc6fc8142ddc5f397a51a845bee7faad483a9ba85de9c93d.
 
 Private evidence: work/evidence/work-0.1.30-return; captured LogOutput.log SHA-256 5190c741ceaffaf12f344099b426dbbf30762ae88ea64ccb0b78ad012e373184, overlap.png d3f23366df039e06a8737dc19f0500fe67f02f02344a8938b7cdd1729121812a. Log identifies 0.1.30, has 22 render-group records at guidance depth 4999/native tooltip depth 5000, zero RAR_WORK_ERROR and zero broken-marker records. Acceptance closes current overlap presentation and preserves accepted colour/source hierarchy. It does not establish all foreign UI panel stacks, all languages, exhaustive lifecycle scenarios or production promotion. No new binary is issued for acceptance recording.
+
+## Study Table Work Probe 0.1.31 — concise acquisition and Study wording
+
+User adopts "Использование предмета", action-only extraction/cremation rows below equipment, "Покупка" above Clotho, and the exact footer "Отмеченные материалы нужно сначала изучить на исследовательском столе."
+
+- Source: f4ab8ee2dcbc0274635313239c06a9ccc0058059, research/study-table-work.
+- Artifact: StudyTableWorkProbe-0.1.31.dll; plugin 0.1.31, assembly/file 0.1.31.0; SHA-256 6ef7998abac55865b8e332c502fbbb6cbc613cc2a1482cde68ae3ccbce1c7893.
+- Existing SDK 6.0.406 clean-source deterministic compile/identity gate and all local suites pass. Existing source tests exercise new item-use/action/purchase rendering, combined preparation tiers, preserved progression annotations and shared Study footer. No source/technology/DLC/save mechanics change; accepted 0.1.30 render grouping/appearance is retained.
+- Installed with game closed; previous 0.1.30 hash verified before replacement, new installed bytes verified before old removal, exactly one study probe remains. Earlier artifacts remain immutable.
+- Exact text is adopted; installed text-fit/readability acceptance is pending. A familiar item-use/body/memory tooltip and an unstudied-source footer are sufficient; no repeat research/payment/source-coverage/persistence run.
