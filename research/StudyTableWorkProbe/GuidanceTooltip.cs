@@ -22,19 +22,30 @@ namespace NikichMods.Research
         private static int expectedStudyMarkers;
         private static Vector4 lastLayout;
         private static int settled;
+        private static string language;
         internal static void Show(CraftGUI gui, CraftItemGUI row)
         {
-            if (bubble != null && selected == row && ReferenceEquals(formula, row.current_craft)) return;
+            string currentLanguage = GJL.GetCurLng();
+            if (bubble != null && selected == row && ReferenceEquals(formula, row.current_craft) && language == currentLanguage) return;
             Hide();
+            language = currentLanguage;
             var owner = gui.transform.Find("window/back");
             frame = owner == null ? null : owner.GetComponent<UIWidget>();
             camera = MainGame.me.gui_cam;
             var collider = row.GetComponent<Collider2D>();
             if (frame == null || camera == null || collider == null) throw new InvalidOperationException("Missing native tooltip/window geometry");
             selected = row; formula = row.current_craft;
-            var data = new BubbleWidgetDataContainer(WidgetsBubbleGUI.Alignment.Left,
-                new BubbleWidgetTextData("[241A13]" + Name(formula) + "[-]\n", UITextStyles.TextStyle.HintTitle, NGUIText.Alignment.Left),
-                new BubbleWidgetTextData(RecipeGuidance.Text(formula), UITextStyles.TextStyle.TinyDescription, NGUIText.Alignment.Left));
+            var parts = GuidanceHeadingEffects.Split(RecipeGuidance.Text(formula), formula, RecipeGuidance.Name);
+            var widgets = new List<BubbleWidgetData> {
+                new BubbleWidgetTextData("[241A13]" + Name(formula) + "[-]\n", UITextStyles.TextStyle.HintTitle, NGUIText.Alignment.Left)
+            };
+            var outlined = new Dictionary<string, string>();
+            foreach (var part in parts)
+            {
+                widgets.Add(new BubbleWidgetTextData(part.text, UITextStyles.TextStyle.TinyDescription, NGUIText.Alignment.Left));
+                if (part.outlined != null) outlined[part.text] = part.outlined;
+            }
+            var data = new BubbleWidgetDataContainer(WidgetsBubbleGUI.Alignment.Left, widgets.ToArray());
             // Collider mode provides native lifetime/layout on both input modes; this bubble
             // is independent of the manager's ordinary item tooltip and never takes focus.
             bubble = TooltipBubbleGUI.Show(data, true, collider);
@@ -62,6 +73,8 @@ namespace NikichMods.Research
                 label.leftAnchor.target = null; label.rightAnchor.target = null;
                 label.topAnchor.target = null; label.bottomAnchor.target = null;
                 label.ResetAnchors();
+                string lightHeading;
+                if (outlined.TryGetValue(label.text, out lightHeading)) GuidanceHeadingEffects.Apply(label, lightHeading);
                 string original = label.text;
                 expectedStudyMarkers += Count(original, RecipeGuidance.StudyMarker);
                 if (original.Contains(RecipeGuidance.StudyMarker))
@@ -174,6 +187,7 @@ namespace NikichMods.Research
             var old = bubble; bubble = null;
             selected = null; formula = null; frame = null; camera = null; chrome = null; amountWidgets = null; background = null; revealed = false;
             textLabels = null; expectedStudyMarkers = 0;
+            language = null;
             lastLayout = Vector4.zero; settled = 0;
             if (old != null) old.DestroyBubble();
         }

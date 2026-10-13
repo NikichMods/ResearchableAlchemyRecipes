@@ -1,5 +1,13 @@
 # Reagent heading palette — proposal
 
+## Selected outline experiment — 0.1.28
+
+Installed 0.1.27 B is explicitly accepted by the user. The next requested comparison applies C only to alchemy_1_yellow, alchemy_2_yellow, alchemy_3_yellow, powder_white, taste_booster:salt, powder_silver, powder_gold and drop_oil. Other headings retain B. Each selected heading is a separate native text widget; its Outline effect is #4B3422 at (0.5, 0.5) native units. Unsupported/unknown font paths retain B and no outline locally; colour fallback does not disable the mod. This is an adopted experiment, not installed visual acceptance of C.
+
+Direct installed 1.407 inspection finds all default fonts and the GJL Japanese/Chinese ch_jp_12 and Korean korean fonts are atlas-backed, without replacements. UIFont.packedFontShader returns false on this atlas path, so no built-in language is statically excluded. Actual multilingual outline appearance remains untested. A language change rebuilds the bubble through native current-language font selection. Shared UI_INPUT_TIME_AND_ENVIRONMENT.md owns reusable font/layout/alpha evidence.
+
+Failed-experiment goo_ source rows follow ordinary sources within each equipment list and use native [AA] alpha (170/255) through the end of their Study/condition text, followed by [FF]. Material names, Study state and conditions are preserved; monster jelly remains an ordinary source. This subdued presentation still needs user readability acceptance.
+
 ## Adopted parchment palette B — 2026-10-13
 
 The user explicitly selects column B for the entire palette: all 36 inputs, without outlines or mixing C into light headings. The B column below is the adopted mapping. Candidate 0.1.27 applies it; installed visual acceptance is separate from the accepted comparison.

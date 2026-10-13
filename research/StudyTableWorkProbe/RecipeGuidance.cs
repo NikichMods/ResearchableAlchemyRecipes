@@ -83,7 +83,7 @@ namespace NikichMods.Research
             return formula != null && SupportedStation(station) && formula.craft_in.Contains(station) &&
                 save.unlocked_techs.Contains(SourceResearch.Technology) && save.completed_one_time_crafts.Contains(formula.id);
         }
-        private static string Name(string id)
+        internal static string Name(string id)
         {
             string member;
             string native = familyNames.TryGetValue(id, out member) ? member : id;
@@ -145,12 +145,15 @@ namespace NikichMods.Research
                     if (unstudied) { pending = true; line.Append(" ").Append(StudyMarker); }
                     if (!save.IsCraftVisible(route)) line.Append(" (рецепт закрыт)");
                     if (route.condition.has_expression) line.Append(" (есть дополнительное условие)");
-                    section.lines.Add(line.ToString());
+                    bool goo = route.needs.Exists(item => item.id.StartsWith("goo_", StringComparison.Ordinal));
+                    if (goo) section.gooLines.Add("[AA]" + line + "[FF]");
+                    else section.lines.Add(line.ToString());
                 }
                 foreach (var section in sections)
                 {
                     text.Append("\n  ").Append(section.equipment).Append(":");
                     foreach (string line in section.lines) text.Append("\n    ").Append(line);
+                    foreach (string line in section.gooLines) text.Append("\n    ").Append(line);
                 }
             }
             if (pending) text.Append("\n\n[693606]").Append(StudyExplanation).Append("[-]");
@@ -160,6 +163,7 @@ namespace NikichMods.Research
         {
             internal string key, equipment;
             internal readonly List<string> lines = new List<string>();
+            internal readonly List<string> gooLines = new List<string>();
         }
         internal static List<List<CraftDefinition>> GroupRoutes(List<CraftDefinition> producers, GameSave save)
         {

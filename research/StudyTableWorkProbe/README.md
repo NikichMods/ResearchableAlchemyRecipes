@@ -2,7 +2,11 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current presentation candidate: 0.1.27
+## Current presentation candidate: 0.1.28
+
+User accepts installed B. This experiment applies light outlined colours only to life powder/fluid/essence, white/silver/gold powders, salt and oil. Selected headings use native text widgets and a local B fallback for unsupported fonts. Failed-experiment goo source rows appear last within equipment lists at reduced alpha, preserving Study marks. Inspect outline weight, section spacing and goo readability in a few known recipes. Exact identity/acceptance belongs to TEST_LOG.md.
+
+## Accepted presentation candidate: 0.1.27
 
 Applies user-selected parchment palette B to all 36 reagent headings, including memory powder, without outlines. Preserves 0.1.26's accepted tooltip geometry, whole Study marks, source guidance and input behavior. Minimum installed check: inspect a few existing recipe tooltips for colour comfort; no research/payment/restart scenario needs repetition. TEST_LOG.md owns exact identity and acceptance limits.
 
