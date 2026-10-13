@@ -1,6 +1,7 @@
 # Diagnostic runtime tests
 
 ## Study Table Work Probe 0.1.37 — resurrection technology source, 2026-10-14
+Clean source 1f0ef0f18d313ba64a6bb95f6d9b723f429c272c, SDK 6.0.406 Roslyn. Immutable artifact artifacts/StudyTableWorkProbe-0.1.37/StudyTableWorkProbe-0.1.37.dll, SHA-256 8956cb946c18deb6712321883c6a8ec7e67c91ad9f72556c66057bb13e4f732e; assembly/file/plugin version checks pass. Installed with game closed at canonical StudyTableWorkProbe.dll, exact hash verified; previous accepted 0.1.36 backed up outside plugins and only one active study payload remains. Preserved pre-install log SHA-256 d42a25e65835b56f350b08655ff2413bd4e25d7fe5ab6b44c8519c1de51899be. Installation is not loader/topic/reward acceptance.
 
 Research-only candidate; installed acceptance pending. User selects opened Second chance as the persistent source for zombie_juise. Native metadata connects the technology's resurrection-table construction unlock to the consuming zombie_craft operation, with one ordinary formula. Add one explicit registered topic (25 products / 33 formulas) while preserving all handed job IDs, costs, native Study/production and accepted guidance/partial wording. No physical table, body, target item or window visit is required. No new hook/observer or duplicate save state is introduced.
 
