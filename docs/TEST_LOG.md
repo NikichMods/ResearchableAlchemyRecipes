@@ -618,3 +618,14 @@ Status: clean-source compile/identity gate and existing local suites passed; exa
 - Failed-experiment goo_ source rows are stably moved behind ordinary rows within equipment groups and wrapped in native [AA]/[FF] alpha tags. Tests verify source catalogue is not reordered, monster jelly is not dimmed, Study marks remain atomic under wrapping, and alpha reset precedes the next equipment row.
 - Existing knowledge/source/actual installed foreign quantity-checker suites pass. Shared static font/layout/alpha evidence is recorded at GraveyardKeeperResearch ec41cbe. These tests do not prove live glyph appearance or all source-route layouts.
 - User check: inspect light headings (white/life/silver/gold/salt/oil), ordinary headings, section spacing and the legibility of final goo rows. No repeat paid-research/source-coverage/persistence run for this display-only experiment.
+
+## Study Table Work Probe 0.1.29 — unoutlined light headings and goo-only block hierarchy
+
+User adopts selected light C headings without outlines, 35% goo opacity, normal mixed-block headings with goo rows last, and dim goo-only blocks after all ordinary sections. No station-specific order is adopted.
+
+- Source: 236ae19bbce3950979227ae1fd1886ae0a4e8abe, research/study-table-work.
+- Artifact: StudyTableWorkProbe-0.1.29.dll; plugin 0.1.29, assembly/file 0.1.29.0; SHA-256 17976defaa4a3c1e449215735c635d5ccc93ccece3406e8e9040a4811ce430b4.
+- Existing SDK 6.0.406 clean-source deterministic build/identity gate and all local knowledge/source/actual foreign quantity-checker suites pass. Targeted formatter checks prove mixed headings remain normal, goo-only headings are dimmed and placed after normal sources, source catalogue order is unchanged, and wrapped Study marks/alpha reset remain intact.
+- Native [59] gives 89/255 (34.9%), nearest to requested 35%. Selected light RGB values use the accepted colour path without effects. Remove the now-unneeded selective-outline helper and widget partition; restore the original single native body widget, retaining language-change rebuild and accepted geometry/reveal path.
+- Installed with game closed; old 0.1.28 hash verified, new installed bytes verified before old removal, one study DLL remains. Earlier numbered artifacts remain unchanged.
+- Installed visual acceptance pending: inspect light headings, a mixed source block and a goo-only block (including its equipment heading) in familiar recipes. No paid research/persistence/coverage repetition required.
