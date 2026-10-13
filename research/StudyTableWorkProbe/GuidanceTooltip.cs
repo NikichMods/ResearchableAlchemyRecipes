@@ -25,6 +25,8 @@ namespace NikichMods.Research
         private static string language;
         private static UIPanel renderPanel;
         private static string studyMarker, studyMarkerText, studyExplanation;
+        private static int observedFrames;
+        private static float observedMinX, observedMaxX;
         internal static void Show(CraftGUI gui, CraftItemGUI row)
         {
             string currentLanguage = GJL.GetCurLng();
@@ -78,11 +80,15 @@ namespace NikichMods.Research
             float scale = PixelsPerUnit(bubble.transform);
             gap = row.label_descr.fontSize * scale * 0.5f;
             UpdateAnchors();
-            // Full logical source rows determine width; the footer may wrap normally.
+            // Full logical source rows determine width; shared introductory/footer
+            // text may wrap normally without widening every short recipe.
             int preferred = MeasureRows();
             float padding = (Bounds(background).width - Bounds(bubble.widget).width) / scale;
             float right = Screen.width - RightEdge(Bounds(frame)) - gap * 2f;
-            int width = Mathf.FloorToInt(Mathf.Min(preferred, right / scale - padding));
+            // Centered content needs even dimensions: its integer-anchored parchment
+            // must not repeatedly resolve half-pixel edges on alternate sides.
+            int width = Mathf.Min(((preferred + 1) / 2) * 2,
+                Mathf.FloorToInt((right / scale - padding) / 2f) * 2);
             if (width < row.label_descr.fontSize * 4) { Hide(); StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP status=hidden reason=insufficient_side_space"); return; }
             foreach (var label in bubble.GetComponentsInChildren<UILabel>(true))
             {
@@ -134,7 +140,8 @@ namespace NikichMods.Research
             {
                 string original = label.text;
                 foreach (string line in original.Split('\n'))
-                    if (!line.Contains(studyExplanation)) width = Mathf.Max(width, Measure(label, line));
+                    if (!line.Contains(studyExplanation) && !line.Contains(Localization.Get(Localization.Key.HowTo)))
+                        width = Mathf.Max(width, Measure(label, line));
                 label.text = original;
             }
             return Mathf.CeilToInt(width);
@@ -174,6 +181,11 @@ namespace NikichMods.Research
             var current = camera.WorldToScreenPoint(bubble.transform.position);
             var desired = current + new Vector3(x - box.xMin, bottom - box.yMin, 0f);
             bubble.transform.position += camera.ScreenToWorldPoint(desired) - camera.ScreenToWorldPoint(current);
+            // NGUI resolves the surrounding anchors in local UI pixels. Keep the
+            // owner on that same grid rather than feeding subpixel corrections back.
+            Vector3 local = bubble.transform.localPosition;
+            local.x = Mathf.Round(local.x); local.y = Mathf.Round(local.y);
+            if (bubble.transform.localPosition != local) bubble.transform.localPosition = local;
             var layout = new Vector4(Mathf.Round(x), Mathf.Round(bottom), Mathf.Round(box.width), Mathf.Round(box.height));
             settled = layout == lastLayout ? settled + 1 : 0;
             lastLayout = layout;
@@ -187,6 +199,18 @@ namespace NikichMods.Research
                     if (label != null && label.gameObject.activeInHierarchy) intact += Count(label.processedText, studyMarkerText);
                 StudyTableWorkProbe.Write("RAR_GUIDANCE_TEXT language=" + language + " markers=" + expectedStudyMarkers + " rendered_whole=" + intact + " intact=" + (intact == expectedStudyMarkers));
             }
+        }
+        private static void ObserveGeometry()
+        {
+            // One bounded research observation per bubble, through the real geometry
+            // consumer. A static screenshot cannot establish frame-to-frame stability.
+            if (!revealed || observedFrames >= 120) return;
+            float x = Bounds(background).xMin;
+            if (observedFrames == 0) observedMinX = observedMaxX = x;
+            else { observedMinX = Mathf.Min(observedMinX, x); observedMaxX = Mathf.Max(observedMaxX, x); }
+            if (++observedFrames == 120)
+                StudyTableWorkProbe.Write("RAR_GUIDANCE_MOTION language=" + language + " product=" + formula.GetFirstRealOutput().id +
+                    " frames=120 screen_x_range=" + (observedMaxX - observedMinX).ToString("F4", System.Globalization.CultureInfo.InvariantCulture));
         }
         private static int Count(string text, string value) { return (text.Length - text.Replace(value, "").Length) / value.Length; }
         private static float RightEdge(Rect host)
@@ -205,6 +229,7 @@ namespace NikichMods.Research
             renderPanel = null;
             studyMarker = null; studyMarkerText = null; studyExplanation = null;
             lastLayout = Vector4.zero; settled = 0;
+            observedFrames = 0;
             if (old != null) old.DestroyBubble();
         }
         [HarmonyPatch(typeof(WidgetsBubbleGUI), "Update")]
@@ -230,6 +255,12 @@ namespace NikichMods.Research
         [HarmonyPatch(typeof(UIPanel), "UpdateSelf")]
         private static class Ready
         {
+            private static void Postfix(UIPanel __instance)
+            {
+                if (bubble == null || background == null || !ReferenceEquals(__instance, background.panel)) return;
+                try { ObserveGeometry(); }
+                catch (Exception ex) { Hide(); StudyTableWorkProbe.Fail(ex); }
+            }
             [HarmonyPriority(Priority.Last)]
             private static void Prefix(UIPanel __instance)
             {
