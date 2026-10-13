@@ -85,6 +85,24 @@ namespace NikichMods.Research
             foreach (var formula in topic.formulas) if (!save.completed_one_time_crafts.Contains(formula.id)) n++;
             return n;
         }
+        internal static string Describe(string id, GameSave save, string original)
+        {
+            Topic topic;
+            if (save == null || !topics.TryGetValue(id, out topic)) return original;
+            int remaining = Remaining(topic, save);
+            if (remaining == 0 || remaining == topic.formulas.Count) return original;
+            string label = Localization.Get(Localization.Key.OtherMethods);
+            return string.IsNullOrEmpty(original) ? label : original + "\n" + label;
+        }
+        [HarmonyPatch(typeof(CraftDefinition), "GetDescription")]
+        private static class PartialDescription
+        {
+            private static void Postfix(CraftDefinition __instance, ref string __result)
+            {
+                if (!StudyTableWorkProbe.enabledProbe || MainGame.me == null || !IsJob(__instance.id)) return;
+                __result = Describe(__instance.id, MainGame.me.save, __result);
+            }
+        }
         internal static void Refresh(GameSave save)
         {
             snapshotSave = null; sourceAvailable = false;

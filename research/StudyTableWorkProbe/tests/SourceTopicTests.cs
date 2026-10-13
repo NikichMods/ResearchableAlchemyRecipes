@@ -71,6 +71,27 @@ public static class SourceTopicTests
         Assert(topics.Count == 11, "Bounded registration count");
         var black = topics["rar_probe_source_paint_0110_black_paint"];
         var blackFormulas = (List<CraftDefinition>)black.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(black);
+        string blackId = "rar_probe_source_paint_0110_black_paint";
+        var descriptionSave = Save();
+        Assert((string)Call("Describe", blackId, descriptionSave, "native description") == "native description", "Unknown topic marked as alternative research");
+        descriptionSave.completed_one_time_crafts.Add(blackFormulas[0].id);
+        var descriptionBefore = new HashSet<string>(descriptionSave.completed_one_time_crafts);
+        Assert((string)Call("Describe", blackId, descriptionSave, "native description") == "native description\nДругие способы изготовления", "Partial topic loses native description or explanation");
+        var descriptionLanguage = (GJL)AccessTools.Field(typeof(GJL), "cur_lng").GetValue(null);
+        foreach (string locale in GJL.LANGUAGES)
+        {
+            descriptionLanguage.id = locale;
+            string description = (string)Call("Describe", blackId, descriptionSave, "");
+            Assert(!string.IsNullOrWhiteSpace(description) && !description.Contains(blackFormulas[0].id), "Partial explanation absent or leaks formula identity: " + locale);
+        }
+        descriptionLanguage.id = "en";
+        Assert((string)Call("Describe", blackId, descriptionSave, "") == "Other manufacturing methods", "Partial description retained its old language");
+        descriptionLanguage.id = "ru";
+        Assert((string)Call("Describe", "ordinary_craft", descriptionSave, "unchanged") == "unchanged", "Partial label affects ordinary crafts");
+        Assert((string)Call("Describe", blackId, null, "unchanged") == "unchanged", "Description requires loaded save");
+        Assert(descriptionBefore.SetEquals(descriptionSave.completed_one_time_crafts), "Description changed knowledge");
+        Call("GrantRemaining", descriptionSave, blackFormulas);
+        Assert((string)Call("Describe", blackId, descriptionSave, "native description") == "native description", "Fully known group remains marked partial");
         var partiallyKnownBlack = Save(); partiallyKnownBlack.completed_one_time_crafts.Add(blackFormulas[0].id);
         Assert(((List<string>)Call("GrantRemaining", partiallyKnownBlack, blackFormulas)).Count == 2, "Registered three-variant group did not grant only its missing formulas");
         Assert(((List<string>)Call("GrantRemaining", partiallyKnownBlack, blackFormulas)).Count == 0, "Registered multi-variant reward repeated");
@@ -410,6 +431,6 @@ public static class SourceTopicTests
         Assert(text("HowTo", "en") == "How to obtain ingredients", "English guidance header changed");
         Assert(AccessTools.Method(typeof(GJL), "LoadLanguageResource", new[] { typeof(string) }) != null, "Native language-load boundary missing");
         current.id = "ru"; localization.GetMethod("Inject", Private).Invoke(null, null);
-        Console.WriteLine("PASS localization: 42 keys x 11 languages, registered-source language changes, namespaced injection, English fallback, atomic markers and save isolation");
+        Console.WriteLine("PASS localization: " + Enum.GetValues(keyType).Length + " keys x 11 languages, registered-source language changes, namespaced injection, English fallback, atomic markers and save isolation");
     }
 }

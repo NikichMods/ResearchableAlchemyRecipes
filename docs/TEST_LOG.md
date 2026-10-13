@@ -1,5 +1,13 @@
 # Diagnostic runtime tests
 
+## 0.1.35 partial-topic description — 2026-10-14
+
+Research-only presentation candidate. Registered product topics with some, but not all, native formulas known append `Другие способы изготовления` (current-language equivalent) to the native card description. Product names/icons, existing descriptions, source/knowledge/payment/quantity gates and neighbouring cards are preserved. No new sources or mechanics. Native GetDescription -> CraftItemGUI.Redraw -> label_descr/auto-height owns display; no direct label/geometry mutation.
+
+Local compile and knowledge/quantity/source/localization suites pass. New checks distinguish wholly unknown, partially known and fully known groups, preserve original descriptions/unrelated crafts, resolve language changes and leave save knowledge unchanged. Localization is now 43 keys x 11 locales; 27 native-font checks have no missing glyphs. These are lower-level checks, not installed layout/appearance acceptance.
+
+Minimum observation: open research and inspect an already partially known topic (black paint in the returned 0.1.34 state), confirm a readable explanation below the native name and inspect one wholly unknown topic without that explanation. Optionally switch language and reopen the research tab. No paid research, synthetic knowledge reset or full restart matrix is requested. Codex installs directly with host closed and reads the local log after the user checks appearance; exact identity follows the clean build.
+
 ## 0.1.34 room-blueprint source extension — 2026-10-14
 
 ### Returned partial-knowledge result — 2026-10-14

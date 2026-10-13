@@ -2,7 +2,13 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current research candidate: 0.1.34
+## Current research candidate: 0.1.35
+
+Partially known research topics now explain `Other manufacturing methods` below the native product name, translated into all eleven game languages. Existing native descriptions are retained. Entirely unknown topics keep their ordinary presentation; fully known products remain absent. The native description label/auto-height owns layout. No changes to costs, knowledge reward, guidance or source coverage.
+
+Codex installs the verified candidate directly while the game is closed and reads the local log after observation. Inspect an already partially known topic (black paint in the returned save) and one unknown topic; no new payment/reset/restart matrix is needed. Current 0.1.35 installed appearance acceptance is pending. After the label check, continue coverage through verified church-workbench sources.
+
+## Earlier source extension: 0.1.34
 
 Extends the existing room-blueprint source from seven to eleven product groups: adds black, blue and white paint plus glue. Registration validates their exact native formula counts, retains all handed paint job IDs and preserves native knowledge/source/alchemy/payment gates. The F8 diagnostic title now describes room-blueprint research in all eleven languages. Guidance appearance and diagnostic costs are unchanged. AWARENESS_SOURCE_AUDIT.md owns static scope and remaining source-family gates.
 
