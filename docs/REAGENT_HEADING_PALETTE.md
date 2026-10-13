@@ -29,6 +29,8 @@ The accepted dark-card colours below are historical after switching to native pa
 | taste_booster:salt | #504C35 |
 | water | #17516B |
 
+The inspected native tiny_font glyph metadata contains digits 1/2 and comma, but lacks U+2013 (en dash). Combined equipment levels therefore use numeric `1, 2`; U+2014 used in output-count wording is present. This is the inspected font envelope, not proof for all language fonts.
+
 ## Historical dark-card palette
 
 Status: the user explicitly adopted the following dark-card palette for ingredient headings. Research candidate 0.1.15 applied it to the then-known-yellow guidance slice. It is retained as historical evidence; it does not imply acceptance of the new parchment colours above or expand guidance to all formulas.
