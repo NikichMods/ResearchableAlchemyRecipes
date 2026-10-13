@@ -1,10 +1,10 @@
 # Source Eligibility Probe
 
-## Current candidate 0.1.3 — manual Clotho trade snapshot
+## Completed observation 0.1.3 — manual Clotho trade snapshot
 
 Zero patches and no host world/save/balance access before explicit F9. Open Clotho's ordinary trade and press F9 once with the window open. No purchase, crafting, tier unlock or knowledge reset required. Codex installs/reads the local log directly. StudyTableWorkProbe 0.1.37 remains unchanged.
 
-Read only the existing native VendorGUI.trading.trader, actual stock, drawing tier pages, active item cells and lock-overlay state for eight potions. Read current source instance and native @clotho_trade state separately. Do not construct Vendor/Trading, access lazy wgo.vendor or fill inventories. Active cells under an overlay do not prove visible item exposure; note whether the locked-tier goods are recognizable. Expected READY version=0.1.3, TRIGGER, eight RAR_SOURCE_VENDOR_PRODUCT rows, RESULT shown_indexed=True, DONE; no ERROR. Field binding/stock/grouped-card tests pass. Installed acceptance pending; this does not register potion topics.
+Read only the existing native VendorGUI.trading.trader, actual stock, drawing tier pages, active item cells and lock-overlay state for eight potions. Read current source instance and native @clotho_trade state separately. Do not construct Vendor/Trading, access lazy wgo.vendor or fill inventories. Active cells under an overlay do not prove visible item exposure; note whether the locked-tier goods are recognizable. Expected READY version=0.1.3, TRIGGER, eight RAR_SOURCE_VENDOR_PRODUCT rows, RESULT shown_indexed=True, DONE; no ERROR. Field binding/stock/grouped-card tests pass. Returned READY/F9/eight product rows/RESULT/DONE pass. The user excludes locked tiers after visual observation. TEST_LOG.md owns exact identities and limits; this does not register potion topics. Remove the finished observer with game closed.
 
 ## Historical church observation 0.1.2 — completed and removed
 
