@@ -24,12 +24,16 @@ namespace NikichMods.Research
         private static int settled;
         private static string language;
         private static UIPanel renderPanel;
+        private static string studyMarker, studyMarkerText, studyExplanation;
         internal static void Show(CraftGUI gui, CraftItemGUI row)
         {
             string currentLanguage = GJL.GetCurLng();
             if (bubble != null && selected == row && ReferenceEquals(formula, row.current_craft) && language == currentLanguage) return;
             Hide();
             language = currentLanguage;
+            studyMarker = RecipeGuidance.StudyMarker;
+            studyMarkerText = "[" + Localization.Get(Localization.Key.Unstudied) + "]";
+            studyExplanation = RecipeGuidance.StudyExplanation;
             var owner = gui.transform.Find("window/back");
             frame = owner == null ? null : owner.GetComponent<UIWidget>();
             camera = MainGame.me.gui_cam;
@@ -86,13 +90,13 @@ namespace NikichMods.Research
                 label.topAnchor.target = null; label.bottomAnchor.target = null;
                 label.ResetAnchors();
                 string original = label.text;
-                expectedStudyMarkers += Count(original, RecipeGuidance.StudyMarker);
-                if (original.Contains(RecipeGuidance.StudyMarker))
+                expectedStudyMarkers += Count(original, studyMarker);
+                if (original.Contains(studyMarker))
                 {
-                    float minimum = Measure(label, "    " + RecipeGuidance.StudyMarker);
+                    float minimum = Measure(label, "    " + studyMarker);
                     if (width < minimum) { Hide(); StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP status=hidden reason=insufficient_marker_space"); return; }
                 }
-                string formatted = GuidanceTextLayout.Format(original, width, RecipeGuidance.StudyMarker,
+                string formatted = GuidanceTextLayout.Format(original, width, studyMarker,
                     value => Measure(label, value), (value, available) => Wrap(label, value, available));
                 label.overflowMethod = UILabel.Overflow.ResizeHeight;
                 label.color = Color.white;
@@ -103,7 +107,7 @@ namespace NikichMods.Research
             bubble.UpdateSizeAndWidgetsPositions();
             UpdateAnchors();
             textLabels = bubble.GetComponentsInChildren<UILabel>(true);
-            StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP product=" + formula.GetFirstRealOutput().id + " text_width=" + width + " renderer=native independent_list=True");
+            StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP product=" + formula.GetFirstRealOutput().id + " text_width=" + width + " language=" + language + " renderer=native independent_list=True");
         }
         private static float Measure(UILabel label, string text)
         {
@@ -130,7 +134,7 @@ namespace NikichMods.Research
             {
                 string original = label.text;
                 foreach (string line in original.Split('\n'))
-                    if (!line.Contains(RecipeGuidance.StudyExplanation)) width = Mathf.Max(width, Measure(label, line));
+                    if (!line.Contains(studyExplanation)) width = Mathf.Max(width, Measure(label, line));
                 label.text = original;
             }
             return Mathf.CeilToInt(width);
@@ -180,8 +184,8 @@ namespace NikichMods.Research
                 StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP_READY phase=before_geometry anchor=window_lower_right tail=False x=" + layout.x + " y=" + layout.y + " width=" + layout.z + " height=" + layout.w + " exceeds_screen=" + (box.height > Screen.height - gap * 2f));
                 int intact = 0;
                 foreach (var label in textLabels)
-                    if (label != null && label.gameObject.activeInHierarchy) intact += Count(label.processedText, "[не изучено]");
-                StudyTableWorkProbe.Write("RAR_GUIDANCE_TEXT markers=" + expectedStudyMarkers + " rendered_whole=" + intact + " intact=" + (intact == expectedStudyMarkers));
+                    if (label != null && label.gameObject.activeInHierarchy) intact += Count(label.processedText, studyMarkerText);
+                StudyTableWorkProbe.Write("RAR_GUIDANCE_TEXT language=" + language + " markers=" + expectedStudyMarkers + " rendered_whole=" + intact + " intact=" + (intact == expectedStudyMarkers));
             }
         }
         private static int Count(string text, string value) { return (text.Length - text.Replace(value, "").Length) / value.Length; }
@@ -199,6 +203,7 @@ namespace NikichMods.Research
             textLabels = null; expectedStudyMarkers = 0;
             language = null;
             renderPanel = null;
+            studyMarker = null; studyMarkerText = null; studyExplanation = null;
             lastLayout = Vector4.zero; settled = 0;
             if (old != null) old.DestroyBubble();
         }

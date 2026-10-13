@@ -9,8 +9,8 @@ namespace NikichMods.Research
     // Guidance for the already-known native list at both manual alchemy tiers.
     internal static class RecipeGuidance
     {
-        internal const string StudyMarker = "[693606][не изучено][-]";
-        internal const string StudyExplanation = "Отмеченные материалы нужно сначала изучить на исследовательском столе.";
+        internal static string StudyMarker { get { return "[693606][" + Localization.Get(Localization.Key.Unstudied) + "][-]"; } }
+        internal static string StudyExplanation { get { return Localization.Get(Localization.Key.StudyExplanation); } }
         private static readonly HashSet<string> catalogueEntries = new HashSet<string>();
         private static readonly Dictionary<string, List<CraftDefinition>> routes = new Dictionary<string, List<CraftDefinition>>();
         private static readonly Dictionary<string, string> familyNames = new Dictionary<string, string>();
@@ -94,7 +94,7 @@ namespace NikichMods.Research
         { return BuildTextCore(formula, catalogue, save, name, preview, false); }
         private static string BuildTextCore(CraftDefinition formula, Dictionary<string, List<CraftDefinition>> catalogue, GameSave save, Func<string, string> name, bool preview, bool additional)
         {
-            var text = new StringBuilder("[4B3422]Как получить ингредиенты");
+            var text = new StringBuilder("[4B3422]" + Localization.Get(Localization.Key.HowTo));
             bool pending = false;
             foreach (var ingredient in formula.needs)
             {
@@ -102,7 +102,7 @@ namespace NikichMods.Research
                 bool hasAdditional = additional && AdditionalSources.Append(text, ingredient.id, save, name);
                 List<CraftDefinition> producers;
                 if (!catalogue.TryGetValue(ingredient.id, out producers) || producers.Count == 0)
-                { if (!hasAdditional) text.Append("\nИсточник пока не проверен"); continue; }
+                { if (!hasAdditional) text.Append("\n").Append(Localization.Get(Localization.Key.UnknownSource)); continue; }
                 var sections = new List<SourceSection>();
                 foreach (var group in GroupRoutes(producers, save))
                 {
@@ -143,8 +143,8 @@ namespace NikichMods.Research
                     bool unstudied = route.craft_type == CraftDefinition.CraftType.AlchemyDecompose &&
                         ((!save.IsSurveyComplete(CraftDefinition.CraftSubType.Alchemy, route.needs[0].id)) || (preview && route.needs[0].id == "sulfur"));
                     if (unstudied) { pending = true; line.Append(" ").Append(StudyMarker); }
-                    if (!save.IsCraftVisible(route)) line.Append(" (рецепт закрыт)");
-                    if (route.condition.has_expression) line.Append(" (есть дополнительное условие)");
+                    if (!save.IsCraftVisible(route)) line.Append(" (").Append(Localization.Get(Localization.Key.RecipeLocked)).Append(")");
+                    if (route.condition.has_expression) line.Append(" (").Append(Localization.Get(Localization.Key.ExtraCondition)).Append(")");
                     bool goo = route.needs.Exists(item => item.id.StartsWith("goo_", StringComparison.Ordinal));
                     if (goo) section.gooLines.Add("[59]" + line + "[FF]");
                     else section.lines.Add(line.ToString());
@@ -227,14 +227,14 @@ namespace NikichMods.Research
         }
         internal static void PreviewMenu()
         {
-            GUIElements.me.dialog.Open("Проверка отметки изучения", previewUnstudied ? "Обычный вид" : "Сера не изучена: просмотр",
+            GUIElements.me.dialog.Open(Localization.Get(Localization.Key.StudyPreviewTitle), previewUnstudied ? Localization.Get(Localization.Key.NormalView) : Localization.Get(Localization.Key.SulfurPreview),
                 delegate {
                     previewUnstudied = !previewUnstudied;
                     bool nativeStudied = MainGame.me.save.IsSurveyComplete(CraftDefinition.CraftSubType.Alchemy, "sulfur");
                     StudyTableWorkProbe.Write("RAR_GUIDANCE_PREVIEW enabled=" + previewUnstudied + " native_sulfur_studied=" + nativeStudied + " save_mutation=False");
-                    GUIElements.me.dialog.OpenOK("Откройте известный рецепт жёлтой краски. Изменён только просмотр; знания сохранения и доступность на мельнице остаются настоящими.");
-                }, "Закрыть", null, null, GameKey.Select, GameKey.Back,
-                "Временный просмотр добавляет отметку только к сере и исчезает после перезапуска. Он не заменяет проверку настоящего изучения.");
+                    GUIElements.me.dialog.OpenOK(Localization.Get(Localization.Key.PreviewReady));
+                }, Localization.Get(Localization.Key.Close), null, null, GameKey.Select, GameKey.Back,
+                Localization.Get(Localization.Key.PreviewWarning));
         }
         internal static void Refresh()
         {

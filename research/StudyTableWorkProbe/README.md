@@ -2,7 +2,11 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current wording candidate: 0.1.31
+## Current localization candidate: 0.1.32
+
+All 42 custom visible strings (guidance and temporary diagnostic controls) are translated for all 11 native languages. Native names/fonts remain game-owned. Registered source methods resolve text in the current language; the atomic Study marker/footer and final diagnostics are localized too. Unknown locale codes fall back to English. LOCALIZATION.md records completeness/glyph tests and limits. Inspect one familiar recipe in Russian and English, optionally switching back; this includes the deferred 0.1.31 wording check. No repeat research/payment/persistence run.
+
+## Wording candidate: 0.1.31 (standalone installed check deferred)
 
 Applies agreed concise Russian source wording: item use, body extraction/cremation action rows, and purchase heading. Shared footer: "Отмеченные материалы нужно сначала изучить на исследовательском столе." Preserves all source/Study/progression gates and accepted 0.1.30 appearance/render grouping. Brief installed text inspection remains pending; no research/payment/persistence repetition.
 

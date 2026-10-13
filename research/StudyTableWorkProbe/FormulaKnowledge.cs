@@ -11,7 +11,7 @@ namespace NikichMods.Research
     internal static class FormulaKnowledge
     {
         internal const string Job = "rar_probe_knowledge_heal_017";
-        private const string Product = "pot_heal";
+        internal const string Product = "pot_heal";
         private const string Prepared = "rar_probe_knowledge_prepared_017";
         private const string Prefix = "rar_probe_knowledge_original_017_";
         private static readonly List<CraftDefinition> formulas = new List<CraftDefinition>();
@@ -44,7 +44,7 @@ namespace NikichMods.Research
             {
                 balance.craft_data.Add(new CraftDefinition {
                     id = Job, craft_in = new List<string> { "mf_alchemy_survey" },
-                    custom_name = "Проверка открытия формул: эликсир исцеления", icon = "i_" + Product,
+                    custom_name = Localization.Id(Localization.Key.FormulaProbeName), icon = "i_" + Product,
                     craft_type = CraftDefinition.CraftType.None,
                     needs = new List<Item> { new Item("faith", 1) }, needs_from_wgo = new List<Item> { new Item("science", 1) },
                     output = new List<Item>(), condition = new SmartExpression { default_value = 1 },
@@ -69,18 +69,18 @@ namespace NikichMods.Research
         internal static void Menu()
         {
             Status("F8", Save);
-            GUIElements.me.dialog.Open("Проверка открытия формул", "Действия", Actions, "Закрыть", null, null, GameKey.Select, GameKey.Back,
-                "Только тестовое сохранение. Проверяется эликсир исцеления (2 формулы). Не открывайте и не готовьте его обычным способом во время проверки. Очистка вернёт исходные знания; ресурсы не возвращаются.");
+            GUIElements.me.dialog.Open(Localization.Get(Localization.Key.FormulaProbeTitle), Localization.Get(Localization.Key.Actions), Actions, Localization.Get(Localization.Key.Close), null, null, GameKey.Select, GameKey.Back,
+                Localization.Get(Localization.Key.FormulaProbeWarning));
         }
         private static void Actions()
         {
-            GUIElements.me.dialog.Open("Тест сохраняется вместе с игрой", "Подготовить случай", Choose, "Убрать тестовое состояние", StudyTableWorkProbe.Cleanup,
-                null, GameKey.Select, GameKey.Back, "После очистки сохраните игру перед удалением DLL.");
+            GUIElements.me.dialog.Open(Localization.Get(Localization.Key.SavePersistent), Localization.Get(Localization.Key.PrepareCase), Choose, Localization.Get(Localization.Key.Cleanup), StudyTableWorkProbe.Cleanup,
+                null, GameKey.Select, GameKey.Back, Localization.Get(Localization.Key.SaveBeforeRemoving));
         }
         private static void Choose()
         {
-            GUIElements.me.dialog.Open("Начальные знания для проверки", "Неизвестны обе", delegate { Prepare(false); }, "Известна одна", delegate { Prepare(true); },
-                null, GameKey.Select, GameKey.Back, "Это подготовка входных данных, а не результат исследования. Исходные знания будут сохранены для очистки.");
+            GUIElements.me.dialog.Open(Localization.Get(Localization.Key.InitialKnowledge), Localization.Get(Localization.Key.NoneKnown), delegate { Prepare(false); }, Localization.Get(Localization.Key.OneKnown), delegate { Prepare(true); },
+                null, GameKey.Select, GameKey.Back, Localization.Get(Localization.Key.PreparationWarning));
         }
         private static void Prepare(bool partial)
         {
@@ -88,11 +88,11 @@ namespace NikichMods.Research
             {
                 if (Has(Save, Prepared) || Has(Save, Job))
                 {
-                    GUIElements.me.dialog.OpenOK("Сначала уберите предыдущее тестовое состояние через F8."); return;
+                    GUIElements.me.dialog.OpenOK(Localization.Get(Localization.Key.CleanupFirst)); return;
                 }
                 PrepareInput(Save, partial);
                 Status(partial ? "synthetic_partial" : "synthetic_unknown", Save);
-                GUIElements.me.dialog.OpenOK("Подготовлено. Запустите работу на вкладке рецептов исследовательского стола.");
+                GUIElements.me.dialog.OpenOK(Localization.Get(Localization.Key.Prepared));
             }
             catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
         }

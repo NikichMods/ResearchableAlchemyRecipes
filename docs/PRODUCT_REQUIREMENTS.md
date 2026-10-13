@@ -31,6 +31,8 @@ For an alchemical product known to the character, the player can follow a predic
 
 ## Contextual recipe guidance
 
+- Custom visible text follows the game's selected language, covering all 11 native locales with Russian/English prioritized. Item/equipment/NPC names and fonts remain native; unknown locale codes fall back to English. Study marks retain atomic wrapping and source indentation in every language. LOCALIZATION.md owns implementation/evidence limits; translation completeness is separate from installed rendering/editorial acceptance.
+
 - Adopted Russian source wording: "Использование предмета" above the native item name; "Извлечение из тела" / "Сожжение тела" below the applicable equipment; "Покупка" above the native NPC name. Preserve all availability/technology annotations. Avoid duplicating "Тело" and a parenthetical description of the same action.
 
 - Final mod presentation must support all game languages and the complete supported ingredient population. Current research prototypes use Russian; localization implementation is deferred, not removed from final scope. Visual grouping must not depend on Russian names or one representative reagent's colours/line lengths.

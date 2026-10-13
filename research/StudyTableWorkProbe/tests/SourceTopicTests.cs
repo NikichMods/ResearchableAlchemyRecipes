@@ -46,6 +46,9 @@ public static class SourceTopicTests
     }
     private static void Run(string dir)
     {
+        var nativeLanguage = (GJL)FormatterServices.GetUninitializedObject(typeof(GJL));
+        nativeLanguage.id = "ru"; nativeLanguage.dict = new Dictionary<string, string>();
+        AccessTools.Field(typeof(GJL), "cur_lng").SetValue(null, nativeLanguage);
         var asm = Assembly.LoadFrom(Path.Combine(dir, "compile-check.dll"));
         source = asm.GetType("NikichMods.Research.SourceResearch", true);
         var host = (MainGame)FormatterServices.GetUninitializedObject(typeof(MainGame));
@@ -326,5 +329,75 @@ public static class SourceTopicTests
         extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "memory_powder" }, false, false });
         memory = (string)core.Invoke(null, new object[] { memoryFormula, empty, save, names, false, true });
         Assert(!memory.Contains("npc_witch"), "Absent Game of Crone still shows DLC dialogue source");
+        CheckLocalization(asm, balance, save);
+    }
+    private static void CheckLocalization(Assembly asm, GameBalance balance, GameSave save)
+    {
+        var localization = asm.GetType("NikichMods.Research.Localization", true);
+        var keyType = localization.GetNestedType("Key", BindingFlags.NonPublic);
+        var get = localization.GetMethod("Get", Private, null, new[] { keyType, typeof(string) }, null);
+        Func<string, string, string> text = (key, locale) => (string)get.Invoke(null, new[] { Enum.Parse(keyType, key), (object)locale });
+        var current = (GJL)AccessTools.Field(typeof(GJL), "cur_lng").GetValue(null);
+        current.dict["native_fixture"] = "preserved";
+        var guidance = asm.GetType("NikichMods.Research.RecipeGuidance", true);
+        var core = guidance.GetMethod("BuildTextCore", Private);
+        var empty = new Dictionary<string, List<CraftDefinition>>();
+        var extras = asm.GetType("NikichMods.Research.AdditionalSources", true);
+        current.id = "ru";
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "water", "blood", "ash", "memory_powder" }, false, true });
+        var beforeKnowledge = new HashSet<string>(save.completed_one_time_crafts);
+        var layout = asm.GetType("NikichMods.Research.GuidanceTextLayout", true).GetMethod("Format", Private);
+        Func<string, float> measure = value => System.Text.RegularExpressions.Regex.Replace(value, @"\[(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{2})\]|\[-\]", "").Length;
+        Func<string, float, string> wrap = (value, width) =>
+        {
+            var lines = new List<string>(); string line = "";
+            foreach (string word in value.Split(' '))
+            {
+                string next = line.Length == 0 ? word : line + " " + word;
+                if (line.Length > 0 && measure(next) > width) { lines.Add(line); line = word; }
+                else line = next;
+            }
+            lines.Add(line); return string.Join("\n", lines.ToArray());
+        };
+        foreach (string locale in GJL.LANGUAGES)
+        {
+            current.id = locale;
+            current.dict["pot_heal"] = "native_item_name_" + locale;
+            foreach (object key in Enum.GetValues(keyType))
+            {
+                string value = (string)get.Invoke(null, new[] { key, (object)locale });
+                Assert(!string.IsNullOrWhiteSpace(value) && !value.Contains("nikichmods.rar.ui."), "Missing translation: " + locale + "/" + key);
+            }
+            localization.GetMethod("Inject", Private).Invoke(null, null);
+            Assert(current.dict["native_fixture"] == "preserved" && current.dict["nikichmods.rar.ui.SampleFreeProbeName"] == text("SampleFreeProbeName", locale), "Namespaced injection overwrites native text or misses current locale");
+            Assert(current.dict["nikichmods.rar.ui.FormulaProbeName"].Contains("native_item_name_" + locale) && !current.dict["nikichmods.rar.ui.FormulaProbeName"].Contains("{0}"), "Diagnostic item title bypasses native names or leaks placeholder");
+            foreach (var pair in new[] { new[] { "water", "ItemUse" }, new[] { "blood", "Extraction" }, new[] { "ash", "Cremation" }, new[] { "memory_powder", "Purchase" } })
+            {
+                var formula = new CraftDefinition { needs = new List<Item> { new Item(pair[0], 1) } };
+                Func<string, string> names = id => id;
+                string rendered = (string)core.Invoke(null, new object[] { formula, empty, save, names, false, true });
+                Assert(rendered.Contains(text("HowTo", locale)) && rendered.Contains(text(pair[1], locale)), "Cached source method retained its registration language: " + locale + "/" + pair[1]);
+                if (pair[0] == "memory_powder") Assert(rendered.Contains(text("PurchaseUnavailable", locale)), "Closed purchase lost localized availability");
+            }
+            var ordinary = new CraftDefinition { id = "locale_normal", craft_type = CraftDefinition.CraftType.AlchemyDecompose,
+                craft_in = new List<string> { "locale_mill" }, needs = new List<Item> { new Item("locale_material", 1) }, output = new List<Item> { new Item("alchemy_1_yellow", 1) } };
+            var goo = new CraftDefinition { id = "locale_goo", craft_type = ordinary.craft_type,
+                craft_in = ordinary.craft_in, needs = new List<Item> { new Item("goo_yellow", 1) }, output = ordinary.output };
+            var target = new CraftDefinition { needs = new List<Item> { new Item("alchemy_1_yellow", 1) } };
+            var catalogue = new Dictionary<string, List<CraftDefinition>> { { "alchemy_1_yellow", new List<CraftDefinition> { goo, ordinary } } };
+            Func<string, string> identity = id => id;
+            string guide = (string)guidance.GetMethod("BuildText", Private).Invoke(null, new object[] { target, catalogue, save, identity, false });
+            string marker = "[693606][" + text("Unstudied", locale) + "][-]";
+            Assert(guide.Contains(marker) && guide.Contains(text("StudyExplanation", locale)) && guide.IndexOf("locale_material", StringComparison.Ordinal) < guide.IndexOf("goo_yellow", StringComparison.Ordinal), "Localized study/source structure changed: " + locale);
+            string formatted = (string)layout.Invoke(null, new object[] { "    [59]long material name " + marker + "[FF]", measure(marker) + 4, marker, measure, wrap });
+            Assert(formatted.Contains(marker) && formatted.Contains("[59]") && formatted.Contains("[FF]"), "Localized marker/alpha split: " + locale);
+        }
+        Assert(beforeKnowledge.SetEquals(save.completed_one_time_crafts), "Localization changes save knowledge");
+        Assert(text("HowTo", "unknown_locale") == text("HowTo", "en"), "Unknown locale must fall back to English");
+        Assert(text("StudyExplanation", "ru") == "Отмеченные материалы нужно сначала изучить на исследовательском столе.", "Accepted Russian footer changed");
+        Assert(text("HowTo", "en") == "How to obtain ingredients", "English guidance header changed");
+        Assert(AccessTools.Method(typeof(GJL), "LoadLanguageResource", new[] { typeof(string) }) != null, "Native language-load boundary missing");
+        current.id = "ru"; localization.GetMethod("Inject", Private).Invoke(null, null);
+        Console.WriteLine("PASS localization: 42 keys x 11 languages, registered-source language changes, namespaced injection, English fallback, atomic markers and save isolation");
     }
 }

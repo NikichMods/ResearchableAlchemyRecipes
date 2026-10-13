@@ -10,8 +10,8 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.31.0")]
-[assembly: AssemblyFileVersion("0.1.31.0")]
+[assembly: AssemblyVersion("0.1.32.0")]
+[assembly: AssemblyFileVersion("0.1.32.0")]
 
 namespace NikichMods.Research
 {
@@ -19,7 +19,7 @@ namespace NikichMods.Research
     [BepInDependency("p1xel8ted.gyk.maxbuttonsredux", BepInDependency.DependencyFlags.SoftDependency)]
     public sealed class StudyTableWorkProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.31";
+        public const string Version = "0.1.32";
         internal const string JobId = "rar_probe_work_010";
         private const string TableId = "mf_alchemy_survey";
         private const string Technology = "The Beginning Of Alchemy";
@@ -45,6 +45,7 @@ namespace NikichMods.Research
                 TabArtwork.Load();
                 harmony = new Harmony("nikichmods.research.studytablework");
                 harmony.PatchAll(typeof(StudyTableWorkProbe).Assembly);
+                Localization.Inject();
                 QuantityInputCompatibility.Install(harmony, StudyTabs.QuantityInputUnavailable, RecipeGuidance.QuantityUnavailableReason);
                 enabledProbe = true;
                 Write("RAR_WORK_READY version=" + Version + " hash=" + actual + " save_persistent=True reward_probe=True");
@@ -74,8 +75,8 @@ namespace NikichMods.Research
             {
                 DumpActive("RAR_WORK_STATUS");
                 if (enabledProbe) SourceResearch.Menu();
-                else GUIElements.me.dialog.Open("Пробник отключён после ошибки", "Убрать тестовое состояние", Cleanup,
-                    "Закрыть", null, null, GameKey.Select, GameKey.Back, "Очистка доступна. После неё сохраните игру.");
+                else GUIElements.me.dialog.Open(Localization.Get(Localization.Key.Disabled), Localization.Get(Localization.Key.Cleanup), Cleanup,
+                    Localization.Get(Localization.Key.Close), null, null, GameKey.Select, GameKey.Back, Localization.Get(Localization.Key.CleanupAvailable));
             }
             catch (Exception ex) { Fail(ex); }
         }
@@ -113,7 +114,7 @@ namespace NikichMods.Research
                 Write("RAR_TOPICS_CLEANUP job_markers_removed=" + sourceMarkers + " earned_native_knowledge_preserved=True");
                 Write("RAR_WORK_CLEANUP canceled=" + canceled + " last_cleared=" + cleared + " markers_removed=" + removed + " queued_entries_removed=" + queued);
                 DumpActive("RAR_WORK_CLEAN");
-                GUIElements.me.dialog.OpenOK("Тестовое состояние убрано. Сохраните игру перед удалением пробника.");
+                GUIElements.me.dialog.OpenOK(Localization.Get(Localization.Key.CleanupDone));
             }
             catch (Exception ex) { Fail(ex); }
         }
@@ -164,7 +165,7 @@ namespace NikichMods.Research
                         balance.craft_data.Add(new CraftDefinition {
                             id = JobId,
                             craft_in = new List<string> { TableId },
-                            custom_name = "Проверка исследования без образца",
+                            custom_name = Localization.Id(Localization.Key.SampleFreeProbeName),
                             icon = "i_pot_heal",
                             craft_type = CraftDefinition.CraftType.None,
                             needs = new List<Item> { new Item("faith", 1) },
