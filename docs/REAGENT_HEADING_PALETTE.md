@@ -1,8 +1,14 @@
 # Reagent heading palette — proposal
 
-## Complete parchment comparison — 2026-10-13, pending user selection
+## Adopted parchment palette B — 2026-10-13
 
-The user requests a comparison of the entire palette, including unseen colours and memory powder, before changing the installed candidate. Four ignored review sheets cover all 36 ingredient names: powders (16), fluids (8), essences (8), and universal ingredients (4). Each compares A: installed colours, B: more expressive unoutlined colours, and C: light colours with a thin dark outline. These are proposals, not adopted colours or a new runtime candidate. StudyTableWorkProbe 0.1.26 remains unchanged.
+The user explicitly selects column B for the entire palette: all 36 inputs, without outlines or mixing C into light headings. The B column below is the adopted mapping. Candidate 0.1.27 applies it; installed visual acceptance is separate from the accepted comparison.
+
+READY: this research-only change replaces RGB constants in ReagentHeadingPalette and adds memory_powder's explicit entry. RecipeGuidance consumes Heading; native rich-text UILabel rendering with white label tint is the accepted final colour path. Scope is reagent section headings only. Preserve text, source catalogue, marker/body/title colours, layout, knowledge and native mechanics. Existing compile/formatter checks plus comparison of all mappings prove implementation; a short installed visual inspection establishes perceived colours. No new shader, font effect or runtime hook is involved.
+
+## Complete parchment comparison — 2026-10-13
+
+The comparison was prepared before changing the installed candidate. Four ignored review sheets cover all 36 ingredient names: powders (16), fluids (8), essences (8), and universal ingredients (4). Each compares A: 0.1.26 colours, B: more expressive unoutlined colours, and C: light colours with a thin dark outline. B is now selected; A/C remain comparison history.
 
 The sheets use extracted native Russian tiny_font glyphs/advances, native item icons and back_paper02_rounded parchment, with a reconstructed nine-slice background. Glyphs are enlarged 2x by nearest-neighbour sampling; all 36 names fit their cells and have available glyphs. Private sheets/assets and generation scripts stay ignored under work/palette. This is an offline comparison, not a native rendered screenshot. Colours are keyed by item IDs, independent of localization; English and other native language layouts/font effects still require their own checks.
 
@@ -31,7 +37,7 @@ Outline C simulates native Outline's four diagonal copies using #4B3422 at one r
 | water | #21799E | #85D3F0 |
 | memory_powder | #955E36 | #EDB69B |
 
-The ordinary eight family colours apply consistently to all three reagent forms. Memory powder currently has no explicit palette entry and inherits body #4B3422 in A. Body/study-marker text remains #4B3422/#693606 in the comparison. A mixed selection (B for coloured families, C for selected light inputs) is possible, but remains a user-owned decision.
+The ordinary eight family colours apply consistently to all three reagent forms. Memory powder had no explicit palette entry in 0.1.26 and inherits body #4B3422 in A. Body/study-marker text remains #4B3422/#693606 in the comparison. The considered mixed B/C selection was not adopted; the user chose B throughout.
 
 ## Parchment adaptation — 0.1.24 candidate
 

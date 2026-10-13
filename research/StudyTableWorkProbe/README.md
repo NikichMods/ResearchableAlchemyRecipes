@@ -2,7 +2,11 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current presentation candidate: 0.1.23
+## Current presentation candidate: 0.1.27
+
+Applies user-selected parchment palette B to all 36 reagent headings, including memory powder, without outlines. Preserves 0.1.26's accepted tooltip geometry, whole Study marks, source guidance and input behavior. Minimum installed check: inspect a few existing recipe tooltips for colour comfort; no research/payment/restart scenario needs repetition. TEST_LOG.md owns exact identity and acceptance limits.
+
+## Historical presentation candidate: 0.1.23
 
 Owned native tooltip grows upward beside the vanilla window's lower-right corner, with measured amount-arrow clearance and a fixed native LD tail. Intermediate layout remains hidden until consecutive late-size observations settle. Text uses a darker parchment palette and title spacing; manual sources use equipment subheadings/material rows. Equivalent available preparation/distiller tiers may combine; different gates/yields remain explicit. Native Souls availability excludes wall-crematorium sources without that DLC. Local regressions pass; flicker, tail/anchor, colours and actual input need installed observation. Exact identity/limits are in TEST_LOG.md.
 
