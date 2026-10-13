@@ -5,13 +5,15 @@ using HarmonyLib;
 
 namespace NikichMods.Research
 {
-    // Bounded room-paint research, not a global product catalogue or encounter ledger.
+    // Bounded room-blueprint research, not a global product catalogue or encounter ledger.
     internal static class SourceResearch
     {
         internal const string Builder = "keeper_room_builddesk";
         internal const string Technology = "The Beginning Of Alchemy";
         private const string JobPrefix = "rar_probe_source_paint_0110_";
-        private static readonly string[] Products = { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint" };
+        // Preserve the handed paint job IDs; new groups reuse the same verified source owner.
+        private static readonly string[] Products = { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint", "black_paint", "blue_paint", "white_paint", "glue" };
+        private static readonly int[] FormulaCounts = { 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 1 };
         private sealed class Topic
         {
             internal string product;
@@ -35,8 +37,9 @@ namespace NikichMods.Research
             if (ReferenceEquals(registeredBalance, balance)) return;
             topics.Clear(); snapshotSave = null; sourceAvailable = false;
             // Resolve original definitions before appending any work to the host list.
-            foreach (string product in Products)
+            for (int productIndex = 0; productIndex < Products.Length; productIndex++)
             {
+                string product = Products[productIndex];
                 var topic = new Topic { product = product };
                 foreach (var craft in balance.craft_data)
                 {
@@ -46,9 +49,9 @@ namespace NikichMods.Research
                 }
                 foreach (var craft in balance.craft_obj_data)
                     if (craft.builder_ids.Contains(Builder) && craft.needs.Exists(item => item.id == product)) topic.sources.Add(craft);
-                // Accepted slice: exactly one ordinary formula per paint, all room sources.
-                if (topic.formulas.Count != 1 || topic.sources.Count == 0)
-                    throw new InvalidOperationException("Verified paint group changed: " + product);
+                // Explicit audited groups; do not silently generalize to other product outputs.
+                if (topic.formulas.Count != FormulaCounts[productIndex] || topic.sources.Count == 0)
+                    throw new InvalidOperationException("Verified room-source group changed: " + product);
                 topic.job = new CraftDefinition {
                     id = JobPrefix + product, craft_in = new List<string> { "mf_alchemy_survey" },
                     custom_name = product, icon = balance.items_data.Find(item => item.id == product).GetIcon(),
@@ -68,7 +71,7 @@ namespace NikichMods.Research
                 balance.craft_data.Add(topic.job);
             }
             registeredBalance = balance;
-            StudyTableWorkProbe.Write("RAR_TOPICS_REGISTER products=" + topics.Count + " source=room_paints synthetic=False");
+            StudyTableWorkProbe.Write("RAR_TOPICS_REGISTER products=" + topics.Count + " source=room_blueprints synthetic=False");
         }
         internal static void VerifyCache(GameBalance balance)
         {

@@ -30,6 +30,8 @@ Owner: [ALCHEMY_SYSTEM.md](https://github.com/NikichMods/GraveyardKeeperResearch
 
 ## Prior awareness/progression research
 
+Current project-specific channel triage: [AWARENESS_SOURCE_AUDIT.md](AWARENESS_SOURCE_AUDIT.md), 2026-10-14. Same pinned host inputs confirm 25/34 ordinary products with nonhidden craft/build consumers. The already verified room-builder owner has 11 product groups, including four beyond the installed seven-paint slice; ordinary workbench and vendor/dialogue current availability remain separate gates. Native visible/locked/inactive rows must not be replaced by affordability predicates. This static audit does not change installed topics or production acceptance.
+
 Accepted evidence may be reused from AlchemyRiddle; its former product decisions are not requirements here:
 
 - [RUNTIME_CORPUS_ANALYSIS.md](https://github.com/NikichMods/AlchemyRiddle/blob/38feb900ed6c7151691aeccc129ab65798046478/docs/RUNTIME_CORPUS_ANALYSIS.md): structural/vendor candidate channels cover 26/34 ordinary products; 8 remain outside those measured channels. Seven of these have authored blueprint consumers whose actual visibility/unlock path was not established by that pass; one lacks measured ordinary consumer/vendor channels. This is channel-existence evidence, not a complete save-specific first-exposure proof.

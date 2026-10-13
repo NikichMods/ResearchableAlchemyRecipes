@@ -1,0 +1,48 @@
+# Product awareness source audit — 2026-10-14
+
+Status: static channel/consumer audit completed; bounded room extension prepared as research candidate 0.1.34. Wider installed eligibility remains unaccepted. No installed DLL, save or economics changed.
+
+## Question and evidence
+
+Which native currently available sources can support paid product topics beyond SourceResearch's seven room paints, without a global catalogue or duplicate encounter history?
+
+Recover accepted channel-existence/progression evidence through VERIFIED_RUNTIME_DATA.md and shared RESEARCH_INDEX.md / ALCHEMY_SYSTEM.md. Historical 26/34 structural/vendor coverage is not 26/34 current-save eligibility. Ingredient-guidance coverage is a separate property.
+
+Fresh read-only balance inspection rechecked resources.assets SHA-256 `215c7981901a4b72d5db717666ba47ad3cc032527c95f58dc39d8af1293a69ca` and Assembly-CSharp.dll SHA-256 `e72e4270e4b88dd0a87ca23c9cf1750aec4c4a0fedb40b6d2dae7902fc9c7fd8`. It selects nonhidden successful MixedCraft definitions at the two manual alchemy tables and applies the accepted native positional ingredient types for the ordinary subset. For each of its 34 outputs, inspect nonhidden, non-MixedCraft craft/build definitions that consume it. Output rows and private inspection scripts stay ignored; no concrete formula ingredients are published.
+
+Static source reference: [Kupie/GYK_DECOMP at the pinned 1.407 revision](https://github.com/Kupie/GYK_DECOMP/tree/6abf79199d92482af1c7573870dd9a20ec2270b9/Assembly-CSharp), specifically MainGame, GameSave, CraftDefinition, CraftComponent, BaseCraftGUI, CraftGUI, Vendor, VendorDefinition and Trading. Source inspection supports ownership, not installed acceptance of a new consumer.
+
+## Structural partition
+
+The ordinary corpus remains 43 formulas / 34 products. 25 products have at least one nonhidden authored downstream craft/build consumer; nine lack that measured channel. There are 95 product-to-consumer associations, not 95 unique recipes. Individual source rows overlap and must not be added as distinct-product totals.
+
+| Source identity | Products | Distinct consuming definitions | Evidence / remaining boundary |
+| --- | ---: | ---: | --- |
+| keeper_room_builddesk | 11 | 48 | Native builder routing/visibility owner and positive physical-source state already verified for the seven-paint subset; new product groups remain untested. |
+| table_book_constr | 16 | 32 | Native ordinary card filter established statically; physical station access/current-save cards not captured for this expansion. |
+| mf_paper_press | 1 | 1 | Separate physical station owner; overlaps other sources. |
+| contraband_box | 2 | 1 | Special interaction/progression route; do not generalize ordinary workbench access. |
+| mf_alchemy_survey | 1 | 1 | Special native operation; preserve ordinary material Study and verify its actual entry path. |
+| zombie_crafting_table | 1 | 1 | Separate station/access route; not a reason to reveal the whole catalogue. |
+
+The nine products without craft/build consumers are eight potion outputs plus Spices. Existing vendor candidates and Clotho/other dialogue channels remain relevant, but candidate presence is not current display availability. Accepted Spices evidence already establishes a native formula disclosure in its introduction: actual native knowledge suppresses the paid topic. The additional native quest memory-potion case is outside the ordinary 34-output population and has its dedicated receipt/disclosure path; the 44-formula ingredient audit must not silently widen paid-topic criteria.
+
+## Native visibility versus payment
+
+GameSave.IsCraftVisible checks hidden, CraftDefinition.IsLocked and one-time completion. IsLocked reads native unlocked_crafts/locked_crafts. It does not check recipe affordability or condition.
+
+MainGame.OpenBuildObjectGUI selects exact builder_ids plus IsCraftVisible, with the already identified tutorial guard. BaseCraftGUI.CommonOpen consumes the supplied building inventory or the station CraftComponent.crafts and filters by native visibility and allowed craft type. Decomposition additionally checks material Survey. BaseCraftGUI.CanCraft checks materials and condition separately. Therefore a displayed resource need must not be hidden merely because the player lacks that target input or cannot currently perform the consuming craft. An unlocked technology alone also does not establish that its physical source exists/is accessible.
+
+Vendor.CanBuyItem is the merchant buying from the player; Trading.BuyableItemsFilter is not a merchant-stock discovery rule. Trading.SellableItemsFilter uses CanSellItem(item, true), but returns Inactive, not Hide, for a nonempty item that cannot currently be sold. Vendor.FillDrawingMultiInventory groups existing inventory into native tier pages and marks higher tiers locked. FillVendorInventory can insert a one-item row above the current tier and uses CanBuyOrSellItem, not CanSellItem alone. Hence a current purchase predicate is insufficient to reconstruct all visible stock rows; it may suppress visible inactive/locked entries. This is a verified static distinction, not proof that every structural candidate appears on every save.
+
+Do not invoke wgo.vendor, construct Trading/Vendor or fill vendor inventories for an observational census. Those paths create or modify inventory/save state. Actual current inventory, displayed tier pages, dynamic product types, NPC/root trade access and physical source availability need a separate bounded owner check. KnownNPC presence alone is not proof of a currently reachable trade answer.
+
+## Next implementation boundary
+
+READY for a research-only 11-group extension: the observable change is four additional remaining-only topics; native builder availability/IsCraftVisible owns their source, the pre-payment Refresh and native job completion own the commit boundaries. SourceResearch registration, card visibility, repetition guards, reward, diagnostic status and cleanup are the affected consumers. Preserve all seven handed job IDs, earned knowledge, native Study/production, tooltip presentation and diagnostic costs. Existing exact candidate 0.1.33 cannot offer the additional groups, while another observer DLL cannot exercise their job registration/reward composition; a narrow extension of the existing harness is the smallest executable method. Lower-level tests cover multi-variant registration/reward and eligibility; installed topic/list/completion observation owns exact-candidate acceptance.
+
+The least additional host surface is the existing room builder, rather than all vendors/dialogue at once. Its 11 products comprise the accepted seven plus `black_paint`, `blue_paint`, `white_paint` and `glue`. Those four have respectively 3, 1, 3 and 1 ordinary formula variants. Across all 11 products the metadata contains 15 formulas; these are catalogue totals, not a promised topic count on the user's save.
+
+For that bounded extension, retain the same actual desk availability, native blueprint visibility, alchemy unlock and remaining-formula gates. Remove the seven-paint-specific one-formula assertion only for explicitly validated new groups; do not alter handed job IDs or grant unknown formulas on registration. The existing remaining-only reward supports multiple variants, but new registration/list integration still requires lower-level checks and exact-candidate acceptance. Other source families must not ride along as presumed-ready mechanisms.
+
+Next useful installed observation is source/card agreement for the added room groups and correct exclusion of fully known products. Do not repeat the already passed seven-paint payment/reward/full-restart matrix solely for recovery. A later new candidate may exercise one naturally eligible added product if needed for the changed integration; static counts do not justify resetting earned knowledge. Final costs, unfinished-work restart/cancellation/refunds, reward-dialog polish and production packaging remain later work.

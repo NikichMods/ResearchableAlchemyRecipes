@@ -4,6 +4,8 @@ Current adopted direction: study-table research plus informational alchemy guida
 
 ## Current recovery entry point — 2026-10-13
 
+**Resumed source audit — 2026-10-14:** [AWARENESS_SOURCE_AUDIT.md](AWARENESS_SOURCE_AUDIT.md) owns the static channel partition and READY boundary. Host identities match accepted inputs; 25/34 ordinary products have nonhidden craft/build consumers. Research candidate 0.1.34 expands the same verified room-builder source from seven to eleven products, adding black/blue/white paint and glue while preserving actual source visibility and remaining-only knowledge. All seven handed job IDs remain stable; the new groups have explicitly checked formula counts. Local registration/reward/eligibility, native quantity compatibility, knowledge and all-language checks pass. Installed 0.1.33 remains the accepted baseline; 0.1.34 installed acceptance is pending. Other workbench/trade/dialogue families are not accepted from structural counts. Next observation is correct added-topic listing/exclusion and one naturally eligible new completion, without synthetic knowledge resets or replay of the old paint matrix. Economics and deferred lifecycle/production work remain deferred.
+
 
 ### Handoff checkpoint — continue in the next chat
 

@@ -2,7 +2,13 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current localization candidate: 0.1.32
+## Current research candidate: 0.1.34
+
+Extends the existing room-blueprint source from seven to eleven product groups: adds black, blue and white paint plus glue. Registration validates their exact native formula counts, retains all handed paint job IDs and preserves native knowledge/source/alchemy/payment gates. The F8 diagnostic title now describes room-blueprint research in all eleven languages. Guidance appearance and diagnostic costs are unchanged. AWARENESS_SOURCE_AUDIT.md owns static scope and remaining source-family gates.
+
+Minimum installed check on a test save: open the study table's research tab and inspect naturally eligible additional topics (fully known products must remain absent). Complete one new topic if available, then inspect its native formula cards at the appropriate alchemy table; a partially known product should teach only missing variants and disappear once complete. Return the log and any observed defect. Do not reset earned knowledge, repeat all seven paint jobs or replay the accepted full-restart knowledge matrix. Actual learning remains ordinary saved progress and survives diagnostic cleanup. Exact candidate acceptance is pending; installed 0.1.33 remains the accepted baseline.
+
+## Earlier localization candidate: 0.1.32
 
 All 42 custom visible strings (guidance and temporary diagnostic controls) are translated for all 11 native languages. Native names/fonts remain game-owned. Registered source methods resolve text in the current language; the atomic Study marker/footer and final diagnostics are localized too. Unknown locale codes fall back to English. LOCALIZATION.md records completeness/glyph tests and limits. Inspect one familiar recipe in Russian and English, optionally switching back; this includes the deferred 0.1.31 wording check. No repeat research/payment/persistence run.
 

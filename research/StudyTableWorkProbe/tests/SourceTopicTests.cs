@@ -56,17 +56,24 @@ public static class SourceTopicTests
         var balance = (GameBalance)FormatterServices.GetUninitializedObject(typeof(GameBalance));
         balance.craft_data = new List<CraftDefinition>(); balance.craft_obj_data = new List<ObjectCraftDefinition>();
         balance.items_data = new List<ItemDefinition>();
-        var products = new[] { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint" };
+        var products = new[] { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint", "black_paint", "blue_paint", "white_paint", "glue" };
         foreach (string product in products)
         {
             balance.items_data.Add(new ItemDefinition { id = product, icon = "fixture_native_icon_" + product });
-            balance.craft_data.Add(new CraftDefinition { id = "fixture_" + product, craft_type = CraftDefinition.CraftType.MixedCraft, output = new List<Item> { new Item(product, 1) } });
+            int variants = product == "black_paint" || product == "white_paint" ? 3 : 1;
+            for (int variant = 0; variant < variants; variant++)
+                balance.craft_data.Add(new CraftDefinition { id = "fixture_" + product + "_" + variant, craft_type = CraftDefinition.CraftType.MixedCraft, output = new List<Item> { new Item(product, 1) } });
             balance.craft_obj_data.Add(new ObjectCraftDefinition { id = "source_" + product, builder_ids = new List<string> { "keeper_room_builddesk" }, needs = new List<Item> { new Item(product, 1) } });
         }
         Call("Register", balance); Call("Register", balance);
-        Assert(balance.craft_data.Count == 14, "Registration duplicated native jobs");
+        Assert(balance.craft_data.Count == 26, "Registration duplicated native jobs");
         var topics = (IDictionary)source.GetField("topics", Private).GetValue(null);
-        Assert(topics.Count == 7, "Bounded registration count");
+        Assert(topics.Count == 11, "Bounded registration count");
+        var black = topics["rar_probe_source_paint_0110_black_paint"];
+        var blackFormulas = (List<CraftDefinition>)black.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(black);
+        var partiallyKnownBlack = Save(); partiallyKnownBlack.completed_one_time_crafts.Add(blackFormulas[0].id);
+        Assert(((List<string>)Call("GrantRemaining", partiallyKnownBlack, blackFormulas)).Count == 2, "Registered three-variant group did not grant only its missing formulas");
+        Assert(((List<string>)Call("GrantRemaining", partiallyKnownBlack, blackFormulas)).Count == 0, "Registered multi-variant reward repeated");
         var topic = topics["rar_probe_source_paint_0110_yellow_paint"];
         var job = (CraftDefinition)topic.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(topic);
         var visible = topic.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -85,6 +92,11 @@ public static class SourceTopicTests
             source.GetField("snapshotSave", Private).SetValue(null, save);
             source.GetField("sourceAvailable", Private).SetValue(null, true); visible.SetValue(topic, 1);
             Assert(save.IsCraftVisible(job), "Positive native topic hidden");
+            var blackJob = (CraftDefinition)black.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(black);
+            black.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(black, 1);
+            save.completed_one_time_crafts.Add(blackFormulas[0].id);
+            Assert(save.IsCraftVisible(blackJob), "Partially known multi-variant topic hidden");
+            Assert(((List<string>)Call("GrantRemaining", save, blackFormulas)).Count == 2 && !save.IsCraftVisible(blackJob), "Fully known multi-variant topic still offered");
             save.unlocked_techs.Clear(); Assert(!save.IsCraftVisible(job), "Alchemy gate ignored"); save.unlocked_techs.Add("The Beginning Of Alchemy");
             source.GetField("sourceAvailable", Private).SetValue(null, false); Assert(!save.IsCraftVisible(job), "Absent/disabled source offered"); source.GetField("sourceAvailable", Private).SetValue(null, true);
             visible.SetValue(topic, 0); Assert(!save.IsCraftVisible(job), "Locked blueprints offered"); visible.SetValue(topic, 1);

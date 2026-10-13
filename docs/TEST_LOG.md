@@ -1,5 +1,13 @@
 # Diagnostic runtime tests
 
+## 0.1.34 room-blueprint source extension — 2026-10-14
+
+Research-only candidate, installed acceptance pending. Adds black/blue/white paint and glue through the existing room-builder source owner, bringing structural registration to 11 product groups / 15 ordinary formulas. Actual offered count still depends on native blueprint availability, physical desk/alchemy gates and remaining knowledge. All seven old handed job IDs remain unchanged. No global catalogue, additional source family, economics or tooltip changes. F8 diagnostic title now describes the expanded room-blueprint scope in all eleven languages.
+
+Lower-level checks pass: native input hashes match the accepted 1.407 resources/assets and assembly; direct metadata projection matches all 11 exact registration groups, ordinary formula counts, source consumers and native icons. Local compile and suites pass knowledge restoration, actual installed optional quantity checker, 42-key/11-language localization and source registration/visibility/reward/cleanup. The expanded fixture proves a three-variant group remains offered with partial knowledge, grants exactly two missing variants and is hidden once fully known. These are offline policy/native-method checks, not native serializer, current-world source or installed UI evidence.
+
+Minimum return on a test save: inspect naturally eligible added topics at the research tab, verify fully known groups are absent, finish one naturally unknown new topic if available and inspect the newly known native cards at its alchemy table. Return the log plus observed defects. Do not reset earned knowledge or repeat the accepted seven-paint payment/full-restart matrix. Earned formulas are normal persistent progress, not reverted by diagnostic cleanup. Exact source/DLL identity is recorded after the clean build.
+
 ## Study Table Work Probe 0.1.6 — fixed user-selected icon position
 
 **Status:** clean-source compile/identity gate passed. Selected placement was observed in 0.1.5; exact 0.1.6 binary is not yet runtime-tested. The user explicitly defers a standalone 0.1.6 test and will inspect fixed placement in subsequent substantive candidates; do not request another dedicated run merely for these offsets.
