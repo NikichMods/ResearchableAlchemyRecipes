@@ -8,6 +8,8 @@ Research-method checkpoint: exact question is whether current native visibility 
 
 Local native-binding/grouped-card tests pass, including duplicated cells, nonselected variants, unrelated input exclusion and an equal-count different-ID negative case. No startup world reads, patches, save mutations, new research jobs or source-eligibility rule adoption. Actual load/F9 agreement is pending. Minimum user action: open the idle church workbench's crafting window and press F9 once. Codex reads the local log; no crafting, spending, new game or cleanup. Require RAR_SOURCE_CHURCH_RESULT exact_ids_agree=True/shown_indexed=True, all sixteen product rows and DONE without source errors before relying on this positive current-save boundary. Negative/early physical states and busy-source semantics remain separate.
 
+Exact clean compiled source `5020e89f71cef61704eb6cdc103aae3f12f87840`, SDK 6.0.406 Roslyn. Immutable artifact `artifacts/SourceEligibilityProbe-0.1.2/SourceEligibilityProbe-0.1.2.dll`, SHA-256 `3d8426ff867338fe84b7da2b0d2333b059129fcb555c20fbe34940b1d28df10f`; assembly/file/plugin versions agree. Installed directly with game closed as SourceEligibilityProbe.dll; no prior observer payload was present, and installed hash matches. Main StudyTableWorkProbe.dll remains exact accepted 0.1.35, hash `231136b019f66e95d5d91864813f1337899a7aeed8cf7ea26150943b2d47b80b`. Current host resources.assets/Assembly-CSharp hashes were rechecked and match their accepted identities. Pre-install log was preserved; installation is not startup/F9 acceptance. LOCAL_ENVIRONMENT.md owns private paths.
+
 ## 0.1.35 partial-topic description — 2026-10-14
 
 ### Returned acceptance — 2026-10-14
