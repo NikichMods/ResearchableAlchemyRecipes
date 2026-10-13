@@ -23,19 +23,19 @@ namespace NikichMods.Research
             foreach (string id in ingredients) routes.Add(id, new List<Route>());
             // Verified npc_witch root answer #18: dialogue purchase, not vendor stock.
             if (croneAvailable && ingredients.Contains("memory_powder") && balance.items_data.Exists(item => item.id == "memory_powder"))
-                routes["memory_powder"].Add(new Route { source = "npc_witch", method = "Покупка в диалоге", phrase = "@buy_memory_powder" });
+                routes["memory_powder"].Add(new Route { source = "npc_witch", method = "Покупка", phrase = "@buy_memory_powder" });
             foreach (var item in balance.items_data)
                 if (item.can_be_used && !item.autouse && string.IsNullOrEmpty(item.on_use_script))
                     foreach (var output in item.drop_on_use)
                         if (ingredients.Contains(output.id)) routes[output.id].Add(new Route {
-                            source = item.id, method = "Использовать в инвентаре", yield = FixedYield(output)
+                            source = item.id, method = "Использование предмета", yield = FixedYield(output)
                         });
             foreach (var craft in balance.craft_data)
                 if (!craft.hidden && !craft.dont_show_in_hint && craft.IsBodyPartExtractionCraft() && craft.needs.Count == 0)
                     foreach (var output in craft.output)
                         if (ingredients.Contains(output.id))
                             foreach (string station in craft.craft_in) routes[output.id].Add(new Route {
-                                source = "body", equipment = station, method = "извлечение из тела", yield = FixedYield(output), extraction = craft
+                                source = "body", equipment = station, method = "Извлечение из тела", yield = FixedYield(output), extraction = craft
                             });
             AddCremation(balance, ingredients, "corp_burning", "mf_pyre_placed", "cremation_builddesk:p:mf_pyre_placed");
             if (soulsAvailable) AddCremation(balance, ingredients, "crematorium_corp_burning", "mf_crematorium", "souls_builddesk:p:mf_crematorium");
@@ -60,7 +60,7 @@ namespace NikichMods.Research
                 throw new InvalidOperationException("Missing verified cremation channel: " + craftId);
             foreach (var output in craft.output)
                 if (ingredients.Contains(output.id)) routes[output.id].Add(new Route {
-                    source = "body", equipment = station, method = "сожжение тела", yield = FixedYield(output), blueprint = blueprint
+                    source = "body", equipment = station, method = "Сожжение тела", yield = FixedYield(output), blueprint = blueprint
                 });
         }
         internal static int FixedYield(Item output)
@@ -102,10 +102,9 @@ namespace NikichMods.Research
                     }
                 }
                 else equipment = source.method;
-                var line = new StringBuilder(name(source.source));
+                var line = new StringBuilder(source.equipment == null ? name(source.source) : source.method);
                 if (source.phrase != null && (!save.unlocked_phrases.Contains(source.phrase) || save.black_list_of_phrases.Contains(source.phrase)))
                     line.Append(" (покупка пока недоступна)");
-                if (source.equipment != null) line.Append(" (").Append(source.method).Append(")");
                 if (source.extraction != null)
                 {
                     if (!save.IsCraftVisible(source.extraction)) Closed(line, source, save, name, "рецепт закрыт");

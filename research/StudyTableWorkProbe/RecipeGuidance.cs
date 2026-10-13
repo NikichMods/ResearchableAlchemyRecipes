@@ -10,7 +10,7 @@ namespace NikichMods.Research
     internal static class RecipeGuidance
     {
         internal const string StudyMarker = "[693606][не изучено][-]";
-        internal const string StudyExplanation = "Получение ингредиентов из отмеченных материалов требует их изучения на исследовательском столе.";
+        internal const string StudyExplanation = "Отмеченные материалы нужно сначала изучить на исследовательском столе.";
         private static readonly HashSet<string> catalogueEntries = new HashSet<string>();
         private static readonly Dictionary<string, List<CraftDefinition>> routes = new Dictionary<string, List<CraftDefinition>>();
         private static readonly Dictionary<string, string> familyNames = new Dictionary<string, string>();

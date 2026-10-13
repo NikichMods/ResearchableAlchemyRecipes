@@ -2,7 +2,11 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current accepted presentation: 0.1.30
+## Current wording candidate: 0.1.31
+
+Applies agreed concise Russian source wording: item use, body extraction/cremation action rows, and purchase heading. Shared footer: "Отмеченные материалы нужно сначала изучить на исследовательском столе." Preserves all source/Study/progression gates and accepted 0.1.30 appearance/render grouping. Brief installed text inspection remains pending; no research/payment/persistence repetition.
+
+## Accepted presentation: 0.1.30
 
 Retains accepted 0.1.29 colours/source hierarchy. An owned native UIPanel groups the entire guidance bubble immediately below the ordinary tooltip panel, preventing cross-bubble background/text interleaving. Native bubble destruction owns panel cleanup. User accepts the current overlap correction; returned screenshot shows the foreground item bubble wholly covering guidance. Log confirms 4999/5000 panel grouping without probe errors. Exact acceptance limits/evidence are in TEST_LOG.md.
 

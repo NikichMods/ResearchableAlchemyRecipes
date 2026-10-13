@@ -128,7 +128,7 @@ public static class SourceTopicTests
         Assert(pending.Contains("[не изучено]") && pending.Contains("исследовательском столе"), "Unstudied native source lacks marker/instruction");
         catalogue["reagent"].Add(producer);
         var multiplePending = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names, false });
-        const string footer = "Получение ингредиентов из отмеченных материалов требует их изучения на исследовательском столе.";
+        const string footer = "Отмеченные материалы нужно сначала изучить на исследовательском столе.";
         Assert(multiplePending.IndexOf(footer, StringComparison.Ordinal) >= 0 && multiplePending.IndexOf(footer, StringComparison.Ordinal) == multiplePending.LastIndexOf(footer, StringComparison.Ordinal), "Shared explanation absent or duplicated per alternative");
         catalogue["reagent"].RemoveAt(1);
         var gooSource = new CraftDefinition { id = "first_goo", craft_type = producer.craft_type,
@@ -260,9 +260,9 @@ public static class SourceTopicTests
             var formula = new CraftDefinition { needs = new List<Item> { new Item(ingredient, 1) } };
             string text = (string)core.Invoke(null, new object[] { formula, empty, save, names, false, true });
             Assert(!text.Contains("Источник пока") && !text.Contains("[не изучено]"), "Procedural source absent or incorrectly needs material Study");
-            if (ingredient == "water") Assert(text.Contains("\n  Использовать в инвентаре:\n    fixture_water_container") && !text.Contains("fixture_not_usable"), "Item-use equipment/source grouping or yield wrong");
-            if (ingredient == "blood") Assert(text.Contains("извлечение") && text.Contains("извлечение из тела") && text.Contains("fixture_required_skill"), "Body-part or declared technology condition absent");
-            if (ingredient == "ash") Assert(text.Contains("сожжение") && text.Contains("mf_pyre_placed") && text.Contains("mf_crematorium"), "Hidden native automatic channels missing or incorrectly shown as menu recipes");
+            if (ingredient == "water") Assert(text.Contains("\n  Использование предмета:\n    fixture_water_container") && !text.Contains("fixture_not_usable"), "Item-use equipment/source grouping or yield wrong");
+            if (ingredient == "blood") Assert(text.Contains("Извлечение из тела") && !text.Contains("body (извлечение") && text.Contains("fixture_required_skill"), "Body-part or declared technology condition absent");
+            if (ingredient == "ash") Assert(text.Contains("Сожжение тела") && text.Contains("mf_pyre_placed") && text.Contains("mf_crematorium"), "Hidden native automatic channels missing or incorrectly shown as menu recipes");
         }
         // Equipment is stated once without losing independent source-study requirements.
         var another = new CraftDefinition { id = "fixture_other_material", craft_type = first.craft_type,
@@ -284,7 +284,7 @@ public static class SourceTopicTests
         Func<string, string> preparationNames = id => id == "mf_preparation_1" ? "fixture table" : id == "mf_preparation_2" ? "fixture table II" : id;
         var bloodFormula = new CraftDefinition { needs = new List<Item> { new Item("blood", 1) } };
         string combined = (string)core.Invoke(null, new object[] { bloodFormula, empty, save, preparationNames, false, true });
-        Assert(combined.Contains("\n  fixture table I, II:\n    body (извлечение из тела)") && !combined.Contains("I–II"), "Available preparation tiers/source format or readable numbering wrong");
+        Assert(combined.Contains("\n  fixture table I, II:\n    Извлечение из тела") && !combined.Contains("I–II"), "Available preparation tiers/source format or readable numbering wrong");
         save.locked_crafts.Add(extraction2.id);
         string separate = (string)core.Invoke(null, new object[] { bloodFormula, empty, save, preparationNames, false, true });
         Assert(!separate.Contains("fixture table I, II") && separate.Contains("рецепт закрыт"), "Closed extraction tier hidden in combined label");
@@ -316,7 +316,7 @@ public static class SourceTopicTests
         var memoryFormula = new CraftDefinition { needs = new List<Item> { new Item("memory_powder", 1) } };
         extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "memory_powder" }, false, true });
         string memory = (string)core.Invoke(null, new object[] { memoryFormula, empty, save, names, false, true });
-        Assert(memory.Contains("Покупка в диалоге") && memory.Contains("npc_witch") && memory.Contains("покупка пока недоступна") && !memory.Contains("Источник пока") && !memory.Contains("[не изучено]"), "Dialogue source/closed state missing or incorrectly needs Study");
+        Assert(memory.Contains("Покупка") && memory.Contains("npc_witch") && memory.Contains("покупка пока недоступна") && !memory.Contains("Источник пока") && !memory.Contains("[не изучено]"), "Dialogue source/closed state missing or incorrectly needs Study");
         save.unlocked_phrases.Add("@buy_memory_powder");
         memory = (string)core.Invoke(null, new object[] { memoryFormula, empty, save, names, false, true });
         Assert(memory.Contains("npc_witch") && !memory.Contains("покупка пока недоступна"), "Unlocked purchase remains marked closed");
