@@ -629,3 +629,16 @@ User adopts selected light C headings without outlines, 35% goo opacity, normal 
 - Native [59] gives 89/255 (34.9%), nearest to requested 35%. Selected light RGB values use the accepted colour path without effects. Remove the now-unneeded selective-outline helper and widget partition; restore the original single native body widget, retaining language-change rebuild and accepted geometry/reveal path.
 - Installed with game closed; old 0.1.28 hash verified, new installed bytes verified before old removal, one study DLL remains. Earlier numbered artifacts remain unchanged.
 - Installed visual acceptance pending: inspect light headings, a mixed source block and a goo-only block (including its equipment heading) in familiar recipes. No paid research/persistence/coverage repetition required.
+
+### Returned 0.1.29 — colours and goo hierarchy accepted
+
+The user explicitly accepts the current appearance. Returned screenshot separately exposes overlapping native item/guidance tooltip text interleaving; this opens a render-group correction rather than changing the accepted palette/source hierarchy.
+
+## Study Table Work Probe 0.1.30 — independent tooltip render group
+
+- Source: 6248a6e046289a231954e51931fd76ab549fedb6, research/study-table-work.
+- Artifact: StudyTableWorkProbe-0.1.30.dll; plugin 0.1.30, assembly/file 0.1.30.0; SHA-256 a0efb9e18df3875dbc6fc8142ddc5f397a51a845bee7faad483a9ba85de9c93d.
+- Existing SDK 6.0.406 deterministic clean-source compile/identity gate and all local suites pass. Static render-group owner/final consumer evidence is in VERIFIED_RUNTIME_DATA.md; no standalone CLR test is presented as native draw-call acceptance.
+- An owned UIPanel at the shared native tooltip panel's depth minus one gives guidance a complete consecutive render-queue group. Native sorting settings are inherited; its own widgets rejoin through RemoveFromPanel/CreatePanel or native Start. Ordinary ingredient tooltips stay wholly in front. Native bubble destruction owns the added panel's cleanup; no global depth/frame/input or placement changes.
+- Installed with game closed; old 0.1.29 installed hash verified, new bytes verified before old removal, exactly one study DLL remains. Earlier artifacts remain immutable.
+- Installed overlap/lifetime acceptance pending: ingredient hover creates overlap, pointer away restores unobscured guidance, close/reopen leaves no stale panel. Check the originally returned overlap scenario. No repeat research/source/persistence tests are required.
