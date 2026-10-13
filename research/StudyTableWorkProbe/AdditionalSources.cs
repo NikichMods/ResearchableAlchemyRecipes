@@ -95,11 +95,10 @@ namespace NikichMods.Research
                     if (paired != null)
                     {
                         string first = name("mf_preparation_1"), second = name("mf_preparation_2");
-                        equipment = second == first + " II" ? first + " 1, 2" : first + " / " + second;
+                        equipment = second == first + " II" ? first + " I, II" : first + " / " + second;
                     }
                 }
                 else equipment = source.method;
-                if (source.yield > 1) equipment += " — " + source.yield + " ед.";
                 var line = new StringBuilder(name(source.source));
                 if (source.equipment != null) line.Append(" (").Append(source.method).Append(")");
                 if (source.extraction != null)

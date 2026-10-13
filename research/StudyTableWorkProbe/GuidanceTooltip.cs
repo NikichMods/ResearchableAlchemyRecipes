@@ -49,9 +49,8 @@ namespace NikichMods.Research
             float scale = PixelsPerUnit(bubble.transform);
             gap = row.label_descr.fontSize * scale * 0.5f;
             UpdateAnchors();
-            // Measure the actual title/section headings with the current native font.
-            // Long source/condition lines wrap; they do not dictate empty panel width.
-            int preferred = MeasureHeadings();
+            // Full logical source rows determine width; the footer may wrap normally.
+            int preferred = MeasureRows();
             float padding = (Bounds(background).width - Bounds(bubble.widget).width) / scale;
             float right = Screen.width - RightEdge(Bounds(frame)) - gap * 2f;
             int width = Mathf.FloorToInt(Mathf.Min(preferred, right / scale - padding));
@@ -61,30 +60,47 @@ namespace NikichMods.Research
                 label.leftAnchor.target = null; label.rightAnchor.target = null;
                 label.topAnchor.target = null; label.bottomAnchor.target = null;
                 label.ResetAnchors();
+                string original = label.text;
+                if (original.Contains(RecipeGuidance.StudyMarker))
+                {
+                    float minimum = Measure(label, "    " + RecipeGuidance.StudyMarker);
+                    if (width < minimum) { Hide(); StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP status=hidden reason=insufficient_marker_space"); return; }
+                }
+                string formatted = GuidanceTextLayout.Format(original, width, RecipeGuidance.StudyMarker,
+                    value => Measure(label, value), (value, available) => Wrap(label, value, available));
                 label.overflowMethod = UILabel.Overflow.ResizeHeight;
                 label.color = Color.white;
                 label.width = width;
+                label.text = formatted;
                 label.ProcessText(false, true);
             }
             bubble.UpdateSizeAndWidgetsPositions();
             UpdateAnchors();
             StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP product=" + formula.GetFirstRealOutput().id + " text_width=" + width + " renderer=native independent_list=True");
         }
-        private static int MeasureHeadings()
+        private static float Measure(UILabel label, string text)
+        {
+            label.overflowMethod = UILabel.Overflow.ResizeFreely;
+            label.text = text;
+            label.ProcessText(false, true);
+            return label.printedSize.x;
+        }
+        private static string Wrap(UILabel label, string text, float available)
+        {
+            label.overflowMethod = UILabel.Overflow.ResizeHeight;
+            label.width = Mathf.Max(1, Mathf.FloorToInt(available));
+            label.text = text;
+            label.ProcessText(false, true);
+            return label.processedText;
+        }
+        private static int MeasureRows()
         {
             float width = 0f;
             foreach (var label in bubble.GetComponentsInChildren<UILabel>(true))
             {
                 string original = label.text;
-                var headings = new List<string>();
-                string[] lines = original.Split('\n');
-                headings.Add(lines[0]);
-                foreach (string line in lines)
-                    if (line.StartsWith("  ", StringComparison.Ordinal) && !line.StartsWith("    ", StringComparison.Ordinal)) headings.Add(line);
-                label.overflowMethod = UILabel.Overflow.ResizeFreely;
-                label.text = string.Join("\n", headings.ToArray());
-                label.ProcessText(false, true);
-                width = Mathf.Max(width, label.printedSize.x);
+                foreach (string line in original.Split('\n'))
+                    if (!line.Contains(RecipeGuidance.StudyExplanation)) width = Mathf.Max(width, Measure(label, line));
                 label.text = original;
             }
             return Mathf.CeilToInt(width);

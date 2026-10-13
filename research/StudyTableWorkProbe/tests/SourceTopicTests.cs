@@ -208,7 +208,7 @@ public static class SourceTopicTests
         var tierCatalogue = new Dictionary<string, List<CraftDefinition>> { { "fixture_reagent", sources } };
         Func<string, string> tierNames = id => id;
         string tiers = (string)guidance.GetMethod("BuildText", Private).Invoke(null, new object[] { tierFormula, tierCatalogue, save, tierNames, false });
-        Assert(tiers.Contains("mf_distcube_2_clay") && tiers.Contains("mf_distcube_2_cuprum") && tiers.Contains("2 ед."), "Equipment/yield alternative lost in common-material grouping");
+        Assert(tiers.Contains("mf_distcube_2_clay") && tiers.Contains("mf_distcube_2_cuprum") && !tiers.Contains("ед."), "Equipment/yield alternative lost in common-material grouping");
         second.craft_in[0] = first.craft_in[0];
         Assert(((List<List<CraftDefinition>>)grouping.Invoke(null, new object[] { sources, save })).Count == 2, "Different recipes at the same station collapsed");
         var bonusYield = new Item("fixture_reagent", 1) { min_value = new SmartExpression(), max_value = new SmartExpression() };
@@ -242,7 +242,7 @@ public static class SourceTopicTests
             var formula = new CraftDefinition { needs = new List<Item> { new Item(ingredient, 1) } };
             string text = (string)core.Invoke(null, new object[] { formula, empty, save, names, false, true });
             Assert(!text.Contains("Источник пока") && !text.Contains("[не изучено]"), "Procedural source absent or incorrectly needs material Study");
-            if (ingredient == "water") Assert(text.Contains("\n  Использовать в инвентаре — 20 ед.:\n    fixture_water_container") && !text.Contains("fixture_not_usable"), "Item-use equipment/source grouping or yield wrong");
+            if (ingredient == "water") Assert(text.Contains("\n  Использовать в инвентаре:\n    fixture_water_container") && !text.Contains("fixture_not_usable"), "Item-use equipment/source grouping or yield wrong");
             if (ingredient == "blood") Assert(text.Contains("извлечение") && text.Contains("извлечение из тела") && text.Contains("fixture_required_skill"), "Body-part or declared technology condition absent");
             if (ingredient == "ash") Assert(text.Contains("сожжение") && text.Contains("mf_pyre_placed") && text.Contains("mf_crematorium"), "Hidden native automatic channels missing or incorrectly shown as menu recipes");
         }
@@ -252,6 +252,9 @@ public static class SourceTopicTests
         var sameEquipment = new Dictionary<string, List<CraftDefinition>> { { "fixture_reagent", new List<CraftDefinition> { first, another } } };
         string grouped = (string)guidance.GetMethod("BuildText", Private).Invoke(null, new object[] { tierFormula, sameEquipment, save, tierNames, false });
         Assert(grouped.Split(new[] { "mf_distcube_2_clay" }, StringSplitOptions.None).Length == 2 && grouped.Contains("fixture_source") && grouped.Contains("fixture_other_source"), "Repeated equipment or missing source in equipment section");
+        first.needs[0].value = 4;
+        string quantityFree = (string)guidance.GetMethod("BuildText", Private).Invoke(null, new object[] { tierFormula, sameEquipment, save, tierNames, false });
+        Assert(!quantityFree.Contains("×") && !quantityFree.Contains("ед.") && first.needs[0].value == 4, "Guide retains quantities or mutates native source input");
         extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "ash" }, false });
         var ashFormula = new CraftDefinition { needs = new List<Item> { new Item("ash", 1) } };
         string noDlc = (string)core.Invoke(null, new object[] { ashFormula, empty, save, names, false, true });
@@ -263,10 +266,29 @@ public static class SourceTopicTests
         Func<string, string> preparationNames = id => id == "mf_preparation_1" ? "fixture table" : id == "mf_preparation_2" ? "fixture table II" : id;
         var bloodFormula = new CraftDefinition { needs = new List<Item> { new Item("blood", 1) } };
         string combined = (string)core.Invoke(null, new object[] { bloodFormula, empty, save, preparationNames, false, true });
-        Assert(combined.Contains("\n  fixture table 1, 2:\n    body (извлечение из тела)") && !combined.Contains("I–II"), "Available preparation tiers/source format or readable numbering wrong");
+        Assert(combined.Contains("\n  fixture table I, II:\n    body (извлечение из тела)") && !combined.Contains("I–II"), "Available preparation tiers/source format or readable numbering wrong");
         save.locked_crafts.Add(extraction2.id);
         string separate = (string)core.Invoke(null, new object[] { bloodFormula, empty, save, preparationNames, false, true });
-        Assert(!separate.Contains("fixture table 1, 2") && separate.Contains("рецепт закрыт"), "Closed extraction tier hidden in combined label");
+        Assert(!separate.Contains("fixture table I, II") && separate.Contains("рецепт закрыт"), "Closed extraction tier hidden in combined label");
         save.locked_crafts.Remove(extraction2.id);
+        var layout = asm.GetType("NikichMods.Research.GuidanceTextLayout").GetMethod("Format", Private);
+        string marker = "[693606][не изучено][-]";
+        Func<string, float> measure = value => System.Text.RegularExpressions.Regex.Replace(value, @"\[[A-Fa-f0-9]{6}\]|\[-\]", "").Length;
+        Func<string, float, string> wrap = (value, capacity) =>
+        {
+            var lines = new List<string>(); string line = "";
+            foreach (string word in value.Split(' '))
+            {
+                string next = line.Length == 0 ? word : line + " " + word;
+                if (line.Length > 0 && measure(next) > capacity) { lines.Add(line); line = word; }
+                else line = next;
+            }
+            lines.Add(line); return string.Join("\n", lines.ToArray());
+        };
+        string narrow = (string)layout.Invoke(null, new object[] { "Heading:\n  Station:\n    long source name " + marker + " (closed route)", 18f, marker, measure, wrap });
+        Assert(narrow.Contains("\n    long source\n    name\n    " + marker), "Material continuation lost indentation or atomic Study marker");
+        Assert(narrow.Contains("\n    (closed route)"), "Source condition discarded or left-aligned by wrapping");
+        string wide = (string)layout.Invoke(null, new object[] { "    石灰石 " + marker, 40f, marker, measure, wrap });
+        Assert(wide == "    石灰石 " + marker, "Localized source name or fitting marker modified");
     }
 }

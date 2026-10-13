@@ -9,6 +9,8 @@ namespace NikichMods.Research
     // Guidance for the already-known native list at both manual alchemy tiers.
     internal static class RecipeGuidance
     {
+        internal const string StudyMarker = "[693606][не изучено][-]";
+        internal const string StudyExplanation = "Получение ингредиентов из отмеченных материалов требует их изучения на исследовательском столе.";
         private static readonly HashSet<string> catalogueEntries = new HashSet<string>();
         private static readonly Dictionary<string, List<CraftDefinition>> routes = new Dictionary<string, List<CraftDefinition>>();
         private static readonly Dictionary<string, string> familyNames = new Dictionary<string, string>();
@@ -110,7 +112,6 @@ namespace NikichMods.Research
                     {
                         if (i > 0) line.Append(" + ");
                         line.Append(name(route.needs[i].id));
-                        if (route.needs[i].value > 1) line.Append(" ×").Append(route.needs[i].value);
                     }
                     var stations = new List<string>();
                     var yields = new List<int>();
@@ -129,21 +130,19 @@ namespace NikichMods.Research
                             yields[0] == yields[1] && name(stations[1]) == name(stations[0]) + " II";
                         if (tiers)
                         {
-                            equipment.Append(name(stations[0])).Append(" 1, 2");
-                            if (yields[0] > 1) equipment.Append(" — ").Append(yields[0]).Append(" ед.");
+                            equipment.Append(name(stations[0])).Append(" I, II");
                         }
                         else for (int i = 0; i < stations.Count; i++)
                         {
                             if (i > 0) equipment.Append(" / ");
                             equipment.Append(name(stations[i]));
-                            if (yields[i] > 1) equipment.Append(" — ").Append(yields[i]).Append(" ед.");
                         }
                         section = new SourceSection { key = key, equipment = equipment.ToString() };
                         sections.Add(section);
                     }
                     bool unstudied = route.craft_type == CraftDefinition.CraftType.AlchemyDecompose &&
                         ((!save.IsSurveyComplete(CraftDefinition.CraftSubType.Alchemy, route.needs[0].id)) || (preview && route.needs[0].id == "sulfur"));
-                    if (unstudied) { pending = true; line.Append(" [693606][не изучено][-]"); }
+                    if (unstudied) { pending = true; line.Append(" ").Append(StudyMarker); }
                     if (!save.IsCraftVisible(route)) line.Append(" (рецепт закрыт)");
                     if (route.condition.has_expression) line.Append(" (есть дополнительное условие)");
                     section.lines.Add(line.ToString());
@@ -154,7 +153,7 @@ namespace NikichMods.Research
                     foreach (string line in section.lines) text.Append("\n    ").Append(line);
                 }
             }
-            if (pending) text.Append("\n\n[693606]Получение ингредиентов из отмеченных материалов требует их изучения на исследовательском столе.[-]");
+            if (pending) text.Append("\n\n[693606]").Append(StudyExplanation).Append("[-]");
             return text.Append("[-]").ToString();
         }
         private sealed class SourceSection
