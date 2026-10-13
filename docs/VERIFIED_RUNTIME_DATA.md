@@ -30,6 +30,8 @@ Owner: [ALCHEMY_SYSTEM.md](https://github.com/NikichMods/GraveyardKeeperResearch
 
 ## Prior awareness/progression research
 
+Church-workbench static follow-up / manual observer: AWARENESS_SOURCE_AUDIT.md owns the 32 nonhidden None-consumer records / 16 product groups, native unlock/display/access separation, all-instance WorldMap lookup and grouped CraftItemGUI._possible_crafts membership. Source Eligibility Probe 0.1.2 uses the accepted manual F9 zero-patch envelope to compare current-save predicted/native/rendered source ID sets. Binding/grouped-card checks pass; installed church-source agreement is pending. No new paid-source eligibility or all-source runtime acceptance follows from those static counts.
+
 Current project-specific channel triage: [AWARENESS_SOURCE_AUDIT.md](AWARENESS_SOURCE_AUDIT.md), 2026-10-14. Same pinned host inputs confirm 25/34 ordinary products with nonhidden craft/build consumers. The already verified room-builder owner has 11 product groups, including four beyond the installed seven-paint slice; ordinary workbench and vendor/dialogue current availability remain separate gates. Native visible/locked/inactive rows must not be replaced by affordability predicates. This static audit does not change installed topics or production acceptance.
 
 Accepted evidence may be reused from AlchemyRiddle; its former product decisions are not requirements here:

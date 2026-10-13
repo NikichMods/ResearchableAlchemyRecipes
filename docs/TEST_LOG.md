@@ -1,6 +1,18 @@
 # Diagnostic runtime tests
 
+## Source Eligibility Probe 0.1.2 — church-workbench observer, 2026-10-14
+
+Research-method checkpoint: exact question is whether current native visibility reconstructs actual church-workbench source cards and which physical/access inputs its installed instance has. Accepted 0.1.1 observes room-builder cards only; accepted 0.1.35 paid jobs still use only room sources. Static owner inspection closes the 32-definition / 16-product structural slice but not current-save final consumption. Extend the accepted manual F9 zero-patch envelope rather than add startup polling, synthetic progression, paid topics or another gameplay replay. StudyTableWorkProbe 0.1.35 stays installed unchanged.
+
+0.1.2 activates church observation only when the actual table_book_constr CraftGUI is already open. It reads loaded GameBalance._instance, all existing WorldMap instances, native removed/removing/disabled/tutorial/busy/CanInteractCraft inputs, save-visible None craft definitions, the final BaseCraftGUI.crafts and every CraftItemGUI._possible_crafts entry. The latter handles native grouped quality variants: counting only the selected cell definition can undercount available source methods. Product-by-product comparison requires exact ID set agreement, not just equal counts. Logs show product names/counts/knowledge only, no formula ingredients or exact mixed-formula IDs. No native method to open a menu, initialize balance or unlock progress is called.
+
+Local native-binding/grouped-card tests pass, including duplicated cells, nonselected variants, unrelated input exclusion and an equal-count different-ID negative case. No startup world reads, patches, save mutations, new research jobs or source-eligibility rule adoption. Actual load/F9 agreement is pending. Minimum user action: open the idle church workbench's crafting window and press F9 once. Codex reads the local log; no crafting, spending, new game or cleanup. Require RAR_SOURCE_CHURCH_RESULT exact_ids_agree=True/shown_indexed=True, all sixteen product rows and DONE without source errors before relying on this positive current-save boundary. Negative/early physical states and busy-source semantics remain separate.
+
 ## 0.1.35 partial-topic description — 2026-10-14
+
+### Returned acceptance — 2026-10-14
+
+User confirms the explanation appears and explicitly accepts its current wording while leaving possible clearer wording open for later exploration. User additionally accepts glue research and its native alchemy-card appearance. Exact installed DLL still matches `231136b019f66e95d5d91864813f1337899a7aeed8cf7ea26150943b2d47b80b`. Captured current-launch log is ignored `work/evidence/work-0.1.35-return/launch-1.log`, SHA-256 `c951ac1f35429070c301e60ff5d262d40f719468bebdaa86040d8e3c6384a40a`; loader identifies 0.1.35, glue reward learned=1/remaining=0, topic offered=False, tier-II cards=0 and tier-III cards=1, with no RAR_WORK_ERROR in the captured snapshot. This accepts the observed current partial-label presentation and glue single-formula/advanced-table path, not all-language editorial/layout coverage, a new restart test or production promotion. Preserve immutable 0.1.35 bytes.
 
 Research-only presentation candidate. Registered product topics with some, but not all, native formulas known append `Другие способы изготовления` (current-language equivalent) to the native card description. Product names/icons, existing descriptions, source/knowledge/payment/quantity gates and neighbouring cards are preserved. No new sources or mechanics. Native GetDescription -> CraftItemGUI.Redraw -> label_descr/auto-height owns display; no direct label/geometry mutation.
 

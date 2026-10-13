@@ -2,6 +2,18 @@
 
 Status: static channel/consumer audit completed; bounded room extension prepared as research candidate 0.1.34. Wider installed eligibility remains unaccepted. No installed DLL, save or economics changed.
 
+Current follow-up: 0.1.35 has accepted partial-topic wording and returned glue completion/native tier-III card evidence. Source Eligibility Probe 0.1.2 is the next manual read-only church-source observation; it does not change paid-topic coverage. The initial audit/status above describes its static checkpoint, not the current installed payload.
+
+## Church-workbench boundary — 2026-10-14
+
+Fresh same-input metadata inspection identifies 32 nonhidden consuming crafts on table_book_constr covering 16 ordinary alchemy products. All are native CraftType.None, need a native craft unlock, have no populated condition expression, are repeatable and have dont_show_in_hint=false. Three products overlap the eleven room-source groups; combining the source families could add thirteen groups and yield 24/34 ordinary-product structural coverage, not a guaranteed current-save topic count.
+
+The object has has_craft=true, need_unlock_work=false, interaction_type=Craft, no attached/interaction script and interactive_in_tutorial=false. Pinned WorldGameObject.Interact/CheckDisabledInteractions and CraftComponent.Interact/CanInteractCraft establish distinct physical/tutorial/removed/removing/busy inputs before GUIElements.OpenCraftGUI. Native ordinary GUI dispatch uses CraftGUI.OpenCraftList and BaseCraftGUI.CommonOpen. Craft affordability remains separate from displayed needs. CanInteractCraft may reject a currently busy non-zombie station; do not silently adopt transient busy-state disappearance as paid-topic policy.
+
+WorldMap.GetWorldGameObjectsByObjId scans the existing map list and returns every matching instance. A first-instance-only lookup is insufficient for a buildable station with possible duplicates. Capture each existing instance and the actual opened one; do not spawn a station or force initialization. BaseCraftGUI.crafts is the final filtered definition list. CraftGUI can combine same-output quality variants in one cell; CraftItemGUI._possible_crafts preserves every contributing definition while craft_definition alone denotes only one. Exact membership comparison must therefore inspect grouped definitions as well as the native list.
+
+Next evidence: Source Eligibility Probe 0.1.2 reuses accepted manual F9/zero-patch/no-startup-read behavior, validates those two native list fields, then compares the independently predicted source IDs with the native consumed and rendered IDs for all sixteen products in the actual opened idle church-workbench menu. Passing current-save source/card agreement supports a bounded automatic-topic candidate without synthetic unlocks; failure identifies the owner/filter mismatch to investigate. It does not establish absent/early-world sources, all vendors/dialogue, cancellation economics or production readiness.
+
 ## Question and evidence
 
 Which native currently available sources can support paid product topics beyond SourceResearch's seven room paints, without a global catalogue or duplicate encounter history?

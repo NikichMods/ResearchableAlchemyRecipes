@@ -6,7 +6,7 @@ Research only. No production mod or final interface. Original code is MPL-2.0.
 
 Partially known research topics now explain `Other manufacturing methods` below the native product name, translated into all eleven game languages. Existing native descriptions are retained. Entirely unknown topics keep their ordinary presentation; fully known products remain absent. The native description label/auto-height owns layout. No changes to costs, knowledge reward, guidance or source coverage.
 
-Codex installs the verified candidate directly while the game is closed and reads the local log after observation. Inspect an already partially known topic (black paint in the returned save) and one unknown topic; no new payment/reset/restart matrix is needed. Current 0.1.35 installed appearance acceptance is pending. After the label check, continue coverage through verified church-workbench sources.
+0.1.35 is installed and accepted for the observed partial-topic description/current wording and glue completion/native advanced-table card. No repeat label/payment/reset/restart matrix is needed. Clearer wording can be explored later without replacing the accepted string now. Next coverage investigation uses the separate read-only Source Eligibility Probe 0.1.2 at the church workbench; this study probe remains unchanged.
 
 ## Earlier source extension: 0.1.34
 

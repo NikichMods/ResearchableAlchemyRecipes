@@ -8,21 +8,31 @@ using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.1.0")]
-[assembly: AssemblyFileVersion("0.1.1.0")]
+[assembly: AssemblyVersion("0.1.2.0")]
+[assembly: AssemblyFileVersion("0.1.2.0")]
 
 namespace NikichMods.Research
 {
     [BepInPlugin("nikichmods.research.sourceeligibility", "Source Eligibility Probe", Version)]
     public sealed class SourceEligibilityProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.1";
+        public const string Version = "0.1.2";
         private const string Builder = "keeper_room_builddesk";
+        private const string Church = "table_book_constr";
+        private static readonly string[] ChurchProducts = { "acid", "alkali", "aromatizer", "black_paint", "dark_elixir", "energy_elixir", "flask_green_l_plus", "flavor_enhancer", "freshener", "glue", "golden_elixir", "growth_enhancer", "preservative", "silver_elixir", "tanning_agent", "white_paint" };
         private const string Spice = "taste_booster:alchemy_1_spice";
         private static readonly string[] Paints = { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint" };
         private static ManualLogSource log;
         private static bool ready;
         private static readonly FieldInfo BalanceInstance = typeof(GameBalance).GetField("_instance", BindingFlags.Static | BindingFlags.NonPublic);
+        private static readonly FieldInfo NativeCrafts = typeof(BaseCraftGUI).GetField("crafts", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly FieldInfo CardCrafts = typeof(CraftItemGUI).GetField("_possible_crafts", BindingFlags.Instance | BindingFlags.NonPublic);
+        internal static void ValidateBindings()
+        {
+            if (BalanceInstance == null || NativeCrafts == null || CardCrafts == null ||
+                NativeCrafts.FieldType != typeof(List<CraftDefinition>) || CardCrafts.FieldType != typeof(List<CraftDefinition>))
+                throw new InvalidOperationException("Missing verified native source/card fields");
+        }
         private void Awake()
         {
             log = Logger;
@@ -32,7 +42,7 @@ namespace NikichMods.Research
                 using (var sha = SHA256.Create()) using (var stream = File.OpenRead(typeof(GameSave).Assembly.Location))
                     hash = BitConverter.ToString(sha.ComputeHash(stream)).Replace("-", "").ToLowerInvariant();
                 if (hash != "e72e4270e4b88dd0a87ca23c9cf1750aec4c4a0fedb40b6d2dae7902fc9c7fd8") throw new InvalidOperationException("Unverified host: " + hash);
-                if (BalanceInstance == null) throw new InvalidOperationException("Missing verified balance instance field");
+                ValidateBindings();
                 ready = true;
                 Write("RAR_SOURCE_READY version=" + Version + " read_only=True save_mutation=False patches=0 trigger=F9");
             }
@@ -77,6 +87,14 @@ namespace NikichMods.Research
                 var balance = (GameBalance)BalanceInstance.GetValue(null);
                 Write("RAR_SOURCE_CALL phase=after action=read_existing_balance present=" + (balance != null));
                 if (balance == null) { Write("RAR_SOURCE_SKIPPED reason=balance_not_loaded"); return; }
+                var activeGui = GUIElements.me.craft;
+                var activeStation = activeGui.GetCrafteryWGO();
+                if (activeGui.is_shown && activeStation != null && activeStation.obj_id == Church)
+                {
+                    CaptureChurch(balance, activeGui, activeStation, phase);
+                    Write("RAR_SOURCE_DONE phase=" + phase + " source=church_workbench");
+                    return;
+                }
                 var save = MainGame.me.save;
                 bool alchemy = save.unlocked_techs.Contains("The Beginning Of Alchemy");
                 Write("RAR_SOURCE_CALL phase=before action=builder_lookup");
@@ -114,6 +132,58 @@ namespace NikichMods.Research
                 Write("RAR_SOURCE_DONE phase=" + phase);
             }
             catch (Exception ex) { Fail(ex); }
+        }
+        internal static HashSet<string> SourceIds(IEnumerable<CraftDefinition> crafts, string product)
+        {
+            var ids = new HashSet<string>();
+            foreach (var craft in crafts) if (Uses(craft, product) != 0) ids.Add(craft.id);
+            return ids;
+        }
+        internal static HashSet<string> RenderedIds(IEnumerable<CraftItemGUI> cells, string product)
+        {
+            var ids = new HashSet<string>();
+            foreach (var cell in cells)
+                foreach (string id in SourceIds((List<CraftDefinition>)CardCrafts.GetValue(cell), product)) ids.Add(id);
+            return ids;
+        }
+        private static void CaptureChurch(GameBalance balance, CraftGUI gui, WorldGameObject shown, string phase)
+        {
+            var save = MainGame.me.save;
+            Write("RAR_SOURCE_CALL phase=before action=church_instances");
+            var instances = WorldMap.GetWorldGameObjectsByObjId(Church);
+            Write("RAR_SOURCE_CALL phase=after action=church_instances count=" + instances.Count);
+            foreach (var station in instances)
+            {
+                var component = station.components.craft;
+                Write("RAR_SOURCE_CHURCH_INSTANCE id=" + station.unique_id + " shown=" + ReferenceEquals(station, shown) +
+                    " removed=" + station.is_removed + " removing=" + station.is_removing + " gd_disabled=" + station.IsDisabled() +
+                    " disabled_interactions=" + station.GetParamInt("disabled_interactions") +
+                    " tutorial_blocks=" + (!station.obj_def.interactive_in_tutorial && save.IsInTutorial()) +
+                    " native_can_interact=" + (component != null && component.CanInteractCraft()) +
+                    " busy=" + (component != null && component.is_crafting));
+            }
+            Write("RAR_SOURCE_CALL phase=before action=church_source_cards");
+            var expected = new List<CraftDefinition>();
+            foreach (var craft in balance.craft_data)
+                if (craft.craft_in.Contains(Church) && craft.craft_type == CraftDefinition.CraftType.None && save.IsCraftVisible(craft)) expected.Add(craft);
+            var native = (List<CraftDefinition>)NativeCrafts.GetValue(gui);
+            bool shownIndexed = instances.Exists(station => ReferenceEquals(station, shown));
+            bool allAgree = shownIndexed;
+            foreach (string product in ChurchProducts)
+            {
+                var predicted = SourceIds(expected, product);
+                var consumed = SourceIds(native, product);
+                var rendered = RenderedIds(gui.list_items, product);
+                bool agree = predicted.SetEquals(consumed) && predicted.SetEquals(rendered);
+                allAgree &= agree;
+                int total, known; Knowledge(balance, product, out total, out known);
+                Write("RAR_SOURCE_CHURCH_PRODUCT product=" + product + " native_visible=" + predicted.Count +
+                    " native_consumed=" + consumed.Count + " rendered_definitions=" + rendered.Count + " exact_ids_agree=" + agree +
+                    " formulas=" + total + " known=" + known + " remaining=" + (total - known));
+            }
+            Write("RAR_SOURCE_CALL phase=after action=church_source_cards");
+            Write("RAR_SOURCE_CHURCH_RESULT phase=" + phase + " products=" + ChurchProducts.Length + " exact_ids_agree=" + allAgree +
+                " source_window_reached=True shown_indexed=" + shownIndexed + " alchemy=" + save.unlocked_techs.Contains("The Beginning Of Alchemy") + " mutations=0");
         }
         private static void ObserveShownBuilder()
         {
