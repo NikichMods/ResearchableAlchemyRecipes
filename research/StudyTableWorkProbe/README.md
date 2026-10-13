@@ -2,11 +2,11 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
-## Current research candidate: 0.1.36
+## Current accepted research slice: 0.1.36
 
 Adds the verified church-workbench source to the room-blueprint slice: 24 product groups / 32 ordinary formulas, with one job per product and all handed IDs preserved. Only physically available source families and natively visible recipes contribute; already known formulas exclude completed topics. Temporary church crafting does not hide its topics. Costs, single-operation guards, vanilla Study/production, accepted partial-topic text and ingredient guidance are unchanged.
 
-Codex installs with the game closed and reads the local log after observation. On the last observer save, three additional church-only topics are expected. Inspect research, finish one naturally unknown new topic and inspect its native alchemy cards. Do not reset earned knowledge, replay the seven-paint/full-restart matrix or reinstall the finished source observer. Optional existing church work can check busy invariance without manufacturing a separate test setup. Installed 0.1.36 source/list/completion acceptance is pending. After acceptance, investigate remaining world/shop/dialogue channels; pricing and unfinished-work/refunds stay deferred.
+Installed 0.1.36 is accepted for the observed additional topics and growth-enhancer research/native-recipe/ordinary-manufacturing path. TEST_LOG.md owns exact evidence and limits. Do not reset earned knowledge, replay the seven-paint/full-restart matrix or reinstall the finished source observer merely for recovery. Busy independence is adopted and tested offline, without an installed busy episode claimed. Next investigate the remaining special resurrection/zombie world source, then shop/dialogue channels; pricing and unfinished-work/refunds stay deferred. This accepted research slice is not a production release.
 
 ## Accepted partial-topic presentation: 0.1.35
 
