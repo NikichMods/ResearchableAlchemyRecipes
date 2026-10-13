@@ -1,5 +1,9 @@
 # Reagent heading palette — proposal
 
+## Adopted unoutlined light headings — next candidate
+
+The user accepts the preview's selected light C colours without any outlines and chooses 35% source-row opacity. Other headings retain B. Implementation is pending; installed 0.1.28 remains unchanged. The user proposes dimming the equipment heading and moving the whole section last when it contains only goo, plus always placing the hand mixer last even when it has ordinary sources. The goo-only section rule and a universal hand-mixer ordering rule are being discussed; do not assume either has final acceptance yet.
+
 ## Selected outline experiment — 0.1.28
 
 Returned screenshot feedback: outlined oil visually changes the perceived font, and 170/255 goo alpha is not sufficiently secondary. The user requests an offline preview before another DLL: keep C light colours but remove outlines; reduce goo/Study-row opacity further. Private Light-Headings-No-Outline-Preview.png compares current reconstruction against unoutlined C with 40% opacity and an additional 25% source-row sample. Includes all eight selected heading names. Native glyphs/parchment are reused; this is an offline reconstruction, not a modified screenshot or live rendering acceptance. No new palette/opacity value is adopted yet; installed 0.1.28 remains unchanged.
