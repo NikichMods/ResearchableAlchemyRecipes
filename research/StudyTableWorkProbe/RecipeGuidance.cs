@@ -3,142 +3,29 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using HarmonyLib;
-using UnityEngine;
 
 namespace NikichMods.Research
 {
-    // Known ordinary formulas at both native manual alchemy tiers.
+    // Guidance for the already-known native list at both manual alchemy tiers.
     internal static class RecipeGuidance
     {
-        private static readonly HashSet<string> ordinary = new HashSet<string>();
-        // User-selected optical correction exported twice by 0.1.15 Done.
-        private const int HeaderDown = 9;
+        private static readonly HashSet<string> catalogueEntries = new HashSet<string>();
         private static readonly Dictionary<string, List<CraftDefinition>> routes = new Dictionary<string, List<CraftDefinition>>();
-        private static CraftItemGUI selected;
+        private static readonly Dictionary<string, string> familyNames = new Dictionary<string, string>();
         private static CraftGUI guidanceWindow;
-        private static CraftDefinition describing;
-        private static readonly Dictionary<CraftItemGUI, int> anchors = new Dictionary<CraftItemGUI, int>();
-        private static bool changing;
         private static bool previewUnstudied;
-        private static readonly Dictionary<CraftItemGUI, Layout> layouts = new Dictionary<CraftItemGUI, Layout>();
-        private sealed class Anchor
-        {
-            private readonly Transform target;
-            private readonly float relative;
-            private readonly int absolute;
-            internal Anchor(UIRect.AnchorPoint point) { target = point.target; relative = point.relative; absolute = point.absolute; }
-            internal void Restore(UIRect.AnchorPoint point) { point.target = target; point.relative = relative; point.absolute = absolute; }
-        }
-        private sealed class Layout
-        {
-            private readonly Anchor iconTop, iconBottom, energyTop, energyBottom, textRight;
-            private readonly UIWidget icons;
-            private readonly Transform amountGroup;
-            private readonly Vector3 amountPosition;
-            private bool measured;
-            internal Layout(CraftItemGUI row)
-            {
-                icons = row.ingredients_table.GetComponent<UIWidget>();
-                if (icons == null || row.txt_spend == null) throw new InvalidOperationException("Missing inspected recipe header widgets");
-                iconTop = new Anchor(icons.topAnchor); iconBottom = new Anchor(icons.bottomAnchor);
-                energyTop = new Anchor(row.txt_spend.topAnchor); energyBottom = new Anchor(row.txt_spend.bottomAnchor);
-                textRight = new Anchor(row.label_descr.rightAnchor);
-                // Native amount container is a plain transform on a vertically centred,
-                // stretched selection frame. Preserve every child/button/mod-owned handler.
-                var frame = row.selection_frame;
-                var backing = frame == null || frame.topAnchor.target == null ? null : frame.topAnchor.target.GetComponent<UIWidget>();
-                if (row.amount_buttons != null && frame != null &&
-                    row.amount_buttons.transform.parent == frame.transform &&
-                    frame.pivot == UIWidget.Pivot.Left && frame.bottomAnchor.target == frame.topAnchor.target &&
-                    frame.topAnchor.relative == 1f && frame.bottomAnchor.relative == 0f &&
-                    backing != null && backing.topAnchor.target == row.transform && backing.bottomAnchor.target == row.transform &&
-                    backing.topAnchor.relative == 1f && backing.bottomAnchor.relative == 0f &&
-                    backing.topAnchor.absolute == 0 && backing.bottomAnchor.absolute == 0 && row.no_multi_quality_height > 0)
-                {
-                    amountGroup = row.amount_buttons.transform;
-                    amountPosition = amountGroup.localPosition;
-                }
-                else StudyTableWorkProbe.Write("RAR_GUIDANCE_AMOUNT status=unchanged reason=unsupported_native_group");
-            }
-            private static void Set(UIRect.AnchorPoint point, Transform target, float relative, int absolute)
-            { point.target = target; point.relative = relative; point.absolute = absolute; }
-            internal void Apply(CraftItemGUI row)
-            {
-                // Vertical group anchors are not the visible-cell geometry after UITable
-                // layout. Preserve horizontal owners and align actual final widgets below.
-                icons.topAnchor.target = null; icons.bottomAnchor.target = null;
-                row.txt_spend.topAnchor.target = null; row.txt_spend.bottomAnchor.target = null;
-                Set(row.label_descr.rightAnchor, row.transform, 1f, -8);
-                icons.ResetAnchors();
-                row.txt_spend.ResetAnchors();
-                row.label_descr.ResetAnchors();
-                row.label_descr.UpdateAnchors();
-            }
-            private static float CenterY(UIWidget widget, Transform common)
-            {
-                var corners = widget.worldCorners;
-                return common.InverseTransformPoint((corners[0] + corners[2]) * 0.5f).y;
-            }
-            private static void MoveY(Transform target, Transform common, float delta)
-            {
-                target.localPosition += target.parent.InverseTransformVector(common.TransformVector(new Vector3(0, delta, 0)));
-            }
-            internal void AlignFinal(CraftItemGUI row)
-            {
-                var cells = row.ingredients_table.GetComponentsInChildren<BaseItemCellGUI>();
-                UIWidget cell = null;
-                foreach (var candidate in cells)
-                    if (candidate.gameObject.activeInHierarchy) { cell = candidate.GetComponent<UIWidget>(); if (cell != null) break; }
-                // Native Open builds/redraws cards before activating the full hierarchy.
-                // Rendering readiness is not a host-contract failure or a knowledge failure.
-                if (cell == null) return;
-                float desired = CenterY(row.label_name, row.transform) - HeaderDown;
-                float ingredientBefore = CenterY(cell, row.transform) - desired;
-                float energyBefore = CenterY(row.txt_spend, row.transform) - desired;
-                MoveY(icons.transform, row.transform, -ingredientBefore);
-                MoveY(row.txt_spend.transform, row.transform, -energyBefore);
-                float ingredientError = CenterY(cell, row.transform) - desired;
-                float energyError = CenterY(row.txt_spend, row.transform) - desired;
-                if (amountGroup != null)
-                {
-                    // Native frame centre moves down by half of the row-height growth.
-                    // Restore the normal-row placement without guessing button coordinates.
-                    amountGroup.localPosition = amountPosition;
-                    float growth = row.GetComponent<UIWidget>().height - row.no_multi_quality_height;
-                    MoveY(amountGroup, row.transform, growth * 0.5f);
-                }
-                if (Math.Abs(ingredientError) > 0.1f || Math.Abs(energyError) > 0.1f)
-                    throw new InvalidOperationException("Measured header alignment did not converge");
-                if (!measured && row.label_descr.width > 40)
-                {
-                    measured = true;
-                    StudyTableWorkProbe.Write("RAR_GUIDANCE_HEADER ingredient_before=" + ingredientBefore + " energy_before=" + energyBefore + " ingredient_after=" + ingredientError + " energy_after=" + energyError + " down_ui_pixels=" + HeaderDown + " owner=final_widget_bounds");
-                    if (amountGroup != null) StudyTableWorkProbe.Write("RAR_GUIDANCE_AMOUNT status=aligned owner=native_amount_container extra_height=" + (row.GetComponent<UIWidget>().height - row.no_multi_quality_height));
-                }
-            }
-            internal void Restore(CraftItemGUI row)
-            {
-                iconTop.Restore(icons.topAnchor); iconBottom.Restore(icons.bottomAnchor);
-                energyTop.Restore(row.txt_spend.topAnchor); energyBottom.Restore(row.txt_spend.bottomAnchor);
-                textRight.Restore(row.label_descr.rightAnchor);
-                if (amountGroup != null) amountGroup.localPosition = amountPosition;
-                icons.ResetAnchors();
-                row.txt_spend.ResetAnchors();
-                row.label_descr.ResetAnchors();
-                row.label_descr.UpdateAnchors();
-            }
-        }
         internal static void Register(GameBalance balance)
         {
             routes.Clear();
-            ordinary.Clear();
+            catalogueEntries.Clear();
             var definitions = new Dictionary<string, ItemDefinition>();
             foreach (var item in balance.items_data) definitions[item.id] = item;
+            familyNames.Clear();
             var products = new HashSet<string>();
             foreach (var formula in balance.craft_data)
             {
-                if (!IsOrdinary(formula, definitions)) continue;
-                ordinary.Add(formula.id);
+                if (!IsListCandidate(formula)) continue;
+                catalogueEntries.Add(formula.id);
                 products.Add(formula.GetFirstRealOutput().id);
                 foreach (var ingredient in formula.needs)
                 {
@@ -146,29 +33,26 @@ namespace NikichMods.Research
                     routes.Add(ingredient.id, FindRoutes(balance.craft_data, ingredient.id));
                 }
             }
-            if (ordinary.Count != 43 || products.Count != 34 || routes.Count != 35)
-                throw new InvalidOperationException("Verified ordinary guidance corpus changed");
-            AdditionalSources.Register(balance, new HashSet<string>(routes.Keys));
-            StudyTableWorkProbe.Write("RAR_GUIDANCE_REGISTER formulas=" + ordinary.Count + " products=" + products.Count + " ingredients=" + routes.Count + " scope=known_ordinary_manual_tables");
-        }
-        internal static bool IsTarget(CraftDefinition craft)
-        {
-            return craft != null && ordinary.Contains(craft.id);
-        }
-        internal static bool IsOrdinary(CraftDefinition craft, IDictionary<string, ItemDefinition> definitions)
-        {
-            if (craft == null || craft.craft_type != CraftDefinition.CraftType.MixedCraft || craft.hidden) return false;
-            var output = craft.GetFirstRealOutput();
-            if (output == null || output.id.StartsWith("goo", StringComparison.Ordinal) || craft.id.Contains(":_:")) return false;
-            if (!(craft.needs.Count == 2 && craft.craft_in.Contains("mf_alchemy_craft_02")) &&
-                !(craft.needs.Count == 3 && craft.craft_in.Contains("mf_alchemy_craft_03"))) return false;
-            for (int i = 0; i < craft.needs.Count; i++)
+            foreach (var producers in routes.Values) foreach (var producer in producers) foreach (var input in producer.needs)
             {
-                ItemDefinition definition;
-                if (!definitions.TryGetValue(craft.needs[i].id, out definition) ||
-                    ((int)definition.alch_type != i + 1 && definition.alch_type != ItemDefinition.AlchemyType.Universal)) return false;
+                string member = ResolveFamilyMember(input.id, definitions);
+                if (member != null) familyNames[input.id] = member;
             }
-            return true;
+            AdditionalSources.Register(balance, new HashSet<string>(routes.Keys));
+            StudyTableWorkProbe.Write("RAR_GUIDANCE_REGISTER formulas=" + catalogueEntries.Count + " products=" + products.Count + " ingredients=" + routes.Count + " scope=known_native_list");
+        }
+        internal static bool IsListCandidate(CraftDefinition craft)
+        {
+            return craft != null && craft.craft_type == CraftDefinition.CraftType.MixedCraft && !craft.hidden &&
+                craft.craft_in.Exists(SupportedStation);
+        }
+        internal static string ResolveFamilyMember(string id, IDictionary<string, ItemDefinition> definitions)
+        {
+            if (definitions.ContainsKey(id)) return null;
+            string prefix = id + ":", first = null;
+            foreach (string candidate in definitions.Keys)
+                if (candidate.StartsWith(prefix, StringComparison.Ordinal) && (first == null || string.CompareOrdinal(candidate, first) < 0)) first = candidate;
+            return first;
         }
         internal static List<CraftDefinition> FindRoutes(IEnumerable<CraftDefinition> crafts, string ingredient)
         {
@@ -186,7 +70,7 @@ namespace NikichMods.Research
         }
         private static bool Supports(CraftItemGUI row)
         {
-            if (!StudyTableWorkProbe.enabledProbe || row == null || !IsTarget(row.current_craft)) return false;
+            if (!StudyTableWorkProbe.enabledProbe || row == null || row.current_craft == null) return false;
             var save = MainGame.me.save;
             var table = row.craft_gui_interface.GetCrafteryWGO();
             return table != null && KnownForTable(row.current_craft, table.obj_id, save);
@@ -194,10 +78,16 @@ namespace NikichMods.Research
         internal static bool SupportedStation(string id) { return id == "mf_alchemy_craft_02" || id == "mf_alchemy_craft_03"; }
         internal static bool KnownForTable(CraftDefinition formula, string station, GameSave save)
         {
-            return IsTarget(formula) && SupportedStation(station) && formula.craft_in.Contains(station) &&
+            return formula != null && SupportedStation(station) && formula.craft_in.Contains(station) &&
                 save.unlocked_techs.Contains(SourceResearch.Technology) && save.completed_one_time_crafts.Contains(formula.id);
         }
-        private static string Name(string id) { return GJL.L(id); }
+        private static string Name(string id)
+        {
+            string member;
+            string native = familyNames.TryGetValue(id, out member) ? member : id;
+            var definition = GameBalance.me.GetDataOrNull<ItemDefinition>(native);
+            return definition == null ? GJL.L(id) : definition.GetItemName(true);
+        }
         internal static string BuildText(CraftDefinition formula, Dictionary<string, List<CraftDefinition>> catalogue, GameSave save, Func<string, string> name, bool preview)
         { return BuildTextCore(formula, catalogue, save, name, preview, false); }
         private static string BuildTextCore(CraftDefinition formula, Dictionary<string, List<CraftDefinition>> catalogue, GameSave save, Func<string, string> name, bool preview, bool additional)
@@ -281,7 +171,7 @@ namespace NikichMods.Research
         {
             return ReferenceEquals(a, b) || (a != null && b != null && a.default_value == b.default_value && a.GetRawExpressionString() == b.GetRawExpressionString());
         }
-        private static string Text(CraftDefinition formula) { return BuildTextCore(formula, routes, MainGame.me.save, Name, previewUnstudied, true); }
+        internal static string Text(CraftDefinition formula) { return BuildTextCore(formula, routes, MainGame.me.save, Name, previewUnstudied, true); }
         internal static string QuantityUnavailableReason()
         {
             if (!StudyTableWorkProbe.enabledProbe || guidanceWindow == null || !guidanceWindow.is_shown) return null;
@@ -313,113 +203,19 @@ namespace NikichMods.Research
                 }, "Закрыть", null, null, GameKey.Select, GameKey.Back,
                 "Временный просмотр добавляет отметку только к сере и исчезает после перезапуска. Он не заменяет проверку настоящего изучения.");
         }
-        private static void Select(CraftItemGUI row)
+        internal static void Refresh()
         {
-            if (changing) return;
-            var next = Supports(row) ? row : null;
-            if (selected == next) return;
-            changing = true;
-            try
-            {
-                var old = selected; selected = next;
-                if (old != null) old.Redraw();
-                if (next != null)
-                {
-                    if (next.label_descr == null || !next.auto_height || next.hgt_widget == null)
-                        throw new InvalidOperationException("Missing native description/auto-height contract");
-                    next.Redraw();
-                    StudyTableWorkProbe.Write("RAR_GUIDANCE_SHOW product=" + next.current_craft.GetFirstRealOutput().id + " ingredients=" + next.current_craft.needs.Count + " native_description=True height=" + next.GetComponent<UIWidget>().height + " text_width=" + next.label_descr.width + " text_height=" + next.label_descr.height);
-                    StudyTableWorkProbe.Write("RAR_GUIDANCE_STUDY native_sulfur_studied=" + MainGame.me.save.IsSurveyComplete(CraftDefinition.CraftSubType.Alchemy, "sulfur") + " preview=" + previewUnstudied);
-                }
-                GUIElements.me.craft.craft_list_grid.Reposition();
-                if (next != null && BaseGUI.for_gamepad)
-                {
-                    // Native OnOver scrolls before our postfix grows the card. Native detail
-                    // opening likewise waits 0.03s for anchors before scrolling its new bounds.
-                    var requested = next;
-                    GJTimer.AddTimer(0.03f, delegate
-                    {
-                        if (requested == null || !ReferenceEquals(selected, requested) || !StudyTableWorkProbe.enabledProbe || !BaseGUI.for_gamepad || !GUIElements.me.craft.is_shown) return;
-                        try
-                        {
-                            requested.Redraw();
-                            GUIElements.me.craft.craft_list_grid.Reposition();
-                            GUIElements.me.craft.scroll_view.InvalidateBounds();
-                            if (requested.auto_scroll == null) throw new InvalidOperationException("Missing native card autoscroll");
-                            requested.auto_scroll.Perform(false);
-                            StudyTableWorkProbe.Write("RAR_GUIDANCE_SCROLL phase=after final_height=" + requested.GetComponent<UIWidget>().height + " native_bounds=True");
-                        }
-                        catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
-                    });
-                }
-            }
-            catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
-            finally { changing = false; }
+            if (!StudyTableWorkProbe.enabledProbe || guidanceWindow == null || !guidanceWindow.is_shown_and_top)
+            { GuidanceTooltip.Hide(); return; }
+            var row = CraftItemGUI.current_overed;
+            if (row == null || !guidanceWindow.list_items.Contains(row) || !Supports(row))
+            { GuidanceTooltip.Hide(); return; }
+            GuidanceTooltip.Show(guidanceWindow, row);
         }
         internal static void Restore()
         {
-            GuidanceViewport.Restore();
             guidanceWindow = null;
-            describing = null;
-            var old = selected; selected = null;
-            if (old != null) old.Redraw();
-            anchors.Clear();
-            layouts.Clear();
-        }
-        [HarmonyPatch(typeof(CraftItemGUI), "Redraw")]
-        private static class Draw
-        {
-            private static void Prefix(CraftItemGUI __instance, out CraftDefinition __state)
-            {
-                __state = describing; describing = null;
-                Layout layout;
-                if (layouts.TryGetValue(__instance, out layout)) layout.Restore(__instance);
-                if (__instance.label_descr != null)
-                {
-                    var parent = __instance.label_descr.transform.parent.GetComponent<UIWidget>();
-                    int anchor;
-                    if (parent != null && anchors.TryGetValue(__instance, out anchor)) parent.bottomAnchor.absolute = anchor;
-                }
-                if (__instance == selected && Supports(__instance))
-                {
-                    var parent = __instance.label_descr.transform.parent.GetComponent<UIWidget>();
-                    if (parent == null) throw new InvalidOperationException("Missing native description parent");
-                    if (!anchors.ContainsKey(__instance)) anchors.Add(__instance, parent.bottomAnchor.absolute);
-                    if (!layouts.TryGetValue(__instance, out layout)) { layout = new Layout(__instance); layouts.Add(__instance, layout); }
-                    layout.Apply(__instance);
-                    describing = __instance.current_craft;
-                }
-            }
-            private static Exception Finalizer(CraftItemGUI __instance, Exception __exception, CraftDefinition __state)
-            {
-                describing = __state;
-                if (__exception == null && StudyTableWorkProbe.enabledProbe && __instance == selected)
-                {
-                    try { layouts[__instance].AlignFinal(__instance); }
-                    catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
-                }
-                if (__exception != null && __instance == selected) StudyTableWorkProbe.Fail(__exception);
-                return __exception;
-            }
-        }
-        [HarmonyPatch(typeof(CraftDefinition), "GetDescription")]
-        private static class Description
-        {
-            private static void Postfix(CraftDefinition __instance, ref string __result)
-            {
-                if (ReferenceEquals(__instance, describing))
-                    __result = string.IsNullOrEmpty(__result) ? Text(__instance) : __result + "\n\n" + Text(__instance);
-            }
-        }
-        [HarmonyPatch(typeof(CraftItemGUI), "OnOver")]
-        private static class Focus
-        {
-            private static void Postfix(CraftItemGUI __instance) { if (BaseGUI.for_gamepad && StudyTableWorkProbe.enabledProbe) Select(__instance); }
-        }
-        [HarmonyPatch(typeof(CraftItemGUI), "OnMouseOvered")]
-        private static class Mouse
-        {
-            private static void Postfix(CraftItemGUI __instance) { if (!BaseGUI.for_gamepad && StudyTableWorkProbe.enabledProbe) Select(__instance); }
+            GuidanceTooltip.Hide();
         }
         [HarmonyPatch(typeof(CraftGUI), "OpenAsAlchemy")]
         private static class Open
@@ -427,11 +223,7 @@ namespace NikichMods.Research
             private static void Postfix(CraftGUI __instance)
             {
                 if (!StudyTableWorkProbe.enabledProbe) return;
-                // Own the entire opened supported known-formula list, including other rows.
                 guidanceWindow = __instance.list_items.Exists(Supports) ? __instance : null;
-                if (guidanceWindow != null) GuidanceViewport.Enlarge(__instance);
-                if (BaseGUI.for_gamepad) return;
-                foreach (var row in __instance.list_items) if (Supports(row)) { Select(row); break; }
             }
         }
         [HarmonyPatch(typeof(CraftGUI), "Hide")]

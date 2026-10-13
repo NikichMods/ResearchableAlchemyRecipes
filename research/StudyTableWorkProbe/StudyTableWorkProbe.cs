@@ -10,8 +10,8 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.20.0")]
-[assembly: AssemblyFileVersion("0.1.20.0")]
+[assembly: AssemblyVersion("0.1.21.0")]
+[assembly: AssemblyFileVersion("0.1.21.0")]
 
 namespace NikichMods.Research
 {
@@ -19,7 +19,7 @@ namespace NikichMods.Research
     [BepInDependency("p1xel8ted.gyk.maxbuttonsredux", BepInDependency.DependencyFlags.SoftDependency)]
     public sealed class StudyTableWorkProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.20";
+        public const string Version = "0.1.21";
         internal const string JobId = "rar_probe_work_010";
         private const string TableId = "mf_alchemy_survey";
         private const string Technology = "The Beginning Of Alchemy";
@@ -63,6 +63,11 @@ namespace NikichMods.Research
 
         private void Update()
         {
+            if (MainGame.game_started)
+            {
+                try { RecipeGuidance.Refresh(); }
+                catch (Exception ex) { RecipeGuidance.Restore(); Fail(ex); }
+            }
             if (!registrationSeen || !Input.GetKeyDown(KeyCode.F8) || !MainGame.game_started || !BaseGUI.all_guis_closed)
                 return;
             try

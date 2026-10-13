@@ -21,7 +21,7 @@ $outDir = Join-Path $repoRoot ('artifacts/StudyTableWorkProbe-'+$probeVersion)
 New-Item -ItemType Directory -Path $outDir -Force | Out-Null
 $output = Join-Path $outDir $(if ($CheckOnly) { 'compile-check.dll' } else { 'StudyTableWorkProbe-'+$probeVersion+'.dll' })
 if (!$CheckOnly -and (Test-Path -LiteralPath $output)) { throw 'Numbered output already exists; do not overwrite it' }
-$refs = @('mscorlib.dll','System.dll','System.Core.dll','Assembly-CSharp.dll','Assembly-CSharp-firstpass.dll','UnityEngine.dll','UnityEngine.CoreModule.dll','UnityEngine.InputLegacyModule.dll','UnityEngine.ImageConversionModule.dll') | ForEach-Object { Join-Path $managed $_ }
+$refs = @('mscorlib.dll','System.dll','System.Core.dll','Assembly-CSharp.dll','Assembly-CSharp-firstpass.dll','UnityEngine.dll','UnityEngine.CoreModule.dll','UnityEngine.Physics2DModule.dll','UnityEngine.InputLegacyModule.dll','UnityEngine.ImageConversionModule.dll') | ForEach-Object { Join-Path $managed $_ }
 $refs += @('BepInEx.dll','0Harmony.dll') | ForEach-Object { Join-Path $core $_ }
 $compilerArgs = @('/nologo','/target:library','/nostdlib+','/noconfig','/langversion:7.3','/optimize+','/deterministic+','/warnaserror+',('/out:'+$output))
 $compilerArgs += $refs | ForEach-Object { if (!(Test-Path -LiteralPath $_)) { throw "Missing local reference: $_" }; '/reference:'+$_ }

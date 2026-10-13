@@ -153,7 +153,7 @@ public static class SourceTopicTests
     private static void CheckBroadGuidance(Assembly asm, GameSave save)
     {
         var guidance = asm.GetType("NikichMods.Research.RecipeGuidance", true);
-        var classify = guidance.GetMethod("IsOrdinary", Private);
+        var classify = guidance.GetMethod("IsListCandidate", Private);
         var definitions = new Dictionary<string, ItemDefinition> {
             { "fixture_powder", new ItemDefinition { alch_type = ItemDefinition.AlchemyType.Powder } },
             { "fixture_fluid", new ItemDefinition { alch_type = ItemDefinition.AlchemyType.Fluid } },
@@ -163,20 +163,27 @@ public static class SourceTopicTests
         var a = new CraftDefinition { id = "fixture_known_variant", craft_type = CraftDefinition.CraftType.MixedCraft,
             craft_in = new List<string> { "mf_alchemy_craft_02" }, needs = new List<Item> { new Item("fixture_powder", 1), new Item("fixture_fluid", 1) },
             output = new List<Item> { new Item("fixture_product", 1) } };
-        Assert((bool)classify.Invoke(null, new object[] { a, definitions }), "Ordinary two-slot formula rejected");
+        Assert((bool)classify.Invoke(null, new object[] { a }), "Ordinary two-slot formula rejected");
         a.needs[0].id = "fixture_fluid";
-        Assert(!(bool)classify.Invoke(null, new object[] { a, definitions }), "Wrong picker slot accepted");
+        Assert((bool)classify.Invoke(null, new object[] { a }), "Visible nonstandard formula incorrectly rejected");
         a.needs[0].id = "fixture_universal";
-        Assert((bool)classify.Invoke(null, new object[] { a, definitions }), "Native universal reagent rejected");
+        Assert((bool)classify.Invoke(null, new object[] { a }), "Native universal reagent rejected");
         a.needs.Add(new Item("fixture_essence", 1)); a.craft_in[0] = "mf_alchemy_craft_03";
-        Assert((bool)classify.Invoke(null, new object[] { a, definitions }), "Three-slot table unsupported");
+        Assert((bool)classify.Invoke(null, new object[] { a }), "Three-slot table unsupported");
         a.craft_in[0] = "alchemy_table_zombie";
-        Assert(!(bool)classify.Invoke(null, new object[] { a, definitions }), "Automated station included");
+        Assert(!(bool)classify.Invoke(null, new object[] { a }), "Automated station included");
         a.craft_in[0] = "mf_alchemy_craft_03"; a.output[0].id = "goo";
-        Assert(!(bool)classify.Invoke(null, new object[] { a, definitions }), "Failure output included");
+        Assert((bool)classify.Invoke(null, new object[] { a }), "Known visible failure product incorrectly rejected by display catalogue");
         a.output[0].id = "fixture_product";
-        var targets = (HashSet<string>)guidance.GetField("ordinary", Private).GetValue(null);
-        targets.Add(a.id); targets.Add("fixture_unknown_variant");
+        definitions.Add("fixture_crop:1", new ItemDefinition());
+        definitions.Add("fixture_crop:2", new ItemDefinition());
+        var family = guidance.GetMethod("ResolveFamilyMember", Private);
+        Assert((string)family.Invoke(null, new object[] { "fixture_crop", definitions }) == "fixture_crop:1", "Native family member not resolved deterministically");
+        Assert(family.Invoke(null, new object[] { "fixture_crop:2", definitions }) == null, "Concrete variant replaced by family");
+        Assert(family.Invoke(null, new object[] { "fixture_missing", definitions }) == null, "Missing material invented");
+        a.hidden = true;
+        Assert(!(bool)classify.Invoke(null, new object[] { a }), "Hidden catalogue entry included");
+        a.hidden = false;
         var b = new CraftDefinition { id = "fixture_unknown_variant", craft_in = a.craft_in, needs = a.needs, output = a.output };
         save.completed_one_time_crafts.Add(a.id);
         var eligible = guidance.GetMethod("KnownForTable", Private);
@@ -185,7 +192,7 @@ public static class SourceTopicTests
         Assert(!(bool)eligible.Invoke(null, new object[] { a, "mf_alchemy_craft_02", save }), "Wrong manufacturing station accepted");
         save.unlocked_techs.Clear();
         Assert(!(bool)eligible.Invoke(null, new object[] { a, "mf_alchemy_craft_03", save }), "Pre-alchemy guidance disclosed");
-        save.unlocked_techs.Add("The Beginning Of Alchemy"); targets.Clear();
+        save.unlocked_techs.Add("The Beginning Of Alchemy");
         var first = new CraftDefinition { id = "fixture_source_I", craft_type = CraftDefinition.CraftType.AlchemyDecompose,
             craft_in = new List<string> { "mf_distcube_2_clay" }, needs = new List<Item> { new Item("fixture_source", 1) }, output = new List<Item> { new Item("fixture_reagent", 1) } };
         var second = new CraftDefinition { id = "fixture_source_II", craft_type = first.craft_type,

@@ -2,6 +2,12 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
+## Current prototype: 0.1.21, separate native tooltip
+
+Native TooltipBubbleGUI renders source guidance beside the unchanged vanilla alchemy list/window. Mouse hover/gamepad focus updates an independent owned bubble, with content-height sizing and no scrolling implementation. Inline description/row geometry, deferred autoscroll, amount/header adjustments and enlarged viewport are removed. Known visible nonstandard recipes (including memory potion) are eligible; exact formula knowledge/station/alchemy gates remain. Crop-family names resolve through native item members, without quality notes. Unverified acquisition sources are identified as such. Paid research criteria remain unchanged.
+
+Read GamepadTooltipPositionFix's accepted lifecycle audit for final placement; reuse the matched native Update seam only for our instance, not that mod's constants or implementation. Actual placement/long-text fit, normal tooltip coexistence and gamepad transitions require installed observation. Local suites pass; exact identity/acceptance are in TEST_LOG.md.
+
 ## Current correction: 0.1.20
 
 Returned 0.1.19 has rejected broader presentation (huge first-pass heights, overlap and probe disable). Reset native anchor caches when switching owners and restoring them; skip optical measurement while native ingredient hierarchy is inactive. Resize only the supported native alchemy window using its measured frame/tips envelope and UI camera to 80% screen height, restoring on close. Source and knowledge policy remain unchanged. Local suites pass; installed rendering/navigation acceptance is pending. Inspect both tables, long three-input cards, repeated mouse/gamepad changes and close/reopen. Exact identity/evidence is in TEST_LOG.md.
