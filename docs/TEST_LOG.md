@@ -642,3 +642,9 @@ The user explicitly accepts the current appearance. Returned screenshot separate
 - An owned UIPanel at the shared native tooltip panel's depth minus one gives guidance a complete consecutive render-queue group. Native sorting settings are inherited; its own widgets rejoin through RemoveFromPanel/CreatePanel or native Start. Ordinary ingredient tooltips stay wholly in front. Native bubble destruction owns the added panel's cleanup; no global depth/frame/input or placement changes.
 - Installed with game closed; old 0.1.29 installed hash verified, new bytes verified before old removal, exactly one study DLL remains. Earlier artifacts remain immutable.
 - Installed overlap/lifetime acceptance pending: ingredient hover creates overlap, pointer away restores unobscured guidance, close/reopen leaves no stale panel. Check the originally returned overlap scenario. No repeat research/source/persistence tests are required.
+
+### Returned 0.1.30 — opaque overlap accepted
+
+The user explicitly accepts the correction and says it works correctly. Returned screenshot shows the native ingredient bubble wholly covering guidance, with no guidance text crossing its foreground parchment. The installed DLL still matches a0efb9e18df3875dbc6fc8142ddc5f397a51a845bee7faad483a9ba85de9c93d.
+
+Private evidence: work/evidence/work-0.1.30-return; captured LogOutput.log SHA-256 5190c741ceaffaf12f344099b426dbbf30762ae88ea64ccb0b78ad012e373184, overlap.png d3f23366df039e06a8737dc19f0500fe67f02f02344a8938b7cdd1729121812a. Log identifies 0.1.30, has 22 render-group records at guidance depth 4999/native tooltip depth 5000, zero RAR_WORK_ERROR and zero broken-marker records. Acceptance closes current overlap presentation and preserves accepted colour/source hierarchy. It does not establish all foreign UI panel stacks, all languages, exhaustive lifecycle scenarios or production promotion. No new binary is issued for acceptance recording.
