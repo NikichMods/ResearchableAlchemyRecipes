@@ -1,8 +1,8 @@
 # Product awareness source audit — 2026-10-14
 
-Status: static channel/consumer audit completed; bounded room extension prepared as research candidate 0.1.34. Wider installed eligibility remains unaccepted. No installed DLL, save or economics changed.
+Current state: room/church/resurrection technology coverage is accepted within returned 0.1.37 limits: 25/34 ordinary products, 33/43 formulas. Next source boundary is Clotho trade; Spices stays separate.
 
-Current follow-up: 0.1.35 has accepted partial-topic wording and returned glue completion/native tier-III card evidence. Source Eligibility Probe 0.1.2 is the next manual read-only church-source observation; it does not change paid-topic coverage. The initial audit/status above describes its static checkpoint, not the current installed payload.
+All eight potion products without ordinary craft/build consumers map only to npc_witch through pot_base/pot_cool native product types, at tiers 1–3. Witch not_selling is empty; not_buying concerns sales by the player and does not exclude shop stock. Vendor.FillDrawingMultiInventory retains stock on locked tier pages. InventoryWidget.Redraw draws those item cells and activates a separate lock widget; cell activity alone cannot establish visual exposure beneath the overlay. VendorGUI.Open creates Trading and materializes the drawing list. Read only that existing instance in the manual 0.1.3 observer; never invoke those initialization paths from the observer. @clotho_trade is root answer 19 of native witch graph node 9; native phrase unlock/blacklist and physical source reachability remain independent. Runtime and locked-tier source policy remain pending.
 
 ## Resurrection technology boundary — 2026-10-14
 

@@ -8,15 +8,16 @@ using BepInEx;
 using BepInEx.Logging;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.2.0")]
-[assembly: AssemblyFileVersion("0.1.2.0")]
+[assembly: AssemblyVersion("0.1.3.0")]
+[assembly: AssemblyFileVersion("0.1.3.0")]
 
 namespace NikichMods.Research
 {
     [BepInPlugin("nikichmods.research.sourceeligibility", "Source Eligibility Probe", Version)]
     public sealed class SourceEligibilityProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.2";
+        public const string Version = "0.1.3";
+        private static readonly string[] Potions = { "pot_appetite", "pot_armor", "pot_berserk", "pot_damage", "pot_heal", "pot_heal_long", "pot_mana", "pot_speed" };
         private const string Builder = "keeper_room_builddesk";
         private const string Church = "table_book_constr";
         private static readonly string[] ChurchProducts = { "acid", "alkali", "aromatizer", "black_paint", "dark_elixir", "energy_elixir", "flask_green_l_plus", "flavor_enhancer", "freshener", "glue", "golden_elixir", "growth_enhancer", "preservative", "silver_elixir", "tanning_agent", "white_paint" };
@@ -27,9 +28,14 @@ namespace NikichMods.Research
         private static readonly FieldInfo BalanceInstance = typeof(GameBalance).GetField("_instance", BindingFlags.Static | BindingFlags.NonPublic);
         private static readonly FieldInfo NativeCrafts = typeof(BaseCraftGUI).GetField("crafts", BindingFlags.Instance | BindingFlags.NonPublic);
         private static readonly FieldInfo CardCrafts = typeof(CraftItemGUI).GetField("_possible_crafts", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly FieldInfo VendorObject = typeof(VendorGUI).GetField("_vendor_obj", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly FieldInfo VendorWidgets = typeof(InventoryPanelGUI).GetField("_widgets", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly FieldInfo InventoryCells = typeof(InventoryWidget).GetField("items", BindingFlags.Instance | BindingFlags.NonPublic);
         internal static void ValidateBindings()
         {
-            if (BalanceInstance == null || NativeCrafts == null || CardCrafts == null ||
+            if (BalanceInstance == null || NativeCrafts == null || CardCrafts == null || VendorObject == null || VendorWidgets == null || InventoryCells == null ||
+                InventoryCells.FieldType != typeof(List<BaseItemCellGUI>) ||
+                VendorObject.FieldType != typeof(WorldGameObject) || VendorWidgets.FieldType != typeof(List<InventoryWidget>) ||
                 NativeCrafts.FieldType != typeof(List<CraftDefinition>) || CardCrafts.FieldType != typeof(List<CraftDefinition>))
                 throw new InvalidOperationException("Missing verified native source/card fields");
         }
@@ -87,6 +93,13 @@ namespace NikichMods.Research
                 var balance = (GameBalance)BalanceInstance.GetValue(null);
                 Write("RAR_SOURCE_CALL phase=after action=read_existing_balance present=" + (balance != null));
                 if (balance == null) { Write("RAR_SOURCE_SKIPPED reason=balance_not_loaded"); return; }
+                var vendorGui = GUIElements.me.vendor;
+                if (vendorGui.is_shown)
+                {
+                    CaptureVendor(balance, vendorGui, phase);
+                    Write("RAR_SOURCE_DONE phase=" + phase + " source=vendor");
+                    return;
+                }
                 var activeGui = GUIElements.me.craft;
                 var activeStation = activeGui.GetCrafteryWGO();
                 if (activeGui.is_shown && activeStation != null && activeStation.obj_id == Church)
@@ -138,6 +151,54 @@ namespace NikichMods.Research
             var ids = new HashSet<string>();
             foreach (var craft in crafts) if (Uses(craft, product) != 0) ids.Add(craft.id);
             return ids;
+        }
+        internal static int StockCount(IEnumerable<Item> items, string product)
+        {
+            int count = 0;
+            foreach (var item in items) if (item != null && item.id == product && item.value > 0) count += item.value;
+            return count;
+        }
+        private static void CaptureVendor(GameBalance balance, VendorGUI gui, string phase)
+        {
+            var shown = (WorldGameObject)VendorObject.GetValue(gui);
+            // Only read the trading object already created by the player's native window.
+            var trader = gui.trading == null ? null : gui.trading.trader;
+            if (shown == null || shown.obj_id != "npc_witch" || trader == null)
+            { Write("RAR_SOURCE_VENDOR_SKIPPED reason=clotho_not_shown"); return; }
+            Write("RAR_SOURCE_CALL phase=before action=existing_vendor_lists");
+            var widgets = (List<InventoryWidget>)VendorWidgets.GetValue(gui.vendor_panel);
+            var instances = WorldMap.GetWorldGameObjectsByObjId("npc_witch");
+            foreach (var station in instances)
+                Write("RAR_SOURCE_VENDOR_INSTANCE id=" + station.unique_id + " shown=" + ReferenceEquals(station, shown) +
+                    " removed=" + station.is_removed + " gd_disabled=" + station.IsDisabled() +
+                    " disabled_interactions=" + station.GetParamInt("disabled_interactions"));
+            foreach (string product in Potions)
+            {
+                int stock = 0, drawing = 0, lockedDrawing = 0, cells = 0, lockedCells = 0;
+                foreach (var inventory in trader.inventory.all) stock += StockCount(inventory.data.inventory, product);
+                foreach (var inventory in trader.drawing_inventory.all)
+                {
+                    int n = StockCount(inventory.data.inventory, product); drawing += n;
+                    if (inventory.is_locked) lockedDrawing += n;
+                }
+                foreach (var widget in widgets)
+                    foreach (var cell in (List<BaseItemCellGUI>)InventoryCells.GetValue(widget))
+                        if (cell.gameObject.activeInHierarchy && cell.item != null && cell.item.id == product && cell.item.value > 0)
+                        {
+                            cells++;
+                            if (widget.inventory_lock_widget != null && widget.inventory_lock_widget.gameObject.activeInHierarchy) lockedCells++;
+                        }
+                int total, known; Knowledge(balance, product, out total, out known);
+                Write("RAR_SOURCE_VENDOR_PRODUCT product=" + product + " stock=" + stock + " drawing=" + drawing +
+                    " locked_drawing=" + lockedDrawing + " active_cells=" + cells + " cells_under_lock=" + lockedCells +
+                    " formulas=" + total + " known=" + known + " remaining=" + (total - known));
+            }
+            Write("RAR_SOURCE_CALL phase=after action=existing_vendor_lists");
+            Write("RAR_SOURCE_VENDOR_RESULT phase=" + phase + " source_window_reached=True shown_indexed=" +
+                instances.Exists(station => ReferenceEquals(station, shown)) + " tier=" + trader.cur_tier +
+                " trade_phrase_unlocked=" + MainGame.me.save.unlocked_phrases.Contains("@clotho_trade") +
+                " trade_phrase_blacklisted=" + MainGame.me.save.black_list_of_phrases.Contains("@clotho_trade") +
+                " products=" + Potions.Length + " mutations=0 visual_lock_occlusion_unverified=True");
         }
         internal static HashSet<string> RenderedIds(IEnumerable<CraftItemGUI> cells, string product)
         {

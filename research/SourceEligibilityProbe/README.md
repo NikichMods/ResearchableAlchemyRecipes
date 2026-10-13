@@ -1,5 +1,13 @@
 # Source Eligibility Probe
 
+## Current candidate 0.1.3 — manual Clotho trade snapshot
+
+Zero patches and no host world/save/balance access before explicit F9. Open Clotho's ordinary trade and press F9 once with the window open. No purchase, crafting, tier unlock or knowledge reset required. Codex installs/reads the local log directly. StudyTableWorkProbe 0.1.37 remains unchanged.
+
+Read only the existing native VendorGUI.trading.trader, actual stock, drawing tier pages, active item cells and lock-overlay state for eight potions. Read current source instance and native @clotho_trade state separately. Do not construct Vendor/Trading, access lazy wgo.vendor or fill inventories. Active cells under an overlay do not prove visible item exposure; note whether the locked-tier goods are recognizable. Expected READY version=0.1.3, TRIGGER, eight RAR_SOURCE_VENDOR_PRODUCT rows, RESULT shown_indexed=True, DONE; no ERROR. Field binding/stock/grouped-card tests pass. Installed acceptance pending; this does not register potion topics.
+
+## Historical church observation 0.1.2 — completed and removed
+
 Current research candidate: 0.1.2, manual read-only church-workbench observer for Graveyard Keeper 1.407 / BepInEx 5. The accepted StudyTableWorkProbe 0.1.35 stays unchanged. This separate diagnostic installs zero patches, reads no native world/save/balance until an explicit F9 press and creates no save state.
 
 Codex installs the exact verified observer while the game is closed, preserving the current local log. Load the existing save, open an idle church workbench's ordinary crafting menu and press F9 once while the menu remains open. No spending, crafting, synthetic unlock, new game or cleanup is needed. Codex reads the local log directly. This observation does not yet add research topics.

@@ -35,5 +35,10 @@ public static class CardObserverTests
         var incorrect = new HashSet<string> { "source_a", "wrong_source" };
         Assert(expected.Count == incorrect.Count && !expected.SetEquals(incorrect), "Equal counts were treated as source agreement");
         Assert(cell.craft_definition == first && first.needs.Count == 1 && second.needs.Count == 1, "Observation mutated native/card inputs");
+        var stock = type.GetMethod("StockCount", Private);
+        var stocked = (Item)FormatterServices.GetUninitializedObject(typeof(Item)); stocked.id = "fixture_product"; stocked.value = 3;
+        var depleted = (Item)FormatterServices.GetUninitializedObject(typeof(Item)); depleted.id = "fixture_product"; depleted.value = 0;
+        Assert((int)stock.Invoke(null, new object[] { new[] { stocked, depleted, null }, "fixture_product" }) == 3, "Stock observer counts empty/null entries incorrectly");
+        Assert((int)stock.Invoke(null, new object[] { new[] { stocked }, "other_product" }) == 0 && stocked.value == 3, "Stock observation changes inventory or counts unrelated goods");
     }
 }
