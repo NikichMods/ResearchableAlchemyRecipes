@@ -1,5 +1,13 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.37 — resurrection technology source, 2026-10-14
+
+Research-only candidate; installed acceptance pending. User selects opened Second chance as the persistent source for zombie_juise. Native metadata connects the technology's resurrection-table construction unlock to the consuming zombie_craft operation, with one ordinary formula. Add one explicit registered topic (25 products / 33 formulas) while preserving all handed job IDs, costs, native Study/production and accepted guidance/partial wording. No physical table, body, target item or window visit is required. No new hook/observer or duplicate save state is introduced.
+
+Compile and existing knowledge/quantity/source/localization suites pass. New tests cover missing resurrection technology despite physical source availability, opened resurrection technology without any physical source, isolation of unrelated topics, independent alchemy gate and exclusion after native formula learning. Existing partial/all-known, source-family isolation, cleanup and locale tests still pass. No custom visible strings/assets changed. This does not claim installed runtime acceptance or full source coverage.
+
+Minimum observation: on the existing save open research; if resurrection technology is open and the formula remains unknown, the liquid topic appears. Learn it and inspect its native alchemy card. If already known, absence is correct; do not reset knowledge. Codex reads the returned native technology/knowledge/topic log. The next coverage boundary is eight potion/vendor products plus Spices/dialogue.
+
 ## Study Table Work Probe 0.1.36 — automatic church-source topics, 2026-10-14
 
 ### Returned integration acceptance — 2026-10-14

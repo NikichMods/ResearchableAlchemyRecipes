@@ -5,16 +5,18 @@ using HarmonyLib;
 
 namespace NikichMods.Research
 {
-    // Bounded room/church research, not a global product catalogue or encounter ledger.
+    // Bounded room/church sources plus the adopted resurrection technology source.
     internal static class SourceResearch
     {
         internal const string Builder = "keeper_room_builddesk";
         internal const string Church = "table_book_constr";
         internal const string Technology = "The Beginning Of Alchemy";
+        internal const string ResurrectionTechnology = "Second chance";
+        internal const string ResurrectionProduct = "zombie_juise";
         private const string JobPrefix = "rar_probe_source_paint_0110_";
         // Preserve the handed paint job IDs; new groups reuse the same verified source owner.
-        private static readonly string[] Products = { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint", "black_paint", "blue_paint", "white_paint", "glue", "acid", "alkali", "aromatizer", "dark_elixir", "energy_elixir", "flask_green_l_plus", "flavor_enhancer", "freshener", "golden_elixir", "growth_enhancer", "preservative", "silver_elixir", "tanning_agent" };
-        private static readonly int[] FormulaCounts = { 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 2, 1 };
+        private static readonly string[] Products = { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint", "black_paint", "blue_paint", "white_paint", "glue", "acid", "alkali", "aromatizer", "dark_elixir", "energy_elixir", "flask_green_l_plus", "flavor_enhancer", "freshener", "golden_elixir", "growth_enhancer", "preservative", "silver_elixir", "tanning_agent", ResurrectionProduct };
+        private static readonly int[] FormulaCounts = { 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 2, 1, 1 };
         private sealed class Topic
         {
             internal string product;
@@ -56,7 +58,7 @@ namespace NikichMods.Research
                 foreach (var craft in balance.craft_data)
                     if (craft.craft_in.Contains(Church) && craft.craft_type == CraftDefinition.CraftType.None && craft.needs.Exists(item => item.id == product)) topic.churchSources.Add(craft);
                 // Explicit audited groups; do not silently generalize to other product outputs.
-                if (topic.formulas.Count != FormulaCounts[productIndex] || (topic.sources.Count == 0 && topic.churchSources.Count == 0))
+                if (topic.formulas.Count != FormulaCounts[productIndex] || (product != ResurrectionProduct && topic.sources.Count == 0 && topic.churchSources.Count == 0))
                     throw new InvalidOperationException("Verified source group changed: " + product);
                 topic.job = new CraftDefinition {
                     id = JobPrefix + product, craft_in = new List<string> { "mf_alchemy_survey" },
@@ -77,7 +79,7 @@ namespace NikichMods.Research
                 balance.craft_data.Add(topic.job);
             }
             registeredBalance = balance;
-            StudyTableWorkProbe.Write("RAR_TOPICS_REGISTER products=" + topics.Count + " source=room_and_church synthetic=False");
+            StudyTableWorkProbe.Write("RAR_TOPICS_REGISTER products=" + topics.Count + " source=room_church_and_resurrection_technology synthetic=False");
         }
         internal static void VerifyCache(GameBalance balance)
         {
@@ -142,17 +144,18 @@ namespace NikichMods.Research
                 foreach (var craft in topic.sources) if (save.IsCraftVisible(craft)) topic.roomVisible++;
                 foreach (var craft in topic.churchSources) if (save.IsCraftVisible(craft)) topic.churchVisible++;
                 topic.visible = VisibleSources(roomAvailable, topic.roomVisible, churchAvailable, topic.churchVisible);
+                if (topic.product == ResurrectionProduct) topic.visible = save.unlocked_techs.Contains(ResurrectionTechnology) ? 1 : 0;
             }
             snapshotSave = save;
             StudyTableWorkProbe.Write("RAR_TOPICS_CALL phase=after action=source_snapshot builder_present=" + (desk != null) + " room_available=" + roomAvailable +
-                " church_instances=" + churchInstances.Count + " church_available=" + churchAvailable + " busy_ignored=True source_available=" + sourceAvailable + " tutorial_blocks=" + tutorial);
+                " church_instances=" + churchInstances.Count + " church_available=" + churchAvailable + " resurrection_technology=" + save.unlocked_techs.Contains(ResurrectionTechnology) + " busy_ignored=True physical_source_available=" + sourceAvailable + " tutorial_blocks=" + tutorial);
             Status("table_open", save);
         }
         internal static bool Available(string id, GameSave save)
         {
             Topic topic;
             return topics.TryGetValue(id, out topic) && ReferenceEquals(snapshotSave, save) &&
-                Eligible(save.unlocked_techs.Contains(Technology), sourceAvailable, topic.visible, Remaining(topic, save));
+                Eligible(save.unlocked_techs.Contains(Technology), topic.product == ResurrectionProduct ? save.unlocked_techs.Contains(ResurrectionTechnology) : sourceAvailable, topic.visible, Remaining(topic, save));
         }
         internal static bool ReadyToStart(string id, GameSave save)
         {

@@ -2,6 +2,10 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
+## Current candidate: 0.1.37
+
+Adds resurrection liquid through the user's adopted native Second chance technology source: 25 products / 33 formulas. No built resurrection table, body or product sample is needed. Alchemy access and remaining-only knowledge still apply. Local checks pass; installed acceptance is pending. Inspect the topic if its formula is naturally unknown, then its ordinary alchemy card after learning. Do not reset earned knowledge merely to force a topic.
+
 ## Current accepted research slice: 0.1.36
 
 Adds the verified church-workbench source to the room-blueprint slice: 24 product groups / 32 ordinary formulas, with one job per product and all handed IDs preserved. Only physically available source families and natively visible recipes contribute; already known formulas exclude completed topics. Temporary church crafting does not hide its topics. Costs, single-operation guards, vanilla Study/production, accepted partial-topic text and ingredient guidance are unchanged.

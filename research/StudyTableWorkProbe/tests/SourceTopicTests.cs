@@ -71,10 +71,12 @@ public static class SourceTopicTests
                 balance.craft_data.Add(new CraftDefinition { id = "church_" + product, craft_in = new List<string> { "table_book_constr" },
                     needs_unlock = true, needs = new List<Item> { new Item(product, 1) } });
         }
+        balance.items_data.Add(new ItemDefinition { id = "zombie_juise", icon = "fixture_resurrection_icon" });
+        balance.craft_data.Add(new CraftDefinition { id = "fixture_resurrection_formula", craft_type = CraftDefinition.CraftType.MixedCraft, output = new List<Item> { new Item("zombie_juise", 1) } });
         Call("Register", balance); Call("Register", balance);
-        Assert(balance.craft_data.Count == 72, "Registration duplicated native jobs");
+        Assert(balance.craft_data.Count == 74, "Registration duplicated native jobs");
         var topics = (IDictionary)source.GetField("topics", Private).GetValue(null);
-        Assert(topics.Count == 24, "Bounded registration count");
+        Assert(topics.Count == 25, "Bounded registration count");
         var churchOnly = topics["rar_probe_source_paint_0110_energy_elixir"];
         var churchSourceList = (List<CraftDefinition>)churchOnly.GetType().GetField("churchSources", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(churchOnly);
         Assert(churchSourceList.Count == 1 && ((IList)churchOnly.GetType().GetField("sources", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(churchOnly)).Count == 0, "Church-only topic incorrectly acquires room sources");
@@ -150,6 +152,20 @@ public static class SourceTopicTests
             source.GetField("snapshotSave", Private).SetValue(null, save);
             source.GetField("sourceAvailable", Private).SetValue(null, true); visible.SetValue(topic, 1);
             Assert(save.IsCraftVisible(job), "Positive native topic hidden");
+            var resurrection = topics["rar_probe_source_paint_0110_zombie_juise"];
+            var resurrectionJob = (CraftDefinition)resurrection.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(resurrection);
+            resurrection.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(resurrection, 1);
+            Assert(!save.IsCraftVisible(resurrectionJob), "Physical source bypasses resurrection technology");
+            save.unlocked_techs.Add("Second chance");
+            source.GetField("sourceAvailable", Private).SetValue(null, false);
+            Assert(save.IsCraftVisible(resurrectionJob) && !save.IsCraftVisible(job), "Resurrection technology requires a station or enables unrelated physical sources");
+            save.unlocked_techs.Remove("The Beginning Of Alchemy");
+            Assert(!save.IsCraftVisible(resurrectionJob), "Resurrection topic bypasses alchemy access");
+            save.unlocked_techs.Add("The Beginning Of Alchemy");
+            var resurrectionFormulas = (List<CraftDefinition>)resurrection.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(resurrection);
+            Assert(((List<string>)Call("GrantRemaining", save, resurrectionFormulas)).Count == 1 && !save.IsCraftVisible(resurrectionJob), "Known resurrection formula remains offered");
+            save.unlocked_techs.Remove("Second chance");
+            source.GetField("sourceAvailable", Private).SetValue(null, true);
             var churchJob = (CraftDefinition)churchOnly.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(churchOnly);
             var churchVisibleField = churchOnly.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance);
             churchVisibleField.SetValue(churchOnly, Call("VisibleSources", true, 0, false, 1));
