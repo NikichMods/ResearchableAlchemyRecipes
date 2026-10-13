@@ -2,6 +2,10 @@
 
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
+## Current presentation candidate: 0.1.23
+
+Owned native tooltip grows upward beside the vanilla window's lower-right corner, with measured amount-arrow clearance and a fixed native LD tail. Intermediate layout remains hidden until consecutive late-size observations settle. Text uses a darker parchment palette and title spacing; manual sources use equipment subheadings/material rows. Equivalent available preparation/distiller tiers may combine; different gates/yields remain explicit. Native Souls availability excludes wall-crematorium sources without that DLC. Local regressions pass; flicker, tail/anchor, colours and actual input need installed observation. Exact identity/limits are in TEST_LOG.md.
+
 ## Current correction: 0.1.22
 
 Returned 0.1.21 failed at first placement because the native tooltip leaves inherited back_spr unset. Measure native content plus active corner-frame widget bounds instead; all independent-tooltip policy and vanilla-list geometry remain unchanged. Local suites pass; appearance/placement/interaction require installed inspection. Exact identity is in TEST_LOG.md.

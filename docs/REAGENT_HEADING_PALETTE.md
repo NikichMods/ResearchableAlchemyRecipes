@@ -1,6 +1,37 @@
 # Reagent heading palette — proposal
 
-Status: the user explicitly adopts this palette for ingredient headings. Research candidate 0.1.15 applies it to the existing known-yellow guidance slice; installed visual acceptance remains pending. This does not expand guidance to all formulas.
+## Parchment adaptation — 0.1.23 candidate
+
+The accepted dark-card colours below are historical after switching to native parchment tooltip. User requests readable colours on the new light background. The 0.1.23 candidate keeps each stable ID/hue family, lowers HLS lightness and stores explicit dark RGB values; no colour computation runs during display. White/ash/silver become distinguishable dark neutrals rather than white text on beige. Calculated contrast for all 35 headings is >=4.50 against conservative #C59F69; central returned background samples are approximately #C9A877/#CAA97A. This is a numeric comparison, not live visual acceptance or a universal background guarantee. Native font ownership remains; owned text labels have white tint, body foreground #4B3422, title #241A13 and study marks/footer #693606.
+
+| Family | Parchment RGB |
+| --- | --- |
+| brown | #50361B |
+| d_blue | #1F2C60 |
+| d_green | #2C4029 |
+| d_violet | #452C54 |
+| green | #2F401B |
+| red | #63231C |
+| violet | #421E62 |
+| yellow | #433A0F |
+
+| Other ingredient | Parchment RGB |
+| --- | --- |
+| alchemy_1_yellow_electro | #403D0F |
+| ash | #3B3A43 |
+| blood | #601F24 |
+| drop_alcohol | #2E3C4C |
+| drop_oil | #463913 |
+| powder_gold | #493910 |
+| powder_graphite | #313D46 |
+| powder_silver | #2D3E48 |
+| powder_white | #3C3C2A |
+| taste_booster:salt | #3F3C2A |
+| water | #1A4051 |
+
+## Historical dark-card palette
+
+Status: the user explicitly adopted the following dark-card palette for ingredient headings. Research candidate 0.1.15 applied it to the then-known-yellow guidance slice. It is retained as historical evidence; it does not imply acceptance of the new parchment colours above or expand guidance to all formulas.
 
 ## Scope and comparison method
 

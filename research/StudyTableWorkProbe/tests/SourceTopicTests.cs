@@ -233,7 +233,7 @@ public static class SourceTopicTests
         };
         balance.techs_data = new List<TechDefinition> { new TechDefinition { id = "fixture_required_skill", crafts = new List<string> { "ex:fixture:blood" } } };
         var extras = asm.GetType("NikichMods.Research.AdditionalSources", true);
-        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "water", "blood", "ash" } });
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "water", "blood", "ash" }, true });
         var core = guidance.GetMethod("BuildTextCore", Private);
         var empty = new Dictionary<string, List<CraftDefinition>>();
         Func<string, string> names = id => id;
@@ -243,8 +243,30 @@ public static class SourceTopicTests
             string text = (string)core.Invoke(null, new object[] { formula, empty, save, names, false, true });
             Assert(!text.Contains("Источник пока") && !text.Contains("[не изучено]"), "Procedural source absent or incorrectly needs material Study");
             if (ingredient == "water") Assert(text.Contains("fixture_water_container") && text.Contains("20 ед.") && !text.Contains("fixture_not_usable"), "Item-use eligibility/yield wrong");
-            if (ingredient == "blood") Assert(text.Contains("извлечение") && text.Contains("часть должна быть в теле") && text.Contains("fixture_required_skill"), "Body-part or declared technology condition absent");
+            if (ingredient == "blood") Assert(text.Contains("извлечение") && text.Contains("извлечение из тела") && text.Contains("fixture_required_skill"), "Body-part or declared technology condition absent");
             if (ingredient == "ash") Assert(text.Contains("сожжение") && text.Contains("mf_pyre_placed") && text.Contains("mf_crematorium"), "Hidden native automatic channels missing or incorrectly shown as menu recipes");
         }
+        // Equipment is stated once without losing independent source-study requirements.
+        var another = new CraftDefinition { id = "fixture_other_material", craft_type = first.craft_type,
+            craft_in = first.craft_in, needs = new List<Item> { new Item("fixture_other_source", 1) }, output = first.output };
+        var sameEquipment = new Dictionary<string, List<CraftDefinition>> { { "fixture_reagent", new List<CraftDefinition> { first, another } } };
+        string grouped = (string)guidance.GetMethod("BuildText", Private).Invoke(null, new object[] { tierFormula, sameEquipment, save, tierNames, false });
+        Assert(grouped.Split(new[] { "mf_distcube_2_clay" }, StringSplitOptions.None).Length == 2 && grouped.Contains("fixture_source") && grouped.Contains("fixture_other_source"), "Repeated equipment or missing source in equipment section");
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "ash" }, false });
+        var ashFormula = new CraftDefinition { needs = new List<Item> { new Item("ash", 1) } };
+        string noDlc = (string)core.Invoke(null, new object[] { ashFormula, empty, save, names, false, true });
+        Assert(noDlc.Contains("mf_pyre_placed") && !noDlc.Contains("mf_crematorium"), "Absent DLC source displayed or ordinary cremation lost");
+        var extraction1 = new CraftDefinition { id = "ex:fixture_I:blood", craft_in = new List<string> { "mf_preparation_1" }, output = new List<Item> { new Item("blood", 1) } };
+        var extraction2 = new CraftDefinition { id = "ex:fixture_II:blood", craft_in = new List<string> { "mf_preparation_2" }, output = extraction1.output };
+        balance.craft_data.Add(extraction1); balance.craft_data.Add(extraction2);
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "blood" }, true });
+        Func<string, string> preparationNames = id => id == "mf_preparation_1" ? "fixture table" : id == "mf_preparation_2" ? "fixture table II" : id;
+        var bloodFormula = new CraftDefinition { needs = new List<Item> { new Item("blood", 1) } };
+        string combined = (string)core.Invoke(null, new object[] { bloodFormula, empty, save, preparationNames, false, true });
+        Assert(combined.Contains("fixture table I–II"), "Available equivalent preparation tiers not combined");
+        save.locked_crafts.Add(extraction2.id);
+        string separate = (string)core.Invoke(null, new object[] { bloodFormula, empty, save, preparationNames, false, true });
+        Assert(!separate.Contains("fixture table I–II") && separate.Contains("рецепт закрыт"), "Closed extraction tier hidden in combined label");
+        save.locked_crafts.Remove(extraction2.id);
     }
 }

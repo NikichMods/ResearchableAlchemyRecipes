@@ -17,7 +17,7 @@ namespace NikichMods.Research
             internal readonly List<string> technologies = new List<string>();
         }
         private static readonly Dictionary<string, List<Route>> routes = new Dictionary<string, List<Route>>();
-        internal static void Register(GameBalance balance, HashSet<string> ingredients)
+        internal static void Register(GameBalance balance, HashSet<string> ingredients, bool soulsAvailable)
         {
             routes.Clear();
             foreach (string id in ingredients) routes.Add(id, new List<Route>());
@@ -32,10 +32,10 @@ namespace NikichMods.Research
                     foreach (var output in craft.output)
                         if (ingredients.Contains(output.id))
                             foreach (string station in craft.craft_in) routes[output.id].Add(new Route {
-                                source = "body", equipment = station, method = "извлечение", yield = FixedYield(output), extraction = craft
+                                source = "body", equipment = station, method = "извлечение из тела", yield = FixedYield(output), extraction = craft
                             });
             AddCremation(balance, ingredients, "corp_burning", "mf_pyre_placed", "cremation_builddesk:p:mf_pyre_placed");
-            AddCremation(balance, ingredients, "crematorium_corp_burning", "mf_crematorium", "souls_builddesk:p:mf_crematorium");
+            if (soulsAvailable) AddCremation(balance, ingredients, "crematorium_corp_burning", "mf_crematorium", "souls_builddesk:p:mf_crematorium");
             if (balance.techs_data != null)
                 foreach (var sources in routes.Values) foreach (var source in sources)
                 {
@@ -57,7 +57,7 @@ namespace NikichMods.Research
                 throw new InvalidOperationException("Missing verified cremation channel: " + craftId);
             foreach (var output in craft.output)
                 if (ingredients.Contains(output.id)) routes[output.id].Add(new Route {
-                    source = "body", equipment = station, method = "сожжение", yield = FixedYield(output), blueprint = blueprint
+                    source = "body", equipment = station, method = "сожжение тела", yield = FixedYield(output), blueprint = blueprint
                 });
         }
         internal static int FixedYield(Item output)
@@ -80,20 +80,40 @@ namespace NikichMods.Research
         {
             List<Route> sources;
             if (!routes.TryGetValue(ingredient, out sources) || sources.Count == 0) return false;
-            foreach (var source in sources)
+            var remaining = new List<Route>(sources);
+            while (remaining.Count > 0)
             {
+                var source = remaining[0]; remaining.RemoveAt(0);
+                Route paired = remaining.Find(other => CanCombine(source, other, save));
+                if (paired != null) remaining.Remove(paired);
                 text.Append("\n• ").Append(name(source.source)).Append(" → ");
-                if (source.equipment != null) text.Append(name(source.equipment)).Append(" (").Append(source.method).Append(")");
+                if (source.equipment != null)
+                {
+                    string equipment = name(source.equipment);
+                    if (paired != null)
+                    {
+                        string first = name("mf_preparation_1"), second = name("mf_preparation_2");
+                        equipment = second == first + " II" ? first + " I–II" : first + " / " + second;
+                    }
+                    text.Append(equipment).Append(" (").Append(source.method).Append(")");
+                }
                 else text.Append(source.method);
                 if (source.yield > 1) text.Append(" — ").Append(source.yield).Append(" ед.");
                 if (source.extraction != null)
                 {
-                    text.Append("; часть должна быть в теле");
                     if (!save.IsCraftVisible(source.extraction)) Closed(text, source, save, name, "рецепт закрыт");
                 }
                 if (source.blueprint != null && !save.IsCraftVisible(source.blueprint)) Closed(text, source, save, name, "чертёж закрыт");
             }
             return true;
+        }
+        private static bool CanCombine(Route a, Route b, GameSave save)
+        {
+            bool tables = (a.equipment == "mf_preparation_1" && b.equipment == "mf_preparation_2") ||
+                (b.equipment == "mf_preparation_1" && a.equipment == "mf_preparation_2");
+            return tables && a.extraction != null && b.extraction != null && a.source == b.source && a.method == b.method &&
+                !a.extraction.condition.has_expression && !b.extraction.condition.has_expression &&
+                a.yield == b.yield && save.IsCraftVisible(a.extraction) && save.IsCraftVisible(b.extraction);
         }
         private static void Closed(StringBuilder text, Route source, GameSave save, Func<string, string> name, string fallback)
         {

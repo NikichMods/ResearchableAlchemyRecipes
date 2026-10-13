@@ -32,6 +32,8 @@ This checkpoint preserves the next direction, not new product decisions or produ
 
 Returned 0.1.21 fails first display: native tooltip's inherited back_spr is null, while actual chrome is in the four corner groups. Correction 0.1.22 measures content plus the active native corner widgets instead; same owned native-tooltip design and vanilla list remain. Rendering/navigation acceptance is still pending. TEST_LOG.md owns exact failure/artifact identities.
 
+Returned 0.1.22 confirms tooltip creation, but user rejects initial flash/dynamic tail/position, arrow clearance and dark-card palette on parchment. Adopt fixed lower-right host anchoring with upward content growth, stable layout before reveal, title separation and light-background foregrounds. Equipment subheadings/material rows are explicitly adopted. Candidate 0.1.23 implements these and startup native Souls availability filtering for wall crematorium; conditional tier merging preserves closed paths. Generic 'use in inventory' phrasing remains open. Actual visual/transition acceptance belongs to TEST_LOG.md; no native list/navigation mutation is reintroduced.
+
 ## Contextual guidance adopted; journal deferred
 
 The user adopts the initial interaction goal: available research at the study table, learned formulas in native alchemy-table lists, and repeatable ingredient guidance while inspecting a known recipe. Guidance must show source alternatives, processing/equipment/conditions and remaining vanilla material-study requirements. A standalone character-window journal is deferred, likely unnecessary; future consolidated browsing remains optional. Do not make journal implementation a prerequisite for the mod. Native tooltip/detail presentation and mouse/gamepad readability still need verification.

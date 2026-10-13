@@ -38,7 +38,7 @@ namespace NikichMods.Research
                 string member = ResolveFamilyMember(input.id, definitions);
                 if (member != null) familyNames[input.id] = member;
             }
-            AdditionalSources.Register(balance, new HashSet<string>(routes.Keys));
+            AdditionalSources.Register(balance, new HashSet<string>(routes.Keys), DLCEngine.IsDLCAvailable(DLCEngine.DLCVersion.Souls));
             StudyTableWorkProbe.Write("RAR_GUIDANCE_REGISTER formulas=" + catalogueEntries.Count + " products=" + products.Count + " ingredients=" + routes.Count + " scope=known_native_list");
         }
         internal static bool IsListCandidate(CraftDefinition craft)
@@ -92,7 +92,7 @@ namespace NikichMods.Research
         { return BuildTextCore(formula, catalogue, save, name, preview, false); }
         private static string BuildTextCore(CraftDefinition formula, Dictionary<string, List<CraftDefinition>> catalogue, GameSave save, Func<string, string> name, bool preview, bool additional)
         {
-            var text = new StringBuilder("[C9D8DC]Как получить ингредиенты[-]");
+            var text = new StringBuilder("[4B3422]Как получить ингредиенты");
             bool pending = false;
             foreach (var ingredient in formula.needs)
             {
@@ -101,17 +101,17 @@ namespace NikichMods.Research
                 List<CraftDefinition> producers;
                 if (!catalogue.TryGetValue(ingredient.id, out producers) || producers.Count == 0)
                 { if (!hasAdditional) text.Append("\nИсточник пока не проверен"); continue; }
+                var sections = new List<SourceSection>();
                 foreach (var group in GroupRoutes(producers, save))
                 {
                     var route = group[0];
-                    text.Append("\n• ");
+                    var line = new StringBuilder();
                     for (int i = 0; i < route.needs.Count; i++)
                     {
-                        if (i > 0) text.Append(" + ");
-                        text.Append(name(route.needs[i].id));
-                        if (route.needs[i].value > 1) text.Append(" ×").Append(route.needs[i].value);
+                        if (i > 0) line.Append(" + ");
+                        line.Append(name(route.needs[i].id));
+                        if (route.needs[i].value > 1) line.Append(" ×").Append(route.needs[i].value);
                     }
-                    text.Append(" → ");
                     var stations = new List<string>();
                     var yields = new List<int>();
                     foreach (var member in group) foreach (string station in member.craft_in) if (!stations.Contains(station))
@@ -120,24 +120,47 @@ namespace NikichMods.Research
                         var produced = member.output.Find(item => item.id == ingredient.id);
                         yields.Add(produced == null ? 0 : AdditionalSources.FixedYield(produced));
                     }
-                    for (int i = 0; i < stations.Count; i++)
+                    string key = string.Join("|", stations.ToArray()) + ":" + string.Join("|", yields.ConvertAll(n => n.ToString()).ToArray());
+                    var section = sections.Find(x => x.key == key);
+                    if (section == null)
                     {
-                        if (i > 0) text.Append(" / ");
-                        string stationName = name(stations[i]);
-                        if (i == 1 && stations[0] == "mf_distcube_2_clay" && stations[1] == "mf_distcube_2_cuprum" && stationName.StartsWith(name(stations[0]) + " ", StringComparison.Ordinal))
-                            stationName = stationName.Substring(name(stations[0]).Length + 1);
-                        text.Append(stationName);
-                        if (yields[i] > 1) text.Append(" — ").Append(yields[i]).Append(" ед.");
+                        var equipment = new StringBuilder();
+                        bool tiers = stations.Count == 2 && stations[0] == "mf_distcube_2_clay" && stations[1] == "mf_distcube_2_cuprum" &&
+                            yields[0] == yields[1] && name(stations[1]) == name(stations[0]) + " II";
+                        if (tiers)
+                        {
+                            equipment.Append(name(stations[0])).Append(" I–II");
+                            if (yields[0] > 1) equipment.Append(" — ").Append(yields[0]).Append(" ед.");
+                        }
+                        else for (int i = 0; i < stations.Count; i++)
+                        {
+                            if (i > 0) equipment.Append(" / ");
+                            equipment.Append(name(stations[i]));
+                            if (yields[i] > 1) equipment.Append(" — ").Append(yields[i]).Append(" ед.");
+                        }
+                        section = new SourceSection { key = key, equipment = equipment.ToString() };
+                        sections.Add(section);
                     }
                     bool unstudied = route.craft_type == CraftDefinition.CraftType.AlchemyDecompose &&
                         ((!save.IsSurveyComplete(CraftDefinition.CraftSubType.Alchemy, route.needs[0].id)) || (preview && route.needs[0].id == "sulfur"));
-                    if (unstudied) { pending = true; text.Append(" [E5B86D][не изучено][-]"); }
-                    if (!save.IsCraftVisible(route)) text.Append(" (рецепт закрыт)");
-                    if (route.condition.has_expression) text.Append(" (есть дополнительное условие)");
+                    if (unstudied) { pending = true; line.Append(" [693606][не изучено][-]"); }
+                    if (!save.IsCraftVisible(route)) line.Append(" (рецепт закрыт)");
+                    if (route.condition.has_expression) line.Append(" (есть дополнительное условие)");
+                    section.lines.Add(line.ToString());
+                }
+                foreach (var section in sections)
+                {
+                    text.Append("\n  ").Append(section.equipment).Append(":");
+                    foreach (string line in section.lines) text.Append("\n    ").Append(line);
                 }
             }
-            if (pending) text.Append("\n\n[E5B86D]Получение ингредиентов из отмеченных материалов требует их изучения на исследовательском столе.[-]");
-            return text.ToString();
+            if (pending) text.Append("\n\n[693606]Получение ингредиентов из отмеченных материалов требует их изучения на исследовательском столе.[-]");
+            return text.Append("[-]").ToString();
+        }
+        private sealed class SourceSection
+        {
+            internal string key, equipment;
+            internal readonly List<string> lines = new List<string>();
         }
         internal static List<List<CraftDefinition>> GroupRoutes(List<CraftDefinition> producers, GameSave save)
         {

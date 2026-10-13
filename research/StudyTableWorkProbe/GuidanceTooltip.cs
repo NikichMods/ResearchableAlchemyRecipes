@@ -13,10 +13,11 @@ namespace NikichMods.Research
         private static CraftDefinition formula;
         private static UIWidget frame;
         private static Camera camera;
-        private static bool onLeft;
         private static float gap;
         private static bool logged;
         private static UIWidget[] chrome;
+        private static UIWidget[] amountWidgets;
+        private static int lastWidth, lastHeight, settled;
         internal static void Show(CraftGUI gui, CraftItemGUI row)
         {
             if (bubble != null && selected == row && ReferenceEquals(formula, row.current_craft)) return;
@@ -28,12 +29,15 @@ namespace NikichMods.Research
             if (frame == null || camera == null || collider == null) throw new InvalidOperationException("Missing native tooltip/window geometry");
             selected = row; formula = row.current_craft;
             var data = new BubbleWidgetDataContainer(WidgetsBubbleGUI.Alignment.Left,
-                new BubbleWidgetTextData(Name(formula), UITextStyles.TextStyle.HintTitle, NGUIText.Alignment.Left),
+                new BubbleWidgetTextData("[241A13]" + Name(formula) + "[-]\n", UITextStyles.TextStyle.HintTitle, NGUIText.Alignment.Left),
                 new BubbleWidgetTextData(RecipeGuidance.Text(formula), UITextStyles.TextStyle.TinyDescription, NGUIText.Alignment.Left));
             // Collider mode provides native lifetime/layout on both input modes; this bubble
             // is independent of the manager's ordinary item tooltip and never takes focus.
             bubble = TooltipBubbleGUI.Show(data, true, collider);
             if (bubble == null) throw new InvalidOperationException("Native tooltip creation failed");
+            bubble.widget.alpha = 0f;
+            // Native index LD: the bubble grows up/right from its lower-left tail.
+            for (int i = 0; i < bubble.corners.Length; i++) bubble.corners[i].SetActive(i == 0);
             // Exact native tooltip prefab leaves BaseBubbleGUI.back_spr unset.
             // Its four corner families own the frame; cache them once, measure only the
             // currently active family plus the native content widget after native layout.
@@ -41,12 +45,12 @@ namespace NikichMods.Research
             foreach (var corner in bubble.corners)
                 widgets.AddRange(corner.GetComponentsInChildren<UIWidget>(true));
             chrome = widgets.ToArray();
+            amountWidgets = row.amount_buttons == null ? new UIWidget[0] : row.amount_buttons.GetComponentsInChildren<UIWidget>(true);
             float scale = PixelsPerUnit(bubble.transform);
             gap = row.label_descr.fontSize * scale * 0.5f;
             Rect rect = Bounds(frame);
-            float left = rect.xMin - gap * 2f, right = Screen.width - rect.xMax - gap * 2f;
-            onLeft = left >= right;
-            int width = Mathf.FloorToInt(Mathf.Min(row.GetComponent<UIWidget>().width, Mathf.Max(left, right) / scale - row.label_descr.fontSize));
+            float right = Screen.width - RightEdge(rect) - gap * 2f;
+            int width = Mathf.FloorToInt(Mathf.Min(row.GetComponent<UIWidget>().width, right / scale - row.label_descr.fontSize));
             if (width < row.label_descr.fontSize * 4) { Hide(); StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP status=hidden reason=insufficient_side_space"); return; }
             foreach (var label in bubble.GetComponentsInChildren<UILabel>(true))
             {
@@ -54,6 +58,7 @@ namespace NikichMods.Research
                 label.topAnchor.target = null; label.bottomAnchor.target = null;
                 label.ResetAnchors();
                 label.overflowMethod = UILabel.Overflow.ResizeHeight;
+                label.color = Color.white;
                 label.width = width;
                 label.ProcessText(false, true);
             }
@@ -89,23 +94,31 @@ namespace NikichMods.Research
                     box = Rect.MinMaxRect(Mathf.Min(box.xMin, part.xMin), Mathf.Min(box.yMin, part.yMin),
                         Mathf.Max(box.xMax, part.xMax), Mathf.Max(box.yMax, part.yMax));
                 }
-            float x = onLeft ? host.xMin - gap - box.width : host.xMax + gap;
+            float x = RightEdge(host) + gap;
             x = Mathf.Clamp(x, gap, Mathf.Max(gap, Screen.width - gap - box.width));
-            float top = Mathf.Min(host.yMax, Screen.height - gap);
-            if (box.height <= Screen.height - gap * 2f) top = Mathf.Max(top, box.height + gap);
+            float bottom = host.yMin;
+            if (box.height <= Screen.height - gap * 2f) bottom = Mathf.Clamp(bottom, gap, Screen.height - gap - box.height);
             var current = camera.WorldToScreenPoint(bubble.transform.position);
-            var desired = current + new Vector3(x - box.xMin, top - box.yMax, 0f);
+            var desired = current + new Vector3(x - box.xMin, bottom - box.yMin, 0f);
             bubble.transform.position += camera.ScreenToWorldPoint(desired) - camera.ScreenToWorldPoint(current);
             if (!logged)
             {
                 logged = true;
-                StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP_POSITION side=" + (onLeft ? "left" : "right") + " height_screen=" + box.height + " exceeds_screen=" + (box.height > Screen.height - gap * 2f));
+                StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP_POSITION anchor=window_lower_right tail=LD height_screen=" + box.height + " exceeds_screen=" + (box.height > Screen.height - gap * 2f));
             }
+        }
+        private static float RightEdge(Rect host)
+        {
+            float right = host.xMax;
+            foreach (var widget in amountWidgets)
+                if (widget != null && widget.gameObject.activeInHierarchy) right = Mathf.Max(right, Bounds(widget).xMax);
+            return right;
         }
         internal static void Hide()
         {
             var old = bubble; bubble = null;
-            selected = null; formula = null; frame = null; camera = null; chrome = null; logged = false;
+            selected = null; formula = null; frame = null; camera = null; chrome = null; amountWidgets = null; logged = false;
+            lastWidth = lastHeight = settled = 0;
             if (old != null) old.DestroyBubble();
         }
         [HarmonyPatch(typeof(WidgetsBubbleGUI), "Update")]
@@ -115,7 +128,34 @@ namespace NikichMods.Research
             private static void Postfix(WidgetsBubbleGUI __instance)
             {
                 if (!ReferenceEquals(__instance, bubble)) return;
-                try { Place(); } catch (Exception ex) { Hide(); StudyTableWorkProbe.Fail(ex); }
+                try { Place(); bubble.widget.alpha = settled > 0 ? 1f : 0f; }
+                catch (Exception ex) { Hide(); StudyTableWorkProbe.Fail(ex); }
+            }
+        }
+        [HarmonyPatch(typeof(BaseBubbleGUI), "UpdateBubble")]
+        private static class FixedCorner
+        {
+            // Retain native text/widget updates, but this one independent bubble no longer
+            // follows collider-driven native corner/position selection.
+            private static bool Prefix(BaseBubbleGUI __instance) { return !ReferenceEquals(__instance, bubble); }
+        }
+        [HarmonyPatch(typeof(WidgetsBubbleGUI), "LateUpdate")]
+        private static class Ready
+        {
+            [HarmonyPriority(Priority.Last)]
+            private static void Postfix(WidgetsBubbleGUI __instance)
+            {
+                if (!ReferenceEquals(__instance, bubble)) return;
+                try
+                {
+                    int width = bubble.widget.width, height = bubble.widget.height;
+                    settled = width == lastWidth && height == lastHeight ? settled + 1 : 0;
+                    lastWidth = width; lastHeight = height;
+                    Place();
+                    bubble.widget.alpha = settled > 0 ? 1f : 0f;
+                    if (settled == 1) StudyTableWorkProbe.Write("RAR_GUIDANCE_TOOLTIP_READY phase=visible width=" + width + " height=" + height);
+                }
+                catch (Exception ex) { Hide(); StudyTableWorkProbe.Fail(ex); }
             }
         }
     }
