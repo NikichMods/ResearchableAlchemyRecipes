@@ -22,10 +22,10 @@ The user's next instruction adopts decorative paints at 1 and black/white at 2, 
 | Acid | 2 |
 | Alkali | 4 |
 | Aromatizer | 8 |
-| Dark elixir | 12 |
-| Energy elixir (fertilizer) | 4 |
+| Dark elixir | 8 |
+| Energy elixir (fertilizer) | 8 |
 | Balsamic solution | 4 |
-| Flavor enhancer | 12 |
+| Flavor enhancer | 8 |
 | Freshener | 4 |
 | Golden elixir | 12 |
 | Growth enhancer | 4 |
@@ -36,13 +36,13 @@ The user's next instruction adopts decorative paints at 1 and black/white at 2, 
 | Armour potion | 4 |
 | Berserk potion | 4 |
 | Damage potion | 4 |
-| Healing potion | 4 |
+| Healing potion | 2 |
 | Long restoration potion | 4 |
 | Energy potion (drinkable) | 4 |
 | Speed potion | 8 |
 | Zombie juice | 4 |
 
-Totals: 17 practical topics 102, eight decorative topics 8, eight drinkable potions 36; all 33 topics 146 science = 73 sheets of paper-equivalent value. Black/white paint, growth/flavor enhancers and zombie juice total 24 science. These are research fees only, not total progression expenditure. Dark remains 12 under the user's explicit 10–15 -> 12 mapping, despite its conditional usefulness; a reduction to 8 would lower the catalog total to 142, but is not silently selected. Healing 4 is a proposed early-quest fee, not an already individually accepted value.
+Totals after the subsequent explicit corrections: 17 practical topics 98, eight decorative topics 8, eight drinkable potions 34; all 33 topics 140 science = 70 sheets of paper-equivalent value. Black/white paint, growth/flavor enhancers and zombie juice total 20 science. These are research fees only. The user adopts flavor enhancer 8, healing 2, dark elixir 8, growth enhancer 4, freshener (incense I) 4 and aromatizer (incense II) 8. The request to price both tier-II fertilizer inputs at 8 is interpreted as energy_elixir for boost I/II and flavor_enhancer for quality II: these are separate fertilizers, not two elixirs jointly required in the quality-II recipe. The same energy-elixir topic serves both boost tiers, so its fee 8 also applies when initially researched for tier I. Native consumer census confirms energy_elixir -> sack_clock_silver/gold, growth_enhancer -> sack_star_silver, flavor_enhancer -> sack_star_gold, freshener -> incense_1 and aromatizer -> incense_2. Other rows retain the preceding proposal; no runtime costs changed.
 
 ## User proposal preserved
 
