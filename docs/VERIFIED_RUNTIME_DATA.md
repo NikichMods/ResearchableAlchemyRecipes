@@ -1,5 +1,7 @@
 # Verified host evidence
 
+Quest-request source correction (static/automated evidence, installed gate pending): QUEST_RESEARCH_SOURCES.md records the exact npc_clotho_task_1 and astrologer_acid assignment/completion writers, pure native task getters, empty NPC aliases, KnownNPCList binary roundtrip and 0.1.41 menu/payment eligibility tests. Existing installed 0.1.40 acceptance is preserved; these new source tests do not imply installed assignment or full-save acceptance. 33 ordinary paid products / 42 formulas remain unchanged.
+
 ## Current source/persistence evidence checkpoint — 2026-10-14
 
 Installed research 0.1.40 has accepted Clotho trade discovery, saved reload persistence and mana learning/native-card evidence in TEST_LOG.md. Native discovery uses save-specific player Item parameters; GameSave serialized inventory composition and native Item binary roundtrip are verified, with the returned save/reload path observed. AWARENESS_SOURCE_AUDIT.md owns ordinary 34-product/43-formula source accounting: 33 mod-research groups/42 formulas plus one native Spices disclosure. PRODUCT_REQUIREMENTS.md owns actual-window/tier discovery and deferred notification semantics. No broad installed source-state/compatibility, partial-text visual or production promotion is inferred. Resume economics through DESIGN.md; old sections below retain their historical evidence limits.

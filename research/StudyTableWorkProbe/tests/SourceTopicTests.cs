@@ -23,6 +23,7 @@ public static class SourceTopicTests
         save.unlocked_techs = new List<string> { "The Beginning Of Alchemy" };
         save.unlocked_crafts = new List<string>(); save.locked_crafts = new List<string>();
         save.unlocked_phrases = new List<string>(); save.black_list_of_phrases = new List<string>();
+        save.known_npcs = new KnownNPCList();
         return save;
     }
     public static int Main(string[] args)
@@ -85,6 +86,27 @@ public static class SourceTopicTests
                 balance.craft_data.Add(new CraftDefinition { id = "fixture_" + product + "_" + n, craft_type = CraftDefinition.CraftType.MixedCraft, output = new List<Item> { new Item(product, 1) } });
         }
         Call("Register", balance); Call("Register", balance);
+        var questSource = asm.GetType("NikichMods.Research.QuestResearchSources", true);
+        Func<GameSave, string, bool> questKnown = (s, p) => (bool)questSource.GetMethod("Known", Private).Invoke(null, new object[] { s, p });
+        var questSave = Save();
+        Assert(!questKnown(questSave, "pot_heal") && questSave.known_npcs.npcs.Count == 0, "Quest read invents an NPC or healing awareness");
+        var witchQuest = new KnownNPC { npc_id = "npc_witch" };
+        witchQuest.tasks.Add(new KnownNPC.TaskState { id = "npc_clotho_task_1", state = KnownNPC.TaskState.State.Visible });
+        questSave.known_npcs.npcs.Add(witchQuest);
+        Assert(questKnown(questSave, "pot_heal") && !questKnown(questSave, "pot_mana") && !questKnown(questSave, "acid"), "Healing quest expands unrelated topics");
+        witchQuest.tasks[0].state = KnownNPC.TaskState.State.Complete;
+        Assert(questKnown(questSave, "pot_heal"), "Fulfilled request loses product awareness");
+        var restoredQuests = SmartSerializer.Deserialize<KnownNPCList>(SmartSerializer.Serialize<KnownNPCList>(questSave.known_npcs));
+        var restoredQuestSave = Save(); restoredQuestSave.known_npcs = restoredQuests;
+        Assert(questKnown(restoredQuestSave, "pot_heal") && !questKnown(Save(), "pot_heal"), "Native task roundtrip loses knowledge or crosses saves");
+        var astrologer = new KnownNPC { npc_id = "npc_astrologer" };
+        astrologer.tasks.Add(new KnownNPC.TaskState { id = "astrologer_diary", state = KnownNPC.TaskState.State.Visible });
+        questSave.known_npcs.npcs.Add(astrologer);
+        Assert(!questKnown(questSave, "acid"), "Earlier diary quest introduces an unmentioned acid demand");
+        astrologer.tasks.Add(new KnownNPC.TaskState { id = "astrologer_acid", state = KnownNPC.TaskState.State.Visible });
+        Assert(questKnown(questSave, "acid"), "Assigned acid task does not introduce its topic");
+        astrologer.tasks[1].state = KnownNPC.TaskState.State.Complete;
+        Assert(questKnown(questSave, "acid"), "Fulfilled acid demand loses awareness");
         host.player = (WorldGameObject)FormatterServices.GetUninitializedObject(typeof(WorldGameObject));
         var playerData = new Item("fixture_player", 1);
         host.player.RestoreSavedInventory(playerData);
@@ -191,6 +213,27 @@ public static class SourceTopicTests
         {
             var save = host.save;
             Assert(!save.IsCraftVisible(job), "Uncaptured sources offered");
+            var heal = topics["rar_probe_source_paint_0110_pot_heal"];
+            var healJob = (CraftDefinition)heal.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(heal);
+            var healFormulaList = (List<CraftDefinition>)heal.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(heal);
+            var acidTopic = topics["rar_probe_source_paint_0110_acid"];
+            var acidJob = (CraftDefinition)acidTopic.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(acidTopic);
+            source.GetField("snapshotSave", Private).SetValue(null, questSave);
+            source.GetField("sourceAvailable", Private).SetValue(null, false);
+            heal.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(heal, 1);
+            acidTopic.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(acidTopic, 1);
+            Assert(questSave.IsCraftVisible(healJob) && questSave.IsCraftVisible(acidJob), "Assigned requests depend on trade, stock, sample or physical source station");
+            Assert(questSave.unlocked_phrases.Count == 0, "Quest fixtures accidentally open trade");
+            questSave.unlocked_techs.Clear();
+            Assert(!questSave.IsCraftVisible(healJob) && !questSave.IsCraftVisible(acidJob), "Quest request bypasses foundational alchemy gate");
+            questSave.unlocked_techs.Add("The Beginning Of Alchemy");
+            questSave.completed_one_time_crafts.Add(healFormulaList[0].id);
+            Assert(questSave.IsCraftVisible(healJob), "Partial healing knowledge removes the quest topic");
+            questSave.completed_one_time_crafts.Add(healFormulaList[1].id);
+            Assert(!questSave.IsCraftVisible(healJob), "Fully learned quest topic remains paid");
+            var acidFormulaList = (List<CraftDefinition>)acidTopic.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(acidTopic);
+            questSave.completed_one_time_crafts.Add(acidFormulaList[0].id);
+            Assert(!questSave.IsCraftVisible(acidJob), "Known acid remains a paid quest topic");
             source.GetField("snapshotSave", Private).SetValue(null, save);
             source.GetField("sourceAvailable", Private).SetValue(null, true); visible.SetValue(topic, 1);
             Assert(save.IsCraftVisible(job), "Positive native topic hidden");

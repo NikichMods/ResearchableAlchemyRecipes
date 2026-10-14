@@ -31,6 +31,7 @@ namespace NikichMods.Research
             internal int churchVisible;
             internal ItemDefinition vendorItem;
             internal int vendorVisible;
+            internal int questVisible;
             internal int visible;
         }
         private static readonly Dictionary<string, Topic> topics = new Dictionary<string, Topic>();
@@ -159,7 +160,7 @@ namespace NikichMods.Research
             var witchInstances = WorldMap.GetWorldGameObjectsByObjId(Witch);
             foreach (var topic in topics.Values)
             {
-                topic.roomVisible = 0; topic.churchVisible = 0; topic.vendorVisible = 0;
+                topic.roomVisible = 0; topic.churchVisible = 0; topic.vendorVisible = 0; topic.questVisible = 0;
                 foreach (var craft in topic.sources) if (save.IsCraftVisible(craft)) topic.roomVisible++;
                 foreach (var craft in topic.churchSources) if (save.IsCraftVisible(craft)) topic.churchVisible++;
                 topic.visible = VisibleSources(roomAvailable, topic.roomVisible, churchAvailable, topic.churchVisible);
@@ -177,6 +178,10 @@ namespace NikichMods.Research
                     }
                     topic.visible = topic.vendorVisible;
                 }
+                // An actually assigned native request is its own awareness source:
+                // no sample, physical source station or trade visit is required.
+                topic.questVisible = QuestResearchSources.Known(save, topic.product) ? 1 : 0;
+                if (topic.questVisible > 0) topic.visible = System.Math.Max(topic.visible, topic.questVisible);
             }
             snapshotSave = save;
             StudyTableWorkProbe.Write("RAR_TOPICS_CALL phase=after action=source_snapshot builder_present=" + (desk != null) + " room_available=" + roomAvailable +
@@ -188,8 +193,8 @@ namespace NikichMods.Research
         {
             Topic topic;
             return topics.TryGetValue(id, out topic) && ReferenceEquals(snapshotSave, save) &&
-                Eligible(save.unlocked_techs.Contains(Technology), topic.vendorItem != null ? TradeKnown(save) && !ReferenceEquals(MainGame.me.player, null) && HasDiscovery(MainGame.me.player.data, topic.product) :
-                    topic.product == ResurrectionProduct ? save.unlocked_techs.Contains(ResurrectionTechnology) : sourceAvailable, topic.visible, Remaining(topic, save));
+                Eligible(save.unlocked_techs.Contains(Technology), QuestResearchSources.Known(save, topic.product) || (topic.vendorItem != null ? TradeKnown(save) && !ReferenceEquals(MainGame.me.player, null) && HasDiscovery(MainGame.me.player.data, topic.product) :
+                    topic.product == ResurrectionProduct ? save.unlocked_techs.Contains(ResurrectionTechnology) : sourceAvailable), topic.visible, Remaining(topic, save));
         }
         internal static bool TradeKnown(GameSave save)
         {
@@ -260,7 +265,7 @@ namespace NikichMods.Research
                 bool eligible = Available(topic.job.id, save) && !save.completed_one_time_crafts.Contains(topic.job.id);
                 if (eligible) offered++;
                 StudyTableWorkProbe.Write("RAR_TOPICS_PRODUCT phase=" + phase + " product=" + topic.product + " native_visible=" + topic.visible +
-                    " room_visible=" + topic.roomVisible + " church_visible=" + topic.churchVisible + " vendor_visible=" + topic.vendorVisible + " remaining=" + Remaining(topic, save) + " offered=" + eligible);
+                    " room_visible=" + topic.roomVisible + " church_visible=" + topic.churchVisible + " vendor_visible=" + topic.vendorVisible + " quest_visible=" + topic.questVisible + " remaining=" + Remaining(topic, save) + " offered=" + eligible);
             }
             StudyTableWorkProbe.Write("RAR_TOPICS_STATUS phase=" + phase + " source_snapshot_current=" + ReferenceEquals(snapshotSave, save) + " offered=" + offered + " synthetic=False");
         }

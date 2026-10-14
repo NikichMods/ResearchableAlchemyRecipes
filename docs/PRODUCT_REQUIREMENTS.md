@@ -9,6 +9,7 @@ For an alchemical product known to the character, the player can follow a predic
 ## Adopted player flow
 
 1. An available, verified in-game source mentions a product. This counts as character awareness even if the player has not opened that source's window.
+   An actually given native task asking for an alchemical product is an awareness source immediately. The user adopts this on 2026-10-14: do not make the player first open merchant trade or build a separate source station to research the requested product. In particular, Clotho's initial healing-potion task must offer healing research after the native alchemy access gate opens, before memory restoration/trade. Native already-known formulas still suppress redundant research; the task does not grant a formula automatically. Audit other ordinary and native quest products for the same boundary, including authored disclosure cases.
 2. After the character has unlocked the vanilla The Beginning Of Alchemy technology, eligible products appear as research topics. Earlier awareness alone does not open the mod's research/information access. External player knowledge does not reveal the entire catalog.
 3. The player selects, pays for and performs research at the study table. Possession of the target product is not required.
 4. Research reveals all ordinary alternative formulas for the product and the acquisition methods of their ingredients.

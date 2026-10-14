@@ -1,5 +1,7 @@
 # Study Table Work Probe
 
+0.1.41 adds bounded native task awareness for Clotho healing and Astrologer acid. Visible/Complete journal records are read at the existing source snapshot/payment seams; no trade visit or physical source station is required for those exact requests. See docs/QUEST_RESEARCH_SOURCES.md for native owners, offline checks and pending installed gates. Price values remain diagnostic; user-proposed research economics are not bundled.
+
 ## Current accepted research slice 0.1.40 — actual Clotho trade discovery
 
 Trade opening records all stocked potions on native unlocked tiers using save-specific namespaced player Item parameters. No scrolling/hover/purchase; higher tier alone requires another visit. Old saves revisit once. Native trade phrase is access only, replacing narrative-only 0.1.38/39; costs, adopted partial text and remaining-only research stay unchanged. Native Item serialization and existing suites pass; returned positive listing/save-reload/mana-reward/native-card acceptance is recorded in TEST_LOG.md. Partial wording is translated/checked but visual inspection remains pending. Native Spices disclosure resolves the ordinary corpus outside paid topics; notification work is adopted and deferred.

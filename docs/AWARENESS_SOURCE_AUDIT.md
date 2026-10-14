@@ -1,5 +1,7 @@
 # Product awareness source audit — 2026-10-14
 
+Latest adopted addition: actually assigned alchemical-product tasks are independent awareness sources. Research candidate 0.1.41 reads the exact Clotho healing and Astrologer acid task owners, including fulfilled tasks as native evidence of prior mention. Other potion products retain trade discovery; native Spices disclosure remains sufficient. See QUEST_RESEARCH_SOURCES.md for the bounded 764-graph Item/Flow_Answer census and limits. This corrects early healing without expanding the ordinary 33-paid-product registry or claiming universal quest integration.
+
 Current state: room/church/resurrection technology coverage is accepted within returned 0.1.37 limits: 25/34 ordinary products, 33/43 formulas. Next source boundary is Clotho trade; Spices stays separate.
 
 ## Ordinary corpus source closure — 2026-10-14
