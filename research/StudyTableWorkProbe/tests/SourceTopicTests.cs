@@ -21,6 +21,13 @@ public static class SourceTopicTests
     }
     private const BindingFlags Private = BindingFlags.NonPublic | BindingFlags.Static;
     private static Type source;
+    private static CraftComponent refundComponent;
+    private static WorldGameObject refundTable;
+    private static bool RefundTable(object __instance, ref WorldGameObject __result)
+    {
+        if (!ReferenceEquals(__instance, refundComponent)) return true;
+        __result = refundTable; return false;
+    }
     // The standalone CLR has no Unity Resources ECalls. Bag-item initialization is unrelated
     // to source visibility/reward; only this engine-dependent constructor helper is skipped.
     private static bool SkipBagInitialization() { return false; }
@@ -54,6 +61,7 @@ public static class SourceTopicTests
             // The offline fixture supplies station capacity; native AddItem refund and serialization still run.
             fixture.Patch(AccessTools.Method(typeof(Item), "CanAddCount", new[] { typeof(string), typeof(bool), typeof(bool) }), prefix: new HarmonyMethod(typeof(SourceTopicTests), "ScienceCapacity"));
             fixture.Patch(AccessTools.PropertyGetter(typeof(Item), "definition"), prefix: new HarmonyMethod(typeof(SourceTopicTests), "LedgerDefinition"));
+            fixture.Patch(AccessTools.PropertyGetter(typeof(CraftComponent), "wgo"), prefix: new HarmonyMethod(typeof(SourceTopicTests), "RefundTable"));
             Run(dir);
         }
         finally { fixture.UnpatchSelf(); }
@@ -151,7 +159,7 @@ public static class SourceTopicTests
             totalScience += fee; totalWork += (int)definition.craft_time.default_value; totalEnergy += (int)definition.energy.default_value;
             feeGroups[fee] = feeGroups.ContainsKey(fee) ? feeGroups[fee] + 1 : 1;
         }
-        Assert(totalScience == 132 && totalWork == 158 && totalEnergy == 202 && feeGroups.Count == 5 &&
+        Assert(totalScience == 132 && totalWork == 107 && totalEnergy == 202 && feeGroups.Count == 5 &&
             feeGroups[1] == 8 && feeGroups[2] == 4 && feeGroups[4] == 14 && feeGroups[8] == 5 && feeGroups[10] == 2,
             "Registered native jobs differ from the adopted catalog tariff");
         var reserve = asm.GetType("NikichMods.Research.ResearchScienceReserve", true);
@@ -169,6 +177,31 @@ public static class SourceTopicTests
         var legacyLedger = new Item("fixture_legacy_table", 1);
         Assert((int)reserve.GetMethod("Refund", Private).Invoke(null, new object[] { legacyLedger, 1 }) == 1 && legacyLedger.GetItemsCount("science", true) == 1,
             "Legacy diagnostic prepaid fee is replaced by the current product price");
+        var removalLedger = new Item("fixture_table_removal", 1);
+        removalLedger.inventory.Add(new Item("science", 12));
+        reserve.GetMethod("Record", Private).Invoke(null, new object[] { removalLedger, 8 });
+        refundTable = (WorldGameObject)FormatterServices.GetUninitializedObject(typeof(WorldGameObject));
+        refundTable.RestoreSavedInventory(removalLedger);
+        refundComponent = (CraftComponent)FormatterServices.GetUninitializedObject(typeof(CraftComponent));
+        refundComponent.is_crafting = true;
+        refundComponent.current_craft = balance.craft_data.Find(c => c.id == "rar_probe_source_paint_0110_aromatizer");
+        var removalAdvice = reserve.GetNestedType("Removal", BindingFlags.NonPublic);
+        object[] beforeRemoval = { refundComponent, null };
+        removalAdvice.GetMethod("Prefix", Private).Invoke(null, beforeRemoval);
+        var removalCraft = new CraftDefinition { id = "fixture_removal" };
+        // No actual native transition: failed replacement must retain both science and reserve.
+        removalAdvice.GetMethod("Postfix", Private).Invoke(null, new object[] { refundComponent, removalCraft, beforeRemoval[1] });
+        Assert(removalLedger.GetItemsCount("science", true) == 12, "Unsuccessful removal start refunds active research");
+        // Native field assignment is established by IL; the fixture exercises the actual advice and native refund.
+        refundComponent.current_craft = removalCraft;
+        removalAdvice.GetMethod("Postfix", Private).Invoke(null, new object[] { refundComponent, removalCraft, beforeRemoval[1] });
+        Assert(removalLedger.GetItemsCount("science", true) == 20 && (int)reserve.GetMethod("Read", Private).Invoke(null, new object[] { removalLedger }) == 0,
+            "Successful removal replacement loses the research reserve");
+        object[] repeatedRemoval = { refundComponent, null };
+        removalAdvice.GetMethod("Prefix", Private).Invoke(null, repeatedRemoval);
+        removalAdvice.GetMethod("Postfix", Private).Invoke(null, new object[] { refundComponent, removalCraft, repeatedRemoval[1] });
+        Assert(repeatedRemoval[1] == null && removalLedger.GetItemsCount("science", true) == 20, "Removal repeats duplicate the refund");
+        refundComponent = null; refundTable = null;
         var vendorData = new Item("fixture_vendor", 1);
         var healingItem = balance.items_data.Find(i => i.id == "pot_heal");
         Assert((int)Call("VendorStock", vendorData, false, healingItem, 1) == 10 && vendorData.inventory.Count == 0, "Cold stock projection mutates a vendor or misses first-tier stock");

@@ -10,8 +10,8 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.42.0")]
-[assembly: AssemblyFileVersion("0.1.42.0")]
+[assembly: AssemblyVersion("0.1.43.0")]
+[assembly: AssemblyFileVersion("0.1.43.0")]
 
 namespace NikichMods.Research
 {
@@ -19,7 +19,7 @@ namespace NikichMods.Research
     [BepInDependency("p1xel8ted.gyk.maxbuttonsredux", BepInDependency.DependencyFlags.SoftDependency)]
     public sealed class StudyTableWorkProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.42";
+        public const string Version = "0.1.43";
         internal const string JobId = "rar_probe_work_010";
         private const string TableId = "mf_alchemy_survey";
         private const string Technology = "The Beginning Of Alchemy";
@@ -99,7 +99,15 @@ namespace NikichMods.Research
             catch (Exception ex) { Fail(ex); }
         }
 
-        internal static void Write(string message) { if (Log != null) Log.LogInfo(message); }
+        internal static void Write(string message)
+        {
+            if (Log == null) return;
+            // Detailed source/card censuses remain opt-in through the host's Debug log level.
+            if (message.StartsWith("RAR_TOPICS_PRODUCT ", StringComparison.Ordinal) ||
+                message.StartsWith("RAR_TOPICS_CARD ", StringComparison.Ordinal) ||
+                message.StartsWith("RAR_TOPICS_NATIVE_LIST ", StringComparison.Ordinal)) Log.LogDebug(message);
+            else Log.LogInfo(message);
+        }
         internal static void Fail(Exception ex)
         {
             enabledProbe = false;

@@ -1,5 +1,19 @@
-# Paid research lifecycle — candidate 0.1.42
+# Paid research lifecycle — current correction 0.1.43
 
+
+## Current return and next bounded check
+
+0.1.42 return is accepted for tanning-agent native unfinished-work/full restart (progress 0.577, reserve 8), exact F9 refund 18->26, same-table movement/settled-save behavior reported by the user and one remaining-formula completion after one new payment 26->18. The initial 27->26 is the vanilla rope material study, not an unexplained recipe loss. Earlier movement refusals and every source/cross-mod case are not implied.
+
+Real removal comparison reveals a different owner: WorldGameObject.MarkForRemoval invokes CraftComponent.StartRemovalCraft. It returns current craft.needs as drops, zeros craft_amount, replaces current_craft with the removal definition and resets progress; it does not call Cancel or return needs_from_wgo. Subsequent CancelRemovalCraft/End explains the log's n=0/job=none. Thus 0.1.42's Cancel-only refund missed this interruption: launch 3 aromatizer paid 18->10/reserve 8, then removal destroyed the table with the reserve still 8 and no reward. The user explicitly permits destruction on their existing test save and reports exiting without saving; no additional copy is demanded, and pre-candidate backups remain retained.
+
+0.1.43 captures only an active source-research fee before StartRemovalCraft, then returns it after the native current_craft becomes the supplied removal definition. This narrow correction does not replace native removal or general End and cannot refund a failed/unchanged transition or ordinary material study. The next removal sees a native removal craft rather than a source job, preventing duplicate refunds. Completed research and ordinary F9 cancellation keep their existing settlement paths. Science is returned before destruction; if the user then actually destroys the table, its remaining science still disappears with ordinary inventory under the native no-drop rule. No new-table credit bank or demolition restriction is introduced.
+
+The user also selects shorter work 2/2/3/5/8, with all science/faith/energy unchanged. Three large source/card/native-list diagnostic families move from Info to Debug; sparse lifecycle/financial/error evidence stays. The launch-2 volume attribution is recorded in TEST_LOG.md. Production must remove research-only controls/censuses and follow DevRules' sparse logging rules.
+
+Minimal new installed check on 0.1.43: start an unknown topic, preferably aromatizer again if still unknown after the unsaved removal; stop partway and assign removal without finishing destruction. Expect the full fee back on the existing table and no learned formula. Cancel the removal mark through the usual native controls, then start that same topic again and judge the shorter work. Optional completion confirms normal finish; the accepted full-restart/F9/idle-move/payment sequence need not be replayed. Logs for StartRemovalCraft refund and reserve=0 are decisive; actual final demolition only rechecks native inventory loss and is unnecessary for this correction.
+
+## Historical 0.1.42 mechanism and comparison plan
 Adopted: partially known products pay the full fixed product price for all remaining formulas; fully known products are not offered. This is not limited to decorative paints: accepted formula counts include practical products too, so do not use paint-only detection. The science/work/energy table and zero faith are fixed in RESEARCH_PRICE_REVIEW.md.
 
 ## Payment and cancellation decision

@@ -1,6 +1,6 @@
 # Research price and utility review — 2026-10-14
 
-Status: current reduced science tariff adopted as the working balance; historical higher ranges remain exploratory evidence. Installed research candidate 0.1.42 uses the adopted tariff; installed economy/lifecycle acceptance remains pending. The prior quantitative study counted material Study expenditure only; it did not value failed mixtures, material acquisition/processing time, certainty of outcome or convenience. Its 2–3 science result is a comparison anchor, not a ceiling on a richer player-facing fee.
+Status: current reduced science tariff adopted as the working balance; historical higher ranges remain exploratory evidence. 0.1.42 has bounded accepted payment/reload/cancel/completion results. The user now adopts faster work 2/2/3/5/8 for 0.1.43; removal-assignment refund is corrected separately. Science and energy do not change. The prior quantitative study counted material Study expenditure only; it did not value failed mixtures, material acquisition/processing time, certainty of outcome or convenience. Its 2–3 science result is a comparison anchor, not a ceiling on a richer player-facing fee.
 
 ## Current reduced-price working list
 
@@ -50,21 +50,21 @@ The user identifies 20 products as personally important, not universally mandato
 
 ## Faith and native energy/work gradient
 
-Adopted: science tariff fixed; recipe research faith cost 0. Ordinary material Survey costs remain unchanged. Adopted final endpoints: science-1 starts at work 2/energy 2; science-10 ends at work 10/energy 15. This latest explicit user correction supersedes direct use of the native lower endpoints. Intermediate costs follow linear interpolation by science price with nearest-integer rounding. No price scaling by formula count follows from this direction.
+Adopted: science tariff fixed; recipe research faith cost 0. Ordinary material Survey costs remain unchanged. After actual gameplay the user adopts work 2/2/3/5/8 for science 1/2/4/8/10, superseding the previous 2/3/5/8/10. The work maximum falls from 10 to 8 and middle groups become shorter. Energy stays 2/3/6/12/15; zero faith and all science prices stay fixed. No price scaling by formula count follows from this direction.
 
 Read-only 1.407 game_data census on the accepted resource/assembly hashes, ignored study-time-energy-private.py/json: 223 paid single-input Survey/Alchemy definitions have work/energy pairs 0/0 (1), 1/0 (29), 1/1 (18), 1/2 (3), 2/5 (64), 2/10 (2), 3/5 (84), 10/10 (3), 10/15 (19). The zero-work exception is the authored Astrologer quest-key study, not an ordinary material lower endpoint. The previously verified 38 non-slime alchemy-source materials have 1/0 (9), 1/1 (1), 1/2 (3), 3/5 (24), 10/15 (1). Thus ordinary source endpoints are work 1/energy 0 and work 10/energy 15. All these expressions are simplified numeric constants; reading default_value alone would incorrectly report zero. Shared STUDY_RESOURCE_ECONOMY.md owns the reusable corpus facts.
 
-Final numeric mapping: for science price s, x=(s-1)/9; work=round(2+8x), total energy=round(2+13x), nearest integer. Interpolate by science price, not equally spaced group index. Upper endpoints retain the native maximum; lower endpoints are the user-selected 2/2.
+Current mapping: work uses the explicit user-selected group table below, not a linear formula. Energy retains nearest-integer round(2+13*(s-1)/9) for science price s. Historical native endpoints remain comparison evidence, not a requirement to keep the earlier longer work scale.
 
 | Science | Faith | Native craft_time/work | Authored total energy |
 | ---: | ---: | ---: | ---: |
 | 1 | 0 | 2 | 2 |
-| 2 | 0 | 3 | 3 |
-| 4 | 0 | 5 | 6 |
-| 8 | 0 | 8 | 12 |
-| 10 | 0 | 10 | 15 |
+| 2 | 0 | 2 | 3 |
+| 4 | 0 | 3 | 6 |
+| 8 | 0 | 5 | 12 |
+| 10 | 0 | 8 | 15 |
 
-These rounded values follow the adopted endpoints and linear-gradient instruction; they are installed in research candidate 0.1.42, not runtime-accepted. Native manual CraftComponent owns work/proportional energy spending; energy is the definition's whole-job budget, not per action. craft_time is a native work/progress parameter, not a measured wall-clock duration or promised number of key presses: animation/actor/other installed work modifiers affect actual time. Full catalog totals under this tariff are 132 science, 158 native work and 202 energy; personal important set 104/117/156, optional set 28/41/46. This is expenditure over separate jobs across progression, not one session. Immutable 0.1.41 remains preserved; 0.1.42 source integrates the tariff and full-price partial knowledge with native upfront reservation and same-table refund on ordinary cancellation. RESEARCH_WORK_LIFECYCLE.md owns pending installed save/cancel/completion evidence and undecided demolition behavior.
+The revised work values are adopted for 0.1.43; actual shorter-work feel and the corrected removal-assignment path await installed acceptance. Native manual CraftComponent owns work/proportional energy spending; energy is the definition's whole-job budget, not per action. craft_time is a native work/progress parameter, not a measured wall-clock duration or promised number of key presses: animation/actor/other installed work modifiers affect actual time. Full catalog totals under this tariff are 132 science, 107 native work and 202 energy; personal important set 104/76/156, optional set 28/31/46. This is expenditure over separate jobs across progression, not one session. Immutable 0.1.41 remains preserved; 0.1.42 source integrates the tariff and full-price partial knowledge with native upfront reservation and same-table refund on ordinary cancellation. RESEARCH_WORK_LIFECYCLE.md owns pending installed save/cancel/completion evidence and undecided demolition behavior.
 
 
 

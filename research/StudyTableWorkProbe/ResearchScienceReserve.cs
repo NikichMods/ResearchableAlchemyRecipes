@@ -32,6 +32,22 @@ namespace NikichMods.Research
             internal Item table;
             internal int fee;
         }
+        [HarmonyPatch(typeof(CraftComponent), "StartRemovalCraft")]
+        private static class Removal
+        {
+            private static void Prefix(CraftComponent __instance, out CancelState __state)
+            {
+                __state = __instance.is_crafting && __instance.current_craft != null && SourceResearch.IsJob(__instance.current_craft.id)
+                    ? new CancelState { table = __instance.wgo.data, fee = Read(__instance.wgo.data) > 0 ? Read(__instance.wgo.data) : 1 } : null;
+            }
+            private static void Postfix(CraftComponent __instance, CraftDefinition craft, CancelState __state)
+            {
+                // The native owner has replaced the research by removal work and reset progress.
+                if (__state == null || !ReferenceEquals(__instance.current_craft, craft)) return;
+                int refunded = Refund(__state.table, __state.fee);
+                StudyTableWorkProbe.Write("RAR_SCIENCE_RESERVE action=removal_interrupt_refund amount=" + refunded + " science=" + __state.table.GetItemsCount("science", true));
+            }
+        }
         [HarmonyPatch(typeof(CraftComponent), "Cancel")]
         private static class Cancel
         {

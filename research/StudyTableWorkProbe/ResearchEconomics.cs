@@ -24,7 +24,17 @@ namespace NikichMods.Research
             if (!Prices.TryGetValue(product, out price)) throw new InvalidOperationException("Unknown research price: " + product);
             return price;
         }
-        internal static int Work(int science) { return (int)Math.Round(2 + 8 * (science - 1) / 9.0); }
+        internal static int Work(int science)
+        {
+            switch (science)
+            {
+                case 1: case 2: return 2;
+                case 4: return 3;
+                case 8: return 5;
+                case 10: return 8;
+                default: throw new InvalidOperationException("Unknown research work group: " + science);
+            }
+        }
         internal static int Energy(int science) { return (int)Math.Round(2 + 13 * (science - 1) / 9.0); }
         internal static void Apply(CraftDefinition job, string product)
         {
