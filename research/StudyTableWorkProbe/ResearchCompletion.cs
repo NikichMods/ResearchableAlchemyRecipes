@@ -18,11 +18,23 @@ namespace NikichMods.Research
             if (learned == 0) return;
             string count = CountText(learned);
             var gui = GUIElements.me.tech_dialog;
-            gui.OpenAsItemsList(count, new List<Item> { new Item(product, 1) }, onClosed);
-            // Native info mode owns the single product row, focus, font, resizing and close.
-            // Set its public heading after the native generic-information writer.
-            gui.label_header.text = Localization.Get(Localization.Key.ResearchCompleted);
-            gui.UpdateAllAnchors();
+            var container = gui.subheader_container;
+            bool priorActive = container.activeSelf;
+            try
+            {
+                // Ordinary tech inspection can hide this container; info mode leaves it alone.
+                // Activate before native layout, then restore on close/failure for other consumers.
+                container.SetActive(true);
+                gui.OpenAsItemsList(count, new List<Item> { new Item(product, 1) }, delegate {
+                    container.SetActive(priorActive);
+                    if (onClosed != null) onClosed();
+                });
+                // Native info mode owns the single product row, focus, font, resizing and close.
+                // Set its public heading after the native generic-information writer.
+                gui.label_header.text = Localization.Get(Localization.Key.ResearchCompleted);
+                gui.UpdateAllAnchors();
+            }
+            catch { container.SetActive(priorActive); throw; }
             StudyTableWorkProbe.Write("RAR_RESEARCH_RESULT product=" + product + " new_recipes=" + learned + " rows=1 native_info=True");
         }
     }
