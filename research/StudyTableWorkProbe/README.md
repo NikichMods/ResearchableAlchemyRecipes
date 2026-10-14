@@ -1,5 +1,9 @@
 # Study Table Work Probe
 
+## Current candidate 0.1.40 — actual Clotho trade discovery
+
+Trade opening records all stocked potions on native unlocked tiers using save-specific namespaced player Item parameters. No scrolling/hover/purchase; higher tier alone requires another visit. Old saves revisit once. Native trade phrase is access only, replacing narrative-only 0.1.38/39; costs, adopted partial text and remaining-only research stay unchanged. Native Item serialization and existing suites pass; installed listing/save-reload/reward acceptance is pending in TEST_LOG.md.
+
 ## Current candidate 0.1.39 — adopted partial-topic wording
 
 RU: Часть рецептов известна. Открыть все варианты. Updated all eleven locales; partial-only description behavior and geometry stay unchanged. Includes untested 0.1.38 Clotho potion source behavior; one combined installed return is needed, without a separate 0.1.38 run. Local suites/all-language/font checks pass. TEST_LOG.md owns exact identity and pending acceptance.

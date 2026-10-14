@@ -15,6 +15,7 @@ namespace NikichMods.Research
         internal const string ResurrectionProduct = "zombie_juise";
         internal const string Witch = "npc_witch";
         internal const string TradePhrase = "@clotho_trade";
+        private const string DiscoveryPrefix = "rar_seen_clotho_";
         private const string JobPrefix = "rar_probe_source_paint_0110_";
         // Preserve the handed paint job IDs; new groups reuse the same verified source owner.
         private static readonly string[] Products = { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint", "black_paint", "blue_paint", "white_paint", "glue", "acid", "alkali", "aromatizer", "dark_elixir", "energy_elixir", "flask_green_l_plus", "flavor_enhancer", "freshener", "golden_elixir", "growth_enhancer", "preservative", "silver_elixir", "tanning_agent", ResurrectionProduct, "pot_appetite", "pot_armor", "pot_berserk", "pot_damage", "pot_heal", "pot_heal_long", "pot_mana", "pot_speed" };
@@ -172,7 +173,7 @@ namespace NikichMods.Research
                         var data = station.data;
                         bool initialized = Math.Abs(data.GetParam("vendor_inited", 0f) - 1f) <= 0.01f;
                         int tier = initialized ? data.GetParamInt("vendor_tier") : witchDefinition.start_tire;
-                        if (VendorVisible(tradeKnown, physical, tier, topic.vendorItem.product_tier, VendorStock(data, initialized, topic.vendorItem, tier))) topic.vendorVisible++;
+                        if (HasDiscovery(MainGame.me.player.data, topic.product) && VendorVisible(tradeKnown, physical, tier, topic.vendorItem.product_tier, VendorStock(data, initialized, topic.vendorItem, tier))) topic.vendorVisible++;
                     }
                     topic.visible = topic.vendorVisible;
                 }
@@ -187,12 +188,48 @@ namespace NikichMods.Research
         {
             Topic topic;
             return topics.TryGetValue(id, out topic) && ReferenceEquals(snapshotSave, save) &&
-                Eligible(save.unlocked_techs.Contains(Technology), topic.vendorItem != null ? TradeKnown(save) :
+                Eligible(save.unlocked_techs.Contains(Technology), topic.vendorItem != null ? TradeKnown(save) && !ReferenceEquals(MainGame.me.player, null) && HasDiscovery(MainGame.me.player.data, topic.product) :
                     topic.product == ResurrectionProduct ? save.unlocked_techs.Contains(ResurrectionTechnology) : sourceAvailable, topic.visible, Remaining(topic, save));
         }
         internal static bool TradeKnown(GameSave save)
         {
             return save.unlocked_phrases.Contains(TradePhrase) && !save.black_list_of_phrases.Contains(TradePhrase);
+        }
+        internal static bool HasDiscovery(Item playerData, string product)
+        {
+            return playerData != null && playerData.GetParamInt(DiscoveryPrefix + product) == 1;
+        }
+        internal static int RecordTrade(Item playerData, int tier, IEnumerable<Item> stock)
+        {
+            int added = 0;
+            foreach (var topic in topics.Values)
+            {
+                if (topic.vendorItem == null || topic.vendorItem.product_tier > tier || HasDiscovery(playerData, topic.product)) continue;
+                bool present = false;
+                foreach (var item in stock) if (item != null && item.id == topic.product && item.value > 0) { present = true; break; }
+                if (!present) continue;
+                playerData.SetParam(DiscoveryPrefix + topic.product, 1f);
+                added++;
+            }
+            return added;
+        }
+        [HarmonyPatch(typeof(VendorGUI), "Open")]
+        private static class TradeDiscovery
+        {
+            private static void Postfix(VendorGUI __instance)
+            {
+                if (!StudyTableWorkProbe.enabledProbe || !__instance.is_shown || __instance.trading == null ||
+                    __instance.trading.trader == null || __instance.trading.trader.id != Witch || MainGame.me == null || MainGame.me.player == null) return;
+                try
+                {
+                    var trader = __instance.trading.trader;
+                    var stock = new List<Item>();
+                    foreach (var inventory in trader.inventory.all) stock.AddRange(inventory.data.inventory);
+                    int added = RecordTrade(MainGame.me.player.data, trader.cur_tier, stock);
+                    StudyTableWorkProbe.Write("RAR_TOPICS_DISCOVERY source=clotho native_window=True tier=" + trader.cur_tier + " newly_seen=" + added + " persistence=native_player_params");
+                }
+                catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
+            }
         }
         internal static bool VendorVisible(bool tradeKnown, bool physical, int tier, int productTier, int stock)
         {

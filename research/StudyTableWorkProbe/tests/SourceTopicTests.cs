@@ -85,6 +85,24 @@ public static class SourceTopicTests
                 balance.craft_data.Add(new CraftDefinition { id = "fixture_" + product + "_" + n, craft_type = CraftDefinition.CraftType.MixedCraft, output = new List<Item> { new Item(product, 1) } });
         }
         Call("Register", balance); Call("Register", balance);
+        host.player = (WorldGameObject)FormatterServices.GetUninitializedObject(typeof(WorldGameObject));
+        var playerData = new Item("fixture_player", 1);
+        host.player.RestoreSavedInventory(playerData);
+        var shopStock = new List<Item>();
+        foreach (string product in new[] { "pot_appetite", "pot_armor", "pot_berserk", "pot_damage", "pot_heal", "pot_heal_long", "pot_mana", "pot_speed" }) shopStock.Add(new Item(product, 1));
+        Assert((int)Call("RecordTrade", playerData, 1, shopStock) == 2 && (bool)Call("HasDiscovery", playerData, "pot_heal") &&
+            !(bool)Call("HasDiscovery", playerData, "pot_appetite"), "First trade records locked-tier goods or misses unlocked stock");
+        Assert((int)Call("RecordTrade", playerData, 1, shopStock) == 0, "Repeated trade duplicates discovery");
+        Assert(!(bool)Call("HasDiscovery", playerData, "pot_speed"), "Tier upgrade without opening trade records discovery");
+        Assert((int)Call("RecordTrade", playerData, 2, shopStock) == 3, "Second-tier opening misses its goods");
+        shopStock.RemoveAll(item => item.id == "pot_armor");
+        Assert((int)Call("RecordTrade", playerData, 3, shopStock) == 2 && !(bool)Call("HasDiscovery", playerData, "pot_armor"), "Missing stock becomes a discovery");
+        var restoredPlayer = SmartSerializer.Deserialize<Item>(SmartSerializer.Serialize<Item>(playerData));
+        Assert((bool)Call("HasDiscovery", restoredPlayer, "pot_heal") && (bool)Call("HasDiscovery", restoredPlayer, "pot_heal_long") &&
+            !(bool)Call("HasDiscovery", restoredPlayer, "pot_armor"), "Native Item binary serialization loses discovery flags");
+        var freshPlayer = new Item("fixture_other_player", 1);
+        Assert(!(bool)Call("HasDiscovery", freshPlayer, "pot_heal"), "Discovery crosses saves");
+        host.player.RestoreSavedInventory(freshPlayer);
         Assert(balance.craft_data.Count == 91, "Registration duplicated native jobs");
         var topics = (IDictionary)source.GetField("topics", Private).GetValue(null);
         Assert(topics.Count == 33, "Bounded registration count");
@@ -182,6 +200,8 @@ public static class SourceTopicTests
             Assert(!save.IsCraftVisible(potionJob), "Other source opens trade without Clotho explanation");
             save.unlocked_phrases.Add("@clotho_trade");
             source.GetField("sourceAvailable", Private).SetValue(null, false);
+            Assert(!save.IsCraftVisible(potionJob), "Trade explanation alone reveals unviewed potion");
+            Call("RecordTrade", host.player.data, 1, new[] { new Item("pot_heal", 1), new Item("pot_mana", 1) });
             Assert(save.IsCraftVisible(potionJob) && !save.IsCraftVisible(job), "Clotho source requires an unrelated station or enables room topics");
             save.black_list_of_phrases.Add("@clotho_trade");
             Assert(!save.IsCraftVisible(potionJob), "Blacklisted trade remains a source"); save.black_list_of_phrases.Clear();
