@@ -1,8 +1,8 @@
 # Study Table Work Probe
 
-## Current candidate 0.1.40 — actual Clotho trade discovery
+## Current accepted research slice 0.1.40 — actual Clotho trade discovery
 
-Trade opening records all stocked potions on native unlocked tiers using save-specific namespaced player Item parameters. No scrolling/hover/purchase; higher tier alone requires another visit. Old saves revisit once. Native trade phrase is access only, replacing narrative-only 0.1.38/39; costs, adopted partial text and remaining-only research stay unchanged. Native Item serialization and existing suites pass; installed listing/save-reload/reward acceptance is pending in TEST_LOG.md.
+Trade opening records all stocked potions on native unlocked tiers using save-specific namespaced player Item parameters. No scrolling/hover/purchase; higher tier alone requires another visit. Old saves revisit once. Native trade phrase is access only, replacing narrative-only 0.1.38/39; costs, adopted partial text and remaining-only research stay unchanged. Native Item serialization and existing suites pass; returned positive listing/save-reload/mana-reward/native-card acceptance is recorded in TEST_LOG.md. Partial wording is translated/checked but visual inspection remains pending. Native Spices disclosure resolves the ordinary corpus outside paid topics; notification work is adopted and deferred.
 
 ## Current candidate 0.1.39 — adopted partial-topic wording
 

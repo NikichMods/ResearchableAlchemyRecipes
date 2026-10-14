@@ -71,6 +71,12 @@ For an alchemical product known to the character, the player can follow a predic
 - Targeted recipe purchasing from Clotho is a separate possible future mod, outside initial scope.
 - No logic minigame, deduction requirement, generator or UI is inherited from AlchemyRiddle.
 
+## Deferred research-availability notifications
+
+- The user wants a player-visible notification when new research topics become available, identifying the products together. Opening Clotho trade is a representative event; the broader source families must be considered too. Do not require a study-table visit merely to learn that new topics exist.
+- Defer this work until ordinary recipe source coverage is resolved. Prefer an appropriate native-style popup after its host owner is verified; no notification mechanism or hook is selected yet.
+- Coordinate timing with trading, technology/reward dialogs, native popups and tooltips. Notifications must not overlap/disrupt an existing window; choose a safe queue/delivery boundary and aggregate/deduplicate related new topics. Exact presentation, timing and old-save/initial-load behavior remain design choices.
+- Verify source availability transitions and window conflicts using bounded replayable/offline event fixtures and targeted native probes where needed. Do not require the user to replay every quest/unlock naturally. Distinguish such simulated checks from real native window/lifecycle acceptance.
 ## Acceptance envelope
 
 A representative unknown product can be researched without owning it; the native alchemy-table list shows usable formulas and contextual component guidance supplies their acquisition routes. A chosen unstudied source is explicitly identified as needing vanilla study; unrelated alternatives remain unstudied and unpaid. Previously known formulas/materials are recognized. Loading an existing save yields correct current topics. Repeated manufacture and repeated information viewing do not charge another knowledge fee. Save reload preserves the resulting knowledge. Exact research economics and interface acceptance will be defined before the corresponding candidate.
