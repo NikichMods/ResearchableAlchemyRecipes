@@ -26,9 +26,6 @@ namespace NikichMods.Research
         private static CraftGUI Craft { get { return GUIElements.me.craft; } }
         private static ResourceBasedCraftGUI Study { get { return GUIElements.me.resource_based_craft; } }
         private static bool Active { get { return table != null && snapshot != null; } }
-        internal static bool CanCalibratePrice { get { return MainGame.game_started && !MainGame.game_starting &&
-            GUIElements.me != null && Active && selected == ResearchTab &&
-            snapshot.CraftWindow != null && snapshot.CraftWindow.is_shown_and_top && !GUIElements.me.resource_picker.is_shown; } }
         private static bool Owns(CraftGUI gui) { return Active && gui == Craft && gui.GetCrafteryWGO() == table; }
         internal static bool QuantityInputUnavailable()
         {
@@ -113,7 +110,6 @@ namespace NikichMods.Research
         internal static void Restore()
         {
             if (snapshot == null || restoring) return;
-            SciencePriceCalibration.Hide("table_closed");
             restoring = true;
             try
             {
@@ -219,12 +215,31 @@ namespace NikichMods.Research
             }
         }
 
-        [HarmonyPatch(typeof(BaseGUI), "Update")]
-        private static class CalibrationKeys
+        [HarmonyPatch(typeof(UniversalObjectInfoGUI), "Draw")]
+        private static class HeaderDraw
         {
-            private static bool Prefix(BaseGUI __instance)
+            private static void Postfix(UniversalObjectInfoGUI __instance, UniversalObjectInfo __0)
             {
-                return !(SciencePriceCalibration.Capturing && snapshot != null && __instance == snapshot.CraftWindow);
+                if (!StudyTableWorkProbe.enabledProbe || !Active || restoring || snapshot.CraftWindow == null ||
+                    !snapshot.CraftWindow.is_shown) return;
+                try
+                {
+                    var craft = snapshot.CraftWindow;
+                    if (snapshot.StudyWindow != null && __instance == snapshot.StudyWindow.object_info && selected == StudyTab)
+                    {
+                        // Native paper/material work redraws its own now-hidden header.
+                        // Pass the exact native data to our visible outer native header.
+                        craft.object_info.Draw(__0);
+                        return;
+                    }
+                    if (__instance != craft.object_info) return;
+                    // Keep the native sprite/shader and count. Only its replacement
+                    // tint uses the normal dark item style, on this live clone alone.
+                    foreach (var cell in __instance.right_items.GetComponentsInChildren<BaseItemCellGUI>(false))
+                        if (cell.item_id == "science" && cell.container != null && cell.container.icon != null)
+                            cell.container.icon.color = craft.craft_item_prefab.item_gui.colors.normal;
+                }
+                catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
             }
         }
 

@@ -4,6 +4,10 @@ Question: does the .48 loading regression expose a general replacement of native
 
 This is a bounded source/evidence review of the current research probe, not production acceptance or proof that every possible player/mod state is safe. Reviewed owners: StudyTableWorkProbe, SourceResearch, ResearchScienceReserve, ResearchRepetitionGuard, StudyTabs, ResearchCostDisplay/ResearchSciencePriceCell, RecipeGuidance/GuidanceTooltip, AvailabilityNotifications and their canonical accepted evidence.
 
+Follow-up .50 return establishes one concrete composition defect: successful native material conversion redraws ResourceBasedCraftGUI.object_info, hidden by our tabs, while visible CraftGUI.object_info remains stale. Actual science gains reach 22; the stale number is not inventory loss. .51 forwards the exact native header data between those owned instances after native Draw and uses a dark native item tint on the live science header icon. It retains native layout/zero-count rendering, leaves both prefabs and ordinary headers untouched, adds no inventory observer/frame polling, and removes the now-accepted F2 calibration/input patch. Native immediate display and new header tint remain installed acceptance gates. The pre-return findings below are historical where they describe calibration as still active or .50 acceptance as pending.
+
+Adjacent composition audit: only the five captured Study chrome objects are hidden; native Study selection, ingredients, button, CanCraft/CraftAsPlayer, native station inventory and Redraw remain in use. The hidden UniversalObjectInfo is the state-bearing display that needed forwarding; static backgrounds/decor/header duplicates have no independent science value. Geometry/panel depth/tips/key maps retain exact snapshot restoration, confirmed by three .50 closes. No additional defect in these inspected adjacent paths was established. That bounded conclusion does not close outstanding source, picker-warning or foreign-popup compatibility gates.
+
 ## Findings
 
 | Surface | Native owner retained / project addition | Evidence and limits |

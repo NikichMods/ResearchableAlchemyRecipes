@@ -1,5 +1,9 @@
 # Study Table Work Probe
 
+## 0.1.51 native header updates and fixed geometry
+
+Native material conversions redraw the hidden Study header; forward its exact data to the visible outer native header. Use the native dark item tint on the live science header icon, preserving sprite/shader/count and other windows. Freeze the user's .50 price geometry: atom (0,0)/40; counter bottom-right (17,-19)/16. F2/IMGUI/input-capture scaffolding is removed. No science/payment calculation or frame polling. Existing suites pass; check one paper conversion's immediate header gain, same total on the research tab and normal close/reopen. Earlier calibration instructions below are historical.
+
 ## 0.1.50 native science renderer and F2 calibration
 
 Clone only the existing native icon/counter visuals so shader/tint/font/effects are retained. Open the research tab and press F2 for session-only icon X/Y/size and count X/Y/size. Positive X is right and Y is up, in game UI units from the backing center; count position is its bottom-right corner. Done logs all six values and closes the panel; F2 also closes it. Normal table input is temporarily captured and restored after release; teardown restores it too. No save/config writes, new custom MonoBehaviour or global card-redraw hook. Freeze chosen values and remove this scaffold after the user's visual acceptance. Existing suites pass; installed appearance/input/close-reopen proof remains pending.

@@ -44,11 +44,6 @@ namespace NikichMods.Research
             cells.Clear();
         }
 
-        internal static void ApplyGeometry()
-        {
-            foreach (var cell in cells.Values) cell.ApplyGeometry();
-        }
-
         internal static string Format(int price, int available, string nativeText)
         {
             if (price <= 0) return nativeText;

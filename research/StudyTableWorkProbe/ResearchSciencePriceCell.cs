@@ -11,6 +11,9 @@ namespace NikichMods.Research
         private UILabel nativeLabel, counter;
         private UI2DSprite icon;
         private bool nativeActive;
+        // User selected in .50: UI units from the cost backing center.
+        private const int IconX = 0, IconY = 0, IconSize = 40;
+        private const int CountX = 17, CountY = -19, CountSize = 16;
 
         internal void Restore()
         {
@@ -57,17 +60,14 @@ namespace NikichMods.Research
             ApplyGeometry();
         }
 
-        internal void ApplyGeometry()
+        private void ApplyGeometry()
         {
             if (icon == null || counter == null || nativeLabel == null) return;
             Transform box = nativeLabel.transform.parent;
-            int size = SciencePriceCalibration.IconSize;
-            CenterAnchors(icon, box, SciencePriceCalibration.IconX - size / 2,
-                SciencePriceCalibration.IconX - size / 2 + size,
-                SciencePriceCalibration.IconY - size / 2, SciencePriceCalibration.IconY - size / 2 + size);
-            int x = SciencePriceCalibration.CountX, y = SciencePriceCalibration.CountY;
-            counter.fontSize = SciencePriceCalibration.CountSize;
-            CenterAnchors(counter, box, x - 30, x, y, y + SciencePriceCalibration.CountSize);
+            CenterAnchors(icon, box, IconX - IconSize / 2, IconX + IconSize / 2,
+                IconY - IconSize / 2, IconY + IconSize / 2);
+            counter.fontSize = CountSize;
+            CenterAnchors(counter, box, CountX - 30, CountX, CountY, CountY + CountSize);
         }
 
         private static void CenterAnchors(UIWidget widget, Transform box, int left, int right, int bottom, int top)
