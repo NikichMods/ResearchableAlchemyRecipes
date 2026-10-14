@@ -1,5 +1,13 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.49 — large icons only after opening research
+
+Built/installed with game closed; frozen source c419e01aa312552abef5b078f4e46ca44cfb201e, SDK 6.0.406 Roslyn, plugin/assembly/file 0.1.49/0.1.49.0. Immutable artifacts/StudyTableWorkProbe-0.1.49/StudyTableWorkProbe-0.1.49.dll SHA-256 bffbfc89cd302867aa3d758ace4c9de8807ce9ad880eb996b7933c05dbdb19a4; manifest retained. Installed exact version/hash match, one payload; the verified working .47 and its successful-load log retained outside plugins. No original saves modified. .48 stays rejected/preserved, not overwritten.
+
+Re-selected mechanism: remove .48's global CraftItemGUI.Redraw advice and custom MonoBehaviour. Existing owned StudyTabs.Switch, after native layout and only for the Research tab in a started/non-starting game, refreshes plain managed icon/count views for actual visible registered rows. Table-composition restoration restores native labels, destroys owned children and clears view references. No new native load/card callback, frame scan, save state or payment logic. Two sparse RAR_PRICE_CELLS begin/ready markers identify first use after the tab is opened. Existing suites, actual QueueEverything ordering/shortage/isolation regression and no-custom-component/no-global-redraw metadata checks pass. This is not proof of the exact .48 freeze instruction.
+
+Remaining runtime return: load the same save normally, then open the research tab and inspect the large native atom/count; close and reopen. Check load reaches completion before any RAR_PRICE_CELLS event, and actual tab rendering reaches ready. No spending, quest, notification paging or old lifecycle matrix is needed. Startup and first use are unaccepted until this exact candidate returns.
+
 ## Same-save rollback comparison — 0.1.47 after 0.1.48 nonresponse
 
 2026-10-15: user confirms the same save loads normally/quickly after the verified rollback. Archived log work/evidence/work-0.1.47-rollback-return/LogOutput.log SHA-256 b0a11f7614a146b8bc1f8d2bf7462388aa826fe86786563a5dd2de43cd49c056 identifies 0.1.47, reaches loading progress 1 and RAR_NOTICE_LOAD, with no RAR module error marker in this snapshot. Treat .48 as a loading regression in this comparison, not ordinary slow loading; exact instruction/stack causing nonresponse remains unknown. Larger-icon presentation has not been exercised successfully. No original saves modified during rollback/collection. Do not repeat .48 unchanged merely to inspect its icon.
