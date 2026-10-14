@@ -1,0 +1,1502 @@
+{
+  "date": "2026-10-14",
+  "status": "Exploratory static/computational evidence; no adopted prices; no installed economy acceptance",
+  "game": "Graveyard Keeper 1.407",
+  "input_hashes": {
+    "resources.assets": "215c7981901a4b72d5db717666ba47ad3cc032527c95f58dc39d8af1293a69ca",
+    "Assembly-CSharp.dll": "e72e4270e4b88dd0a87ca23c9cf1750aec4c4a0fedb40b6d2dae7902fc9c7fd8"
+  },
+  "scope": {
+    "paid_products": 33,
+    "ordinary_products": 34,
+    "ordinary_formulas": 43,
+    "reagents": 35,
+    "free_reagents": 6,
+    "study_required_reagents": 29,
+    "provider_materials": 38,
+    "all_alchemy_source_materials": 38
+  },
+  "method": {
+    "seed": 1402026,
+    "trials_per_scenario": 12000,
+    "sampling": "uniform fixed-count sampling without replacement; nearest integer to requested fraction",
+    "minimum": "exact weighted set cover; one formula per target; reusable material studies; no slime sources; full future availability assumed",
+    "catchup": "random initial studies plus exact minimum additional studies required to reach the chosen target set; target knowledge assumed for catchup",
+    "guided_order": "3000 random product orders, choose lowest incremental study cost for each product",
+    "runtime_scope": "No game state or installed payload changed",
+    "knowledge_boundary": "Source coverage assumes the actual formula is known for evaluation; studying raw materials alone does not teach it. Catchup with exact information is a conservative comparator, not a simulated vanilla discovery algorithm."
+  },
+  "pools": {
+    "all_paid_item_studies": {
+      "n": 223,
+      "science_total": 649,
+      "faith_total": 613
+    },
+    "non_slime_item_studies": {
+      "n": 198,
+      "science_total": 624,
+      "faith_total": 609
+    },
+    "non_slime_nontarget_item_studies": {
+      "n": 197,
+      "science_total": 621,
+      "faith_total": 606
+    },
+    "non_slime_alchemy_sources": {
+      "n": 38,
+      "science_total": 97,
+      "faith_total": 97
+    },
+    "common_alchemy_sources": {
+      "n": 33,
+      "science_total": 65,
+      "faith_total": 65
+    }
+  },
+  "groups": {
+    "minimal_infrastructure": [
+      "black_paint",
+      "white_paint",
+      "growth_enhancer",
+      "flavor_enhancer",
+      "zombie_juise"
+    ],
+    "infrastructure_and_farming": [
+      "black_paint",
+      "white_paint",
+      "growth_enhancer",
+      "flavor_enhancer",
+      "energy_elixir",
+      "zombie_juise"
+    ],
+    "practical_nonbuff": [
+      "black_paint",
+      "white_paint",
+      "glue",
+      "acid",
+      "alkali",
+      "aromatizer",
+      "dark_elixir",
+      "energy_elixir",
+      "flask_green_l_plus",
+      "flavor_enhancer",
+      "freshener",
+      "golden_elixir",
+      "growth_enhancer",
+      "preservative",
+      "silver_elixir",
+      "tanning_agent",
+      "zombie_juise"
+    ],
+    "practical_plus_native_spices": [
+      "black_paint",
+      "white_paint",
+      "glue",
+      "acid",
+      "alkali",
+      "aromatizer",
+      "dark_elixir",
+      "energy_elixir",
+      "flask_green_l_plus",
+      "flavor_enhancer",
+      "freshener",
+      "golden_elixir",
+      "growth_enhancer",
+      "preservative",
+      "silver_elixir",
+      "tanning_agent",
+      "zombie_juise",
+      "taste_booster:alchemy_1_spice"
+    ],
+    "all_research_products": [
+      "yellow_paint",
+      "green_paint",
+      "brown_paint",
+      "red_paint",
+      "d_green_paint",
+      "d_violet_paint",
+      "violet_paint",
+      "black_paint",
+      "blue_paint",
+      "white_paint",
+      "glue",
+      "acid",
+      "alkali",
+      "aromatizer",
+      "dark_elixir",
+      "energy_elixir",
+      "flask_green_l_plus",
+      "flavor_enhancer",
+      "freshener",
+      "golden_elixir",
+      "growth_enhancer",
+      "preservative",
+      "silver_elixir",
+      "tanning_agent",
+      "pot_appetite",
+      "pot_armor",
+      "pot_berserk",
+      "pot_damage",
+      "pot_heal",
+      "pot_heal_long",
+      "pot_mana",
+      "pot_speed",
+      "zombie_juise"
+    ],
+    "all_ordinary_products": [
+      "yellow_paint",
+      "green_paint",
+      "brown_paint",
+      "red_paint",
+      "d_green_paint",
+      "d_violet_paint",
+      "violet_paint",
+      "black_paint",
+      "blue_paint",
+      "white_paint",
+      "glue",
+      "acid",
+      "alkali",
+      "aromatizer",
+      "dark_elixir",
+      "energy_elixir",
+      "flask_green_l_plus",
+      "flavor_enhancer",
+      "freshener",
+      "golden_elixir",
+      "growth_enhancer",
+      "preservative",
+      "silver_elixir",
+      "tanning_agent",
+      "pot_appetite",
+      "pot_armor",
+      "pot_berserk",
+      "pot_damage",
+      "pot_heal",
+      "pot_heal_long",
+      "pot_mana",
+      "pot_speed",
+      "zombie_juise",
+      "taste_booster:alchemy_1_spice"
+    ],
+    "decorative_only": [
+      "yellow_paint",
+      "green_paint",
+      "brown_paint",
+      "red_paint",
+      "d_green_paint",
+      "d_violet_paint",
+      "violet_paint",
+      "blue_paint"
+    ],
+    "potions_only": [
+      "pot_appetite",
+      "pot_armor",
+      "pot_berserk",
+      "pot_damage",
+      "pot_heal",
+      "pot_heal_long",
+      "pot_mana",
+      "pot_speed"
+    ]
+  },
+  "minimums": {
+    "minimal_infrastructure": {
+      "science": 6,
+      "faith": 6,
+      "studies": 4,
+      "formula_requirement_sets": 3,
+      "blue_reward": 24
+    },
+    "infrastructure_and_farming": {
+      "science": 8,
+      "faith": 8,
+      "studies": 5,
+      "formula_requirement_sets": 4,
+      "blue_reward": 25
+    },
+    "practical_nonbuff": {
+      "science": 36,
+      "faith": 36,
+      "studies": 16,
+      "formula_requirement_sets": 3,
+      "blue_reward": 386
+    },
+    "practical_plus_native_spices": {
+      "science": 36,
+      "faith": 36,
+      "studies": 16,
+      "formula_requirement_sets": 3,
+      "blue_reward": 386
+    },
+    "all_research_products": {
+      "science": 44,
+      "faith": 44,
+      "studies": 19,
+      "formula_requirement_sets": 1,
+      "blue_reward": 389
+    },
+    "all_ordinary_products": {
+      "science": 44,
+      "faith": 44,
+      "studies": 19,
+      "formula_requirement_sets": 1,
+      "blue_reward": 389
+    },
+    "decorative_only": {
+      "science": 17,
+      "faith": 17,
+      "studies": 8,
+      "formula_requirement_sets": 1,
+      "blue_reward": 158
+    },
+    "potions_only": {
+      "science": 29,
+      "faith": 29,
+      "studies": 11,
+      "formula_requirement_sets": 1,
+      "blue_reward": 211
+    }
+  },
+  "simulation": [
+    {
+      "pool": "all_paid_item_studies",
+      "fraction": 0.6,
+      "population": 223,
+      "sample_count": 134,
+      "pool_science": 649,
+      "expected_science_exact": 389.982062780269,
+      "sample_mean": 389.94825,
+      "science_p10": 365,
+      "science_p90": 415,
+      "expected_reagents_exact": 28.192778680512788,
+      "mean_reagents": 28.181416666666667,
+      "all_practical_product_probability": 0.0036666666666666666,
+      "mean_practical_products": 11.942416666666666,
+      "all_reagents_probability": 0.0003333333333333333,
+      "repair_to_known_optimum_mean_upper": 404.3600833333333,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 391.302,
+        "infrastructure_and_farming": 391.64441666666664,
+        "practical_nonbuff": 401.5325,
+        "practical_plus_native_spices": 401.5865,
+        "all_ordinary_products": 404.27525
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.50775,
+        "infrastructure_and_farming": 0.41475,
+        "practical_nonbuff": 0.0036666666666666666,
+        "practical_plus_native_spices": 0.0033333333333333335,
+        "all_ordinary_products": 0.00075
+      },
+      "expected_blue_reward": 1580.3587443946187
+    },
+    {
+      "pool": "all_paid_item_studies",
+      "fraction": 0.65,
+      "population": 223,
+      "sample_count": 145,
+      "pool_science": 649,
+      "expected_science_exact": 421.99551569506724,
+      "sample_mean": 422.14816666666667,
+      "science_p10": 398,
+      "science_p90": 446,
+      "expected_reagents_exact": 29.29746127029166,
+      "mean_reagents": 29.3025,
+      "all_practical_product_probability": 0.010333333333333333,
+      "mean_practical_products": 12.726583333333334,
+      "all_reagents_probability": 0.0009166666666666666,
+      "repair_to_known_optimum_mean_upper": 434.77641666666665,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 423.3279166666667,
+        "infrastructure_and_farming": 423.57958333333335,
+        "practical_nonbuff": 432.1041666666667,
+        "practical_plus_native_spices": 432.1433333333333,
+        "all_ordinary_products": 434.44008333333335
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.575,
+        "infrastructure_and_farming": 0.49766666666666665,
+        "practical_nonbuff": 0.010333333333333333,
+        "practical_plus_native_spices": 0.009833333333333333,
+        "all_ordinary_products": 0.0025
+      },
+      "expected_blue_reward": 1710.0896860986547
+    },
+    {
+      "pool": "all_paid_item_studies",
+      "fraction": 0.7,
+      "population": 223,
+      "sample_count": 156,
+      "pool_science": 649,
+      "expected_science_exact": 454.00896860986546,
+      "sample_mean": 454.04366666666664,
+      "science_p10": 431,
+      "science_p90": 477,
+      "expected_reagents_exact": 30.31749449264617,
+      "mean_reagents": 30.313583333333334,
+      "all_practical_product_probability": 0.026583333333333334,
+      "mean_practical_products": 13.479166666666666,
+      "all_reagents_probability": 0.004083333333333333,
+      "repair_to_known_optimum_mean_upper": 464.8859166666667,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 455.01975,
+        "infrastructure_and_farming": 455.20216666666664,
+        "practical_nonbuff": 462.46791666666667,
+        "practical_plus_native_spices": 462.4911666666667,
+        "all_ordinary_products": 464.42333333333335
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.648,
+        "infrastructure_and_farming": 0.5876666666666667,
+        "practical_nonbuff": 0.026583333333333334,
+        "practical_plus_native_spices": 0.026,
+        "all_ordinary_products": 0.0115
+      },
+      "expected_blue_reward": 1839.8206278026908
+    },
+    {
+      "pool": "non_slime_item_studies",
+      "fraction": 0.6,
+      "population": 198,
+      "sample_count": 119,
+      "pool_science": 624,
+      "expected_science_exact": 375.030303030303,
+      "sample_mean": 375.26625,
+      "science_p10": 351,
+      "science_p90": 400,
+      "expected_reagents_exact": 28.197931087524996,
+      "mean_reagents": 28.20325,
+      "all_practical_product_probability": 0.0035833333333333333,
+      "mean_practical_products": 11.94775,
+      "all_reagents_probability": 0.0004166666666666667,
+      "repair_to_known_optimum_mean_upper": 389.59641666666664,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 376.61941666666667,
+        "infrastructure_and_farming": 376.95816666666667,
+        "practical_nonbuff": 386.80475,
+        "practical_plus_native_spices": 386.85825,
+        "all_ordinary_products": 389.5228333333333
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.5105833333333333,
+        "infrastructure_and_farming": 0.41983333333333334,
+        "practical_nonbuff": 0.0035833333333333333,
+        "practical_plus_native_spices": 0.0033333333333333335,
+        "all_ordinary_products": 0.0008333333333333334
+      },
+      "expected_blue_reward": 1574.0454545454545
+    },
+    {
+      "pool": "non_slime_item_studies",
+      "fraction": 0.65,
+      "population": 198,
+      "sample_count": 129,
+      "pool_science": 624,
+      "expected_science_exact": 406.5454545454545,
+      "sample_mean": 406.84766666666667,
+      "science_p10": 383,
+      "science_p90": 430,
+      "expected_reagents_exact": 29.327455116795218,
+      "mean_reagents": 29.326166666666666,
+      "all_practical_product_probability": 0.011833333333333333,
+      "mean_practical_products": 12.749916666666667,
+      "all_reagents_probability": 0.0011666666666666668,
+      "repair_to_known_optimum_mean_upper": 419.42358333333334,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 408.01183333333336,
+        "infrastructure_and_farming": 408.26208333333335,
+        "practical_nonbuff": 416.78566666666666,
+        "practical_plus_native_spices": 416.82325,
+        "all_ordinary_products": 419.10058333333336
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.5771666666666667,
+        "infrastructure_and_farming": 0.4994166666666667,
+        "practical_nonbuff": 0.011833333333333333,
+        "practical_plus_native_spices": 0.011166666666666667,
+        "all_ordinary_products": 0.0045
+      },
+      "expected_blue_reward": 1706.3181818181818
+    },
+    {
+      "pool": "non_slime_item_studies",
+      "fraction": 0.7,
+      "population": 198,
+      "sample_count": 139,
+      "pool_science": 624,
+      "expected_science_exact": 438.06060606060606,
+      "sample_mean": 437.68108333333333,
+      "science_p10": 415,
+      "science_p90": 461,
+      "expected_reagents_exact": 30.368348092967384,
+      "mean_reagents": 30.373083333333334,
+      "all_practical_product_probability": 0.030083333333333333,
+      "mean_practical_products": 13.52675,
+      "all_reagents_probability": 0.005666666666666667,
+      "repair_to_known_optimum_mean_upper": 448.424,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 438.62975,
+        "infrastructure_and_farming": 438.815,
+        "practical_nonbuff": 445.99991666666665,
+        "practical_plus_native_spices": 446.0275,
+        "all_ordinary_products": 447.96316666666667
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.66,
+        "infrastructure_and_farming": 0.5943333333333334,
+        "practical_nonbuff": 0.030083333333333333,
+        "practical_plus_native_spices": 0.0295,
+        "all_ordinary_products": 0.012333333333333333
+      },
+      "expected_blue_reward": 1838.590909090909
+    },
+    {
+      "pool": "non_slime_nontarget_item_studies",
+      "fraction": 0.6,
+      "population": 197,
+      "sample_count": 118,
+      "pool_science": 621,
+      "expected_science_exact": 371.9695431472081,
+      "sample_mean": 371.96175,
+      "science_p10": 347,
+      "science_p90": 397,
+      "expected_reagents_exact": 28.150823578162232,
+      "mean_reagents": 28.16175,
+      "all_practical_product_probability": 0.0035,
+      "mean_practical_products": 11.916,
+      "all_reagents_probability": 0.0005833333333333334,
+      "repair_to_known_optimum_mean_upper": 386.42516666666666,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 373.3138333333333,
+        "infrastructure_and_farming": 373.6550833333333,
+        "practical_nonbuff": 383.5853333333333,
+        "practical_plus_native_spices": 383.63758333333334,
+        "all_ordinary_products": 386.29783333333336
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.5068333333333334,
+        "infrastructure_and_farming": 0.4146666666666667,
+        "practical_nonbuff": 0.0035,
+        "practical_plus_native_spices": 0.003416666666666667,
+        "all_ordinary_products": 0.0010833333333333333
+      },
+      "expected_blue_reward": 1562.1522842639595
+    },
+    {
+      "pool": "non_slime_nontarget_item_studies",
+      "fraction": 0.65,
+      "population": 197,
+      "sample_count": 128,
+      "pool_science": 621,
+      "expected_science_exact": 403.492385786802,
+      "sample_mean": 403.663,
+      "science_p10": 380,
+      "science_p90": 427,
+      "expected_reagents_exact": 29.28952497828495,
+      "mean_reagents": 29.277916666666666,
+      "all_practical_product_probability": 0.011,
+      "mean_practical_products": 12.726166666666666,
+      "all_reagents_probability": 0.00125,
+      "repair_to_known_optimum_mean_upper": 416.3395,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 404.8466666666667,
+        "infrastructure_and_farming": 405.10175,
+        "practical_nonbuff": 413.6959166666667,
+        "practical_plus_native_spices": 413.73316666666665,
+        "all_ordinary_products": 416.052
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.5714166666666667,
+        "infrastructure_and_farming": 0.494,
+        "practical_nonbuff": 0.011,
+        "practical_plus_native_spices": 0.010333333333333333,
+        "all_ordinary_products": 0.00325
+      },
+      "expected_blue_reward": 1694.5380710659897
+    },
+    {
+      "pool": "non_slime_nontarget_item_studies",
+      "fraction": 0.7,
+      "population": 197,
+      "sample_count": 138,
+      "pool_science": 621,
+      "expected_science_exact": 435.01522842639594,
+      "sample_mean": 434.9150833333333,
+      "science_p10": 412,
+      "science_p90": 458,
+      "expected_reagents_exact": 30.338497398178326,
+      "mean_reagents": 30.347,
+      "all_practical_product_probability": 0.027083333333333334,
+      "mean_practical_products": 13.516583333333333,
+      "all_reagents_probability": 0.005083333333333333,
+      "repair_to_known_optimum_mean_upper": 445.6623333333333,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 435.87,
+        "infrastructure_and_farming": 436.0545833333333,
+        "practical_nonbuff": 443.231,
+        "practical_plus_native_spices": 443.2554166666667,
+        "all_ordinary_products": 445.19825
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.6548333333333334,
+        "infrastructure_and_farming": 0.5915833333333333,
+        "practical_nonbuff": 0.027083333333333334,
+        "practical_plus_native_spices": 0.02666666666666667,
+        "all_ordinary_products": 0.011
+      },
+      "expected_blue_reward": 1826.9238578680204
+    },
+    {
+      "pool": "non_slime_alchemy_sources",
+      "fraction": 0.6,
+      "population": 38,
+      "sample_count": 23,
+      "pool_science": 97,
+      "expected_science_exact": 58.71052631578947,
+      "sample_mean": 58.638416666666664,
+      "science_p10": 51,
+      "science_p90": 66,
+      "expected_reagents_exact": 28.392010431484117,
+      "mean_reagents": 28.423583333333333,
+      "all_practical_product_probability": 0.0005833333333333334,
+      "mean_practical_products": 12.087833333333334,
+      "all_reagents_probability": 0,
+      "repair_to_known_optimum_mean_upper": 72.85175,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 59.96991666666667,
+        "infrastructure_and_farming": 60.267583333333334,
+        "practical_nonbuff": 70.00166666666667,
+        "practical_plus_native_spices": 70.05133333333333,
+        "all_ordinary_products": 72.64583333333333
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.5119166666666667,
+        "infrastructure_and_farming": 0.4225833333333333,
+        "practical_nonbuff": 0.0005833333333333334,
+        "practical_plus_native_spices": 0.0005,
+        "all_ordinary_products": 0
+      },
+      "expected_blue_reward": 319.57894736842104
+    },
+    {
+      "pool": "non_slime_alchemy_sources",
+      "fraction": 0.65,
+      "population": 38,
+      "sample_count": 25,
+      "pool_science": 97,
+      "expected_science_exact": 63.81578947368421,
+      "sample_mean": 63.85341666666667,
+      "science_p10": 56,
+      "science_p90": 71,
+      "expected_reagents_exact": 29.547889995258416,
+      "mean_reagents": 29.532833333333333,
+      "all_practical_product_probability": 0.00475,
+      "mean_practical_products": 12.901916666666667,
+      "all_reagents_probability": 8.333333333333333e-05,
+      "repair_to_known_optimum_mean_upper": 76.13633333333334,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 64.9675,
+        "infrastructure_and_farming": 65.20533333333333,
+        "practical_nonbuff": 73.50991666666667,
+        "practical_plus_native_spices": 73.54008333333333,
+        "all_ordinary_products": 75.7525
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.5964166666666667,
+        "infrastructure_and_farming": 0.5128333333333334,
+        "practical_nonbuff": 0.00475,
+        "practical_plus_native_spices": 0.004416666666666667,
+        "all_ordinary_products": 0.0006666666666666666
+      },
+      "expected_blue_reward": 347.3684210526316
+    },
+    {
+      "pool": "non_slime_alchemy_sources",
+      "fraction": 0.7,
+      "population": 38,
+      "sample_count": 27,
+      "pool_science": 97,
+      "expected_science_exact": 68.92105263157895,
+      "sample_mean": 68.84875,
+      "science_p10": 61,
+      "science_p90": 76,
+      "expected_reagents_exact": 30.607041251778092,
+      "mean_reagents": 30.588166666666666,
+      "all_practical_product_probability": 0.017,
+      "mean_practical_products": 13.686416666666666,
+      "all_reagents_probability": 0.0013333333333333333,
+      "repair_to_known_optimum_mean_upper": 79.29075,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 69.773,
+        "infrastructure_and_farming": 69.9455,
+        "practical_nonbuff": 76.87325,
+        "practical_plus_native_spices": 76.89225,
+        "all_ordinary_products": 78.74266666666666
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.6693333333333333,
+        "infrastructure_and_farming": 0.6055833333333334,
+        "practical_nonbuff": 0.017,
+        "practical_plus_native_spices": 0.015666666666666666,
+        "all_ordinary_products": 0.00475
+      },
+      "expected_blue_reward": 375.1578947368421
+    },
+    {
+      "pool": "common_alchemy_sources",
+      "fraction": 0.6,
+      "population": 33,
+      "sample_count": 20,
+      "pool_science": 65,
+      "expected_science_exact": 39.3939393939394,
+      "sample_mean": 39.395,
+      "science_p10": 36,
+      "science_p90": 43,
+      "expected_reagents_exact": 26.268817204301076,
+      "mean_reagents": 26.285416666666666,
+      "all_practical_product_probability": 0,
+      "mean_practical_products": 10.119416666666666,
+      "all_reagents_probability": 0,
+      "repair_to_known_optimum_mean_upper": 62.664833333333334,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 40.71808333333333,
+        "infrastructure_and_farming": 41.0455,
+        "practical_nonbuff": 59.847833333333334,
+        "practical_plus_native_spices": 59.896166666666666,
+        "all_ordinary_products": 63.23525
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.5159166666666667,
+        "infrastructure_and_farming": 0.41541666666666666,
+        "practical_nonbuff": 0,
+        "practical_plus_native_spices": 0,
+        "all_ordinary_products": 0
+      },
+      "expected_blue_reward": 135.15151515151516
+    },
+    {
+      "pool": "common_alchemy_sources",
+      "fraction": 0.65,
+      "population": 33,
+      "sample_count": 21,
+      "pool_science": 65,
+      "expected_science_exact": 41.36363636363636,
+      "sample_mean": 41.34491666666667,
+      "science_p10": 38,
+      "science_p90": 45,
+      "expected_reagents_exact": 26.871700879765395,
+      "mean_reagents": 26.878666666666668,
+      "all_practical_product_probability": 0,
+      "mean_practical_products": 10.457083333333333,
+      "all_reagents_probability": 0,
+      "repair_to_known_optimum_mean_upper": 63.98591666666667,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 42.55591666666667,
+        "infrastructure_and_farming": 42.816833333333335,
+        "practical_nonbuff": 61.25525,
+        "practical_plus_native_spices": 61.293,
+        "all_ordinary_products": 64.431
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.5588333333333333,
+        "infrastructure_and_farming": 0.47191666666666665,
+        "practical_nonbuff": 0,
+        "practical_plus_native_spices": 0,
+        "all_ordinary_products": 0
+      },
+      "expected_blue_reward": 141.9090909090909
+    },
+    {
+      "pool": "common_alchemy_sources",
+      "fraction": 0.7,
+      "population": 33,
+      "sample_count": 23,
+      "pool_science": 65,
+      "expected_science_exact": 45.303030303030305,
+      "sample_mean": 45.3085,
+      "science_p10": 42,
+      "science_p90": 49,
+      "expected_reagents_exact": 27.985459433040077,
+      "mean_reagents": 27.992416666666667,
+      "all_practical_product_probability": 0,
+      "mean_practical_products": 11.0655,
+      "all_reagents_probability": 0,
+      "repair_to_known_optimum_mean_upper": 66.66183333333333,
+      "with_optimal_catchup_mean": {
+        "minimal_infrastructure": 46.25825,
+        "infrastructure_and_farming": 46.43725,
+        "practical_nonbuff": 64.20391666666667,
+        "practical_plus_native_spices": 64.22208333333333,
+        "all_ordinary_products": 66.80433333333333
+      },
+      "group_success": {
+        "minimal_infrastructure": 0.6569166666666667,
+        "infrastructure_and_farming": 0.5903333333333334,
+        "practical_nonbuff": 0,
+        "practical_plus_native_spices": 0,
+        "all_ordinary_products": 0
+      },
+      "expected_blue_reward": 155.42424242424244
+    }
+  ],
+  "sequential_guided": {
+    "minimal_infrastructure": {
+      "trials": 3000,
+      "min": 6,
+      "median": 6.0,
+      "p90": 6,
+      "max": 6,
+      "mean_studies": 4
+    },
+    "infrastructure_and_farming": {
+      "trials": 3000,
+      "min": 8,
+      "median": 9.0,
+      "p90": 9,
+      "max": 9,
+      "mean_studies": 5.500333333333334
+    },
+    "practical_nonbuff": {
+      "trials": 3000,
+      "min": 36,
+      "median": 37.0,
+      "p90": 37,
+      "max": 39,
+      "mean_studies": 16.580666666666666
+    },
+    "all_ordinary_products": {
+      "trials": 3000,
+      "min": 44,
+      "median": 45.0,
+      "p90": 46,
+      "max": 47,
+      "mean_studies": 19.898
+    }
+  },
+  "verification": {
+    "bruteforce_checks": 80,
+    "source_path_invariants": 8,
+    "expected_cost_max_error": 0.37952272727272884,
+    "expected_coverage_max_error": 0.03157290184921635
+  },
+  "product_classification": [
+    {
+      "id": "yellow_paint",
+      "name": "Желтая краска",
+      "role": "Оформление комнаты",
+      "stage_estimate": "По доступности соответствующей отделки; не цена по календарю",
+      "decorative": true,
+      "practical": false,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "green_paint",
+      "name": "Зелёная краска",
+      "role": "Оформление комнаты",
+      "stage_estimate": "По доступности соответствующей отделки; не цена по календарю",
+      "decorative": true,
+      "practical": false,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "brown_paint",
+      "name": "Коричневая краска",
+      "role": "Оформление комнаты",
+      "stage_estimate": "По доступности соответствующей отделки; не цена по календарю",
+      "decorative": true,
+      "practical": false,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "red_paint",
+      "name": "Красная краска",
+      "role": "Оформление комнаты",
+      "stage_estimate": "По доступности соответствующей отделки; не цена по календарю",
+      "decorative": true,
+      "practical": false,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "d_green_paint",
+      "name": "Тёмно-зелёная краска",
+      "role": "Оформление комнаты",
+      "stage_estimate": "По доступности соответствующей отделки; не цена по календарю",
+      "decorative": true,
+      "practical": false,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "d_violet_paint",
+      "name": "Тёмно-фиолетовая краска",
+      "role": "Оформление комнаты",
+      "stage_estimate": "По доступности соответствующей отделки; не цена по календарю",
+      "decorative": true,
+      "practical": false,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "violet_paint",
+      "name": "Фиолетовая краска",
+      "role": "Оформление комнаты",
+      "stage_estimate": "По доступности соответствующей отделки; не цена по календарю",
+      "decorative": true,
+      "practical": false,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "black_paint",
+      "name": "Черная краска",
+      "role": "Письменные принадлежности, чернила",
+      "stage_estimate": "Раннее–среднее; Writing supplies",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "blue_paint",
+      "name": "Голубая краска",
+      "role": "Оформление комнаты",
+      "stage_estimate": "По доступности соответствующей отделки; не цена по календарю",
+      "decorative": true,
+      "practical": false,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "white_paint",
+      "name": "Белая краска",
+      "role": "Массовая бумага, улучшенные свечи",
+      "stage_estimate": "Раннее–среднее; Paper production / Light of faith",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "glue",
+      "name": "Клей",
+      "role": "Инъекция клея, оформление комнаты",
+      "stage_estimate": "Среднее; Embalm 2; часть декоративных применений может быть раньше",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 2,
+      "compensation_band_science": 3,
+      "moderate_band_science": 4,
+      "old_anchor_band_science": 8
+    },
+    {
+      "id": "acid",
+      "name": "Кислота",
+      "role": "Очистка дневника Звездочёта; инъекция кислоты",
+      "stage_estimate": "Среднее; сюжет дневника / Embalm 1",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 2,
+      "compensation_band_science": 3,
+      "moderate_band_science": 4,
+      "old_anchor_band_science": 8
+    },
+    {
+      "id": "alkali",
+      "name": "Щелочь",
+      "role": "Инъекция щёлочи",
+      "stage_estimate": "Среднее; Embalm 1",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 2,
+      "compensation_band_science": 3,
+      "moderate_band_science": 4,
+      "old_anchor_band_science": 8
+    },
+    {
+      "id": "aromatizer",
+      "name": "Ароматизатор",
+      "role": "Благовония II, производимые духи",
+      "stage_estimate": "Среднее; Pheromones; сюжетные духи можно получить отдельно",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 2,
+      "compensation_band_science": 3,
+      "moderate_band_science": 4,
+      "old_anchor_band_science": 8
+    },
+    {
+      "id": "dark_elixir",
+      "name": "Темный эликсир",
+      "role": "Тёмная инъекция",
+      "stage_estimate": "Позднее углубление бальзамирования; Embalm 3",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 4,
+      "compensation_band_science": 5,
+      "moderate_band_science": 6,
+      "old_anchor_band_science": 16
+    },
+    {
+      "id": "energy_elixir",
+      "name": "Эликсир энергии",
+      "role": "Ускоряющие удобрения I / II",
+      "stage_estimate": "Раннее–среднее; Simple / Complex fertilizers",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "flask_green_l_plus",
+      "name": "Бальзамический раствор",
+      "role": "Инъекция реставрации",
+      "stage_estimate": "Среднее; Embalm 2",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 2,
+      "compensation_band_science": 3,
+      "moderate_band_science": 4,
+      "old_anchor_band_science": 8
+    },
+    {
+      "id": "flavor_enhancer",
+      "name": "Усилитель вкуса",
+      "role": "Удобрение качества II",
+      "stage_estimate": "Среднее; Complex fertilizers",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 2,
+      "compensation_band_science": 3,
+      "moderate_band_science": 4,
+      "old_anchor_band_science": 8
+    },
+    {
+      "id": "freshener",
+      "name": "Освежитель",
+      "role": "Благовония I, розовое мыло",
+      "stage_estimate": "Раннее–среднее; Smell of faith",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "golden_elixir",
+      "name": "Золотой эликсир",
+      "role": "Золотая инъекция",
+      "stage_estimate": "Позднее углубление бальзамирования; Embalm 3",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 4,
+      "compensation_band_science": 5,
+      "moderate_band_science": 6,
+      "old_anchor_band_science": 16
+    },
+    {
+      "id": "growth_enhancer",
+      "name": "Усилитель роста",
+      "role": "Удобрение качества I",
+      "stage_estimate": "Раннее–среднее; Simple fertilizers",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "preservative",
+      "name": "Консервант",
+      "role": "Инъекция сохранности",
+      "stage_estimate": "Среднее; Embalm 2",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 2,
+      "compensation_band_science": 3,
+      "moderate_band_science": 4,
+      "old_anchor_band_science": 8
+    },
+    {
+      "id": "silver_elixir",
+      "name": "Серебряный Эликсир",
+      "role": "Серебряная инъекция",
+      "stage_estimate": "Позднее углубление бальзамирования; Embalm 3",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 4,
+      "compensation_band_science": 5,
+      "moderate_band_science": 6,
+      "old_anchor_band_science": 16
+    },
+    {
+      "id": "tanning_agent",
+      "name": "Дубильная жидкость",
+      "role": "Твёрдые обложки, сумки",
+      "stage_estimate": "Среднее–позднее; Books / отдельные технологии сумок",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 2,
+      "compensation_band_science": 3,
+      "moderate_band_science": 4,
+      "old_anchor_band_science": 8
+    },
+    {
+      "id": "pot_appetite",
+      "name": "Эликсир пищеварения",
+      "role": "Необязательный питьевой эффект / боевой комфорт",
+      "stage_estimate": "После визита в торговлю Клото, открытый торговый уровень 2",
+      "decorative": false,
+      "practical": false,
+      "low_band_science": 2,
+      "compensation_band_science": 3,
+      "moderate_band_science": 4,
+      "old_anchor_band_science": 8
+    },
+    {
+      "id": "pot_armor",
+      "name": "Эликсир защиты",
+      "role": "Необязательный питьевой эффект / боевой комфорт",
+      "stage_estimate": "После визита в торговлю Клото, открытый торговый уровень 3",
+      "decorative": false,
+      "practical": false,
+      "low_band_science": 4,
+      "compensation_band_science": 5,
+      "moderate_band_science": 6,
+      "old_anchor_band_science": 16
+    },
+    {
+      "id": "pot_berserk",
+      "name": "Эликсир берсерка",
+      "role": "Необязательный питьевой эффект / боевой комфорт",
+      "stage_estimate": "После визита в торговлю Клото, открытый торговый уровень 3",
+      "decorative": false,
+      "practical": false,
+      "low_band_science": 4,
+      "compensation_band_science": 5,
+      "moderate_band_science": 6,
+      "old_anchor_band_science": 16
+    },
+    {
+      "id": "pot_damage",
+      "name": "Боевой эликсир усиления урона",
+      "role": "Необязательный питьевой эффект / боевой комфорт",
+      "stage_estimate": "После визита в торговлю Клото, открытый торговый уровень 2",
+      "decorative": false,
+      "practical": false,
+      "low_band_science": 2,
+      "compensation_band_science": 3,
+      "moderate_band_science": 4,
+      "old_anchor_band_science": 8
+    },
+    {
+      "id": "pot_heal",
+      "name": "Эликсир исцеления",
+      "role": "Необязательный питьевой эффект / боевой комфорт",
+      "stage_estimate": "После визита в торговлю Клото, открытый торговый уровень 1",
+      "decorative": false,
+      "practical": false,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "pot_heal_long",
+      "name": "Эликсир восстановления",
+      "role": "Необязательный питьевой эффект / боевой комфорт",
+      "stage_estimate": "После визита в торговлю Клото, открытый торговый уровень 3",
+      "decorative": false,
+      "practical": false,
+      "low_band_science": 2,
+      "compensation_band_science": 3,
+      "moderate_band_science": 4,
+      "old_anchor_band_science": 8
+    },
+    {
+      "id": "pot_mana",
+      "name": "Эликсир энергии",
+      "role": "Необязательный питьевой эффект / боевой комфорт",
+      "stage_estimate": "После визита в торговлю Клото, открытый торговый уровень 1",
+      "decorative": false,
+      "practical": false,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    },
+    {
+      "id": "pot_speed",
+      "name": "Эликсир скорости",
+      "role": "Необязательный питьевой эффект / боевой комфорт",
+      "stage_estimate": "После визита в торговлю Клото, открытый торговый уровень 2",
+      "decorative": false,
+      "practical": false,
+      "low_band_science": 2,
+      "compensation_band_science": 3,
+      "moderate_band_science": 4,
+      "old_anchor_band_science": 8
+    },
+    {
+      "id": "zombie_juise",
+      "name": "Экстракт зомби",
+      "role": "Создание зомби",
+      "stage_estimate": "Раннее–среднее; Second chance",
+      "decorative": false,
+      "practical": true,
+      "low_band_science": 1,
+      "compensation_band_science": 1,
+      "moderate_band_science": 2,
+      "old_anchor_band_science": 4
+    }
+  ],
+  "price_model_totals": {
+    "practical_17": {
+      "n": 17,
+      "uniform_1": 17,
+      "uniform_2": 34,
+      "uniform_3": 51,
+      "uniform_4": 68,
+      "low_band_science": 34,
+      "compensation_band_science": 45,
+      "moderate_band_science": 62,
+      "old_anchor_band_science": 136
+    },
+    "minimal_5": {
+      "n": 5,
+      "uniform_1": 5,
+      "uniform_2": 10,
+      "uniform_3": 15,
+      "uniform_4": 20,
+      "low_band_science": 6,
+      "compensation_band_science": 7,
+      "moderate_band_science": 12,
+      "old_anchor_band_science": 24
+    },
+    "farming_6": {
+      "n": 6,
+      "uniform_1": 6,
+      "uniform_2": 12,
+      "uniform_3": 18,
+      "uniform_4": 24,
+      "low_band_science": 7,
+      "compensation_band_science": 8,
+      "moderate_band_science": 14,
+      "old_anchor_band_science": 28
+    },
+    "all_33": {
+      "n": 33,
+      "uniform_1": 33,
+      "uniform_2": 66,
+      "uniform_3": 99,
+      "uniform_4": 132,
+      "low_band_science": 60,
+      "compensation_band_science": 77,
+      "moderate_band_science": 110,
+      "old_anchor_band_science": 240
+    }
+  },
+  "paper_anchors": {
+    "science_per_sheet": 2,
+    "inquisitor_flyers": 10,
+    "paper_for_inquisitor_flyers": 2,
+    "poet_paper": 10,
+    "poet_ink": 1,
+    "marketing_flyers_per_campaign": 10,
+    "paper_per_campaign": 2,
+    "paper_for_four_campaigns": 8,
+    "astrologer_paper_base_price_silver": 1,
+    "astrologer_paper_base_stock": 2
+  },
+  "limitations": [
+    "Product stages are design estimates grounded in consumer technology or trade tier, not measured player day/progress.",
+    "All potentially relevant resources and technologies are treated as available; exact minima exclude acquisition, production, build costs, output quantities and formula-discovery experimentation.",
+    "The common-source catchup scenario may add later rare sources outside the initially sampled common pool.",
+    "No stock-specific/dynamic purchase price or paper income rate is inferred from authored base values.",
+    "Uniform random populations are scenarios, not observed player behavior.",
+    "Additional red/green/blue rewards of random item studies are not monetized into an equivalent research fee.",
+    "No ingredient identity, recipe ID or vanilla mixture is included."
+  ],
+  "provenance": {
+    "private_model_script": "work/palette/economics-model-private.py",
+    "private_model_script_sha256": "78719e21409cac2f7c01444825cee8a6797b3f09e422f57c5f4fe6e81455c1f3",
+    "private_projection": "work/palette/economics-model-private.json",
+    "private_projection_sha256": "c7928400c43f6e977b566be1a2c7460312cd3a632068c5d7d78a97216a05093c"
+  },
+  "late_coverage_exact": [
+    {
+      "studied": 38,
+      "population": 38,
+      "enumerated_cases": 1,
+      "expected_science": 97.0,
+      "all_practical_source_coverage_probability": 1.0,
+      "all_reagents_probability": 1.0
+    },
+    {
+      "studied": 37,
+      "population": 38,
+      "enumerated_cases": 38,
+      "expected_science": 94.44736842105263,
+      "all_practical_source_coverage_probability": 0.7894736842105263,
+      "all_reagents_probability": 0.6842105263157895
+    },
+    {
+      "studied": 36,
+      "population": 38,
+      "enumerated_cases": 703,
+      "expected_science": 91.89473684210526,
+      "all_practical_source_coverage_probability": 0.6102418207681366,
+      "all_reagents_probability": 0.4523470839260313
+    },
+    {
+      "studied": 35,
+      "population": 38,
+      "enumerated_cases": 8436,
+      "expected_science": 89.34210526315789,
+      "all_practical_source_coverage_probability": 0.4611190137505927,
+      "all_reagents_probability": 0.2876955903271693
+    }
+  ],
+  "monster_jelly_sensitivity": {
+    "source_mode": "monster_jelly allowed; failed-experiment goo excluded",
+    "scope": {
+      "paid_products": 33,
+      "ordinary_products": 34,
+      "ordinary_formulas": 43,
+      "reagents": 35,
+      "free_reagents": 6,
+      "study_required_reagents": 29,
+      "provider_materials": 42,
+      "all_alchemy_source_materials": 42
+    },
+    "material_pool": {
+      "n": 42,
+      "science_total": 101,
+      "faith_total": 101
+    },
+    "minimums": {
+      "minimal_infrastructure": {
+        "science": 4,
+        "faith": 4,
+        "studies": 4,
+        "formula_requirement_sets": 3,
+        "blue_reward": 24
+      },
+      "infrastructure_and_farming": {
+        "science": 6,
+        "faith": 6,
+        "studies": 6,
+        "formula_requirement_sets": 4,
+        "blue_reward": 26
+      },
+      "practical_nonbuff": {
+        "science": 24,
+        "faith": 24,
+        "studies": 15,
+        "formula_requirement_sets": 3,
+        "blue_reward": 185
+      },
+      "practical_plus_native_spices": {
+        "science": 24,
+        "faith": 24,
+        "studies": 15,
+        "formula_requirement_sets": 3,
+        "blue_reward": 185
+      },
+      "all_research_products": {
+        "science": 29,
+        "faith": 29,
+        "studies": 18,
+        "formula_requirement_sets": 1,
+        "blue_reward": 188
+      },
+      "all_ordinary_products": {
+        "science": 29,
+        "faith": 29,
+        "studies": 18,
+        "formula_requirement_sets": 1,
+        "blue_reward": 188
+      },
+      "decorative_only": {
+        "science": 17,
+        "faith": 17,
+        "studies": 8,
+        "formula_requirement_sets": 1,
+        "blue_reward": 158
+      },
+      "potions_only": {
+        "science": 14,
+        "faith": 14,
+        "studies": 10,
+        "formula_requirement_sets": 1,
+        "blue_reward": 10
+      }
+    },
+    "simulation_relevant_material_pool": [
+      {
+        "pool": "non_slime_alchemy_sources",
+        "fraction": 0.6,
+        "population": 42,
+        "sample_count": 25,
+        "pool_science": 101,
+        "expected_science_exact": 60.11904761904762,
+        "sample_mean": 60.061416666666666,
+        "science_p10": 52,
+        "science_p90": 68,
+        "expected_reagents_exact": 29.975029036004646,
+        "mean_reagents": 29.99425,
+        "all_practical_product_probability": 0.009416666666666667,
+        "mean_practical_products": 13.317916666666667,
+        "all_reagents_probability": 0.00025,
+        "repair_to_known_optimum_mean_upper": 69.74475,
+        "with_optimal_catchup_mean": {
+          "minimal_infrastructure": 60.37716666666667,
+          "infrastructure_and_farming": 60.45308333333333,
+          "practical_nonbuff": 66.08216666666667,
+          "practical_plus_native_spices": 66.13408333333334,
+          "all_ordinary_products": 66.968
+        },
+        "group_success": {
+          "minimal_infrastructure": 0.7065,
+          "infrastructure_and_farming": 0.6483333333333333,
+          "practical_nonbuff": 0.009416666666666667,
+          "practical_plus_native_spices": 0.008416666666666666,
+          "all_ordinary_products": 0.002916666666666667
+        },
+        "expected_blue_reward": 316.6666666666667
+      },
+      {
+        "pool": "non_slime_alchemy_sources",
+        "fraction": 0.65,
+        "population": 42,
+        "sample_count": 27,
+        "pool_science": 101,
+        "expected_science_exact": 64.92857142857143,
+        "sample_mean": 64.87983333333334,
+        "science_p10": 57,
+        "science_p90": 72,
+        "expected_reagents_exact": 30.945993031358885,
+        "mean_reagents": 30.933583333333335,
+        "all_practical_product_probability": 0.025166666666666667,
+        "mean_practical_products": 14.033833333333334,
+        "all_reagents_probability": 0.0005833333333333334,
+        "repair_to_known_optimum_mean_upper": 73.41716666666666,
+        "with_optimal_catchup_mean": {
+          "minimal_infrastructure": 65.11108333333334,
+          "infrastructure_and_farming": 65.16066666666667,
+          "practical_nonbuff": 69.943,
+          "practical_plus_native_spices": 69.978,
+          "all_ordinary_products": 70.62608333333333
+        },
+        "group_success": {
+          "minimal_infrastructure": 0.7800833333333334,
+          "infrastructure_and_farming": 0.7381666666666666,
+          "practical_nonbuff": 0.025166666666666667,
+          "practical_plus_native_spices": 0.02325,
+          "all_ordinary_products": 0.0095
+        },
+        "expected_blue_reward": 342.0
+      },
+      {
+        "pool": "non_slime_alchemy_sources",
+        "fraction": 0.7,
+        "population": 42,
+        "sample_count": 29,
+        "pool_science": 101,
+        "expected_science_exact": 69.73809523809524,
+        "sample_mean": 69.74775,
+        "science_p10": 62,
+        "science_p90": 77,
+        "expected_reagents_exact": 31.803600464576075,
+        "mean_reagents": 31.80675,
+        "all_practical_product_probability": 0.06275,
+        "mean_practical_products": 14.68725,
+        "all_reagents_probability": 0.00925,
+        "repair_to_known_optimum_mean_upper": 77.18916666666667,
+        "with_optimal_catchup_mean": {
+          "minimal_infrastructure": 69.90341666666667,
+          "infrastructure_and_farming": 69.93258333333333,
+          "practical_nonbuff": 73.9055,
+          "practical_plus_native_spices": 73.92733333333334,
+          "all_ordinary_products": 74.4025
+        },
+        "group_success": {
+          "minimal_infrastructure": 0.8480833333333333,
+          "infrastructure_and_farming": 0.8220833333333334,
+          "practical_nonbuff": 0.06275,
+          "practical_plus_native_spices": 0.05991666666666667,
+          "all_ordinary_products": 0.034583333333333334
+        },
+        "expected_blue_reward": 367.3333333333333
+      }
+    ],
+    "sequential_guided": {
+      "minimal_infrastructure": {
+        "trials": 3000,
+        "min": 4,
+        "median": 4.0,
+        "p90": 4,
+        "max": 4,
+        "mean_studies": 4
+      },
+      "infrastructure_and_farming": {
+        "trials": 3000,
+        "min": 6,
+        "median": 6.0,
+        "p90": 6,
+        "max": 6,
+        "mean_studies": 6
+      },
+      "practical_nonbuff": {
+        "trials": 3000,
+        "min": 24,
+        "median": 25.0,
+        "p90": 25,
+        "max": 27,
+        "mean_studies": 15.651666666666667
+      },
+      "all_ordinary_products": {
+        "trials": 3000,
+        "min": 29,
+        "median": 30.0,
+        "p90": 30,
+        "max": 31,
+        "mean_studies": 18.458666666666666
+      }
+    },
+    "verification": {
+      "bruteforce_checks": 80,
+      "source_path_invariants": 8,
+      "expected_cost_max_error": 0.3862251243780861,
+      "expected_coverage_max_error": 0.040712046204621544
+    }
+  }
+}

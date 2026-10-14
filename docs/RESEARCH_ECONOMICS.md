@@ -2,6 +2,8 @@
 
 Status: evidence and proposals for discussion, not adopted prices or implementation. Installed immutable 0.1.40 remains unchanged. PRODUCT_REQUIREMENTS.md owns accepted semantics; DESIGN.md points here for the economics workstream.
 
+Quantitative follow-up is complete in [RESEARCH_ECONOMICS_CALCULATIONS.md](RESEARCH_ECONOMICS_CALCULATIONS.md) and [RESEARCH_ECONOMICS_RESULTS.json](RESEARCH_ECONOMICS_RESULTS.json): 33-product classification, paper quest/trade anchors, exact directed study costs and 60–70% random-study sensitivity. The original 4/8/16 anchors below are historical examples, superseded for the next comparison by uniform 2 science versus fixed 1/2/4 groups. Neither is adopted; current runtime costs and acceptance remain unchanged.
+
 ## Question and user direction
 
 How should optional target-directed formula knowledge be priced when vanilla material study, equipment and production remain payable, and an external wiki supplies the information without an in-game fee?
