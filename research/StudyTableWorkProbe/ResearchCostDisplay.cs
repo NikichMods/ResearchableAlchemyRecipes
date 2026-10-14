@@ -7,6 +7,30 @@ namespace NikichMods.Research
 {
     internal static class ResearchCostDisplay
     {
+        [HarmonyPatch(typeof(CraftItemGUI), "Redraw")]
+        private static class PriceCell
+        {
+            private static void Prefix(CraftItemGUI __instance)
+            {
+                var previous = __instance.GetComponent<ResearchSciencePriceCell>();
+                if (previous != null) previous.Restore();
+            }
+            [HarmonyPriority(Priority.Last)]
+            private static void Postfix(CraftItemGUI __instance)
+            {
+                var craft = __instance.current_craft;
+                if (!StudyTableWorkProbe.enabledProbe || craft == null || !SourceResearch.IsJob(craft.id) ||
+                    __instance.txt_spend == null) return;
+                var table = __instance.craft_gui_interface.GetCrafteryWGO();
+                if (ReferenceEquals(table, null) || table.obj_id != "mf_alchemy_survey") return;
+                var fee = craft.needs_from_wgo.Find(item => item.id == "science");
+                if (fee == null) return;
+                var cell = __instance.GetComponent<ResearchSciencePriceCell>();
+                if (cell == null) cell = __instance.gameObject.AddComponent<ResearchSciencePriceCell>();
+                cell.Show(__instance.txt_spend, fee.value, table.data.GetItemsCount("science", true));
+            }
+        }
+
         internal static string Format(int price, int available, string nativeText)
         {
             if (price <= 0) return nativeText;

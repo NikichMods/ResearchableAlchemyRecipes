@@ -1,5 +1,9 @@
 # Study Table Work Probe
 
+## 0.1.48 larger native science atom
+
+Use the game's science item sprite at 32x32 in the existing right cost backing, with a native-styled count at bottom right. Only registered study-table research rows use this owned view; restore the original spend label before native redraw/reuse. Retain exact fee/shortage data and the accepted QueueEverything ordering, continuous notice pages and tab restoration. No new assets, strings, window or payment changes. Existing suites pass; icon/count size and table reopen remain the installed visual check.
+
 ## 0.1.47 QueueEverything price ordering and tab restoration
 
 Run the scoped science spend postfix after QueueEverything's result replacement. A regression using the actual installed foreign postfix reproduces 0.1.46's empty price and checks ordering, shortage color, unrelated crafts/stations and unpatch baseline. Tab restoration uses the exact snapshot windows even if GUIElements.me is gone, and clears snapshots of destroyed windows. Continuous paging is accepted from 0.1.46 and unchanged. Price visibility and ordinary close/teardown logs remain the narrow installed check; no research payment or recipe replay is needed.

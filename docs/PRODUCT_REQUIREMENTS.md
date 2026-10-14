@@ -86,6 +86,8 @@ The user explicitly chooses not to implement a separate research-cancel button (
 
 ## Research-availability notifications
 
+Science-price visual clarification (2026-10-15): user asks for the native science item/atom icon to occupy a substantial part of the existing right-hand cost square, using the neighboring material-study cell as the visual reference. Preserve readable exact fee and insufficient-stock indication; no faith fee, payment or row-size change is adopted. The earlier small inline science symbol is no longer the desired appearance.
+
 User clarification (2026-10-15): show the science icon and exact upfront fee in the research list before starting work; insufficient table science should be apparent. This adds presentation, not a second payment or a change to the adopted tariff. The user also requests eliminating the reported world-screen flash between notice pages if simple/reliable: prefer updating existing native rows in the still-open owned window, retaining deferred input handling, source revalidation, safe initial delivery, foreign-window ownership and displayed-only flags. Do not add animation/overlay infrastructure merely to hide the gap.
 
 - The user wants a player-visible notification when new research topics become available, identifying the products together. Opening Clotho trade is a representative event; the broader source families must be considered too. Do not require a study-table visit merely to learn that new topics exist.
