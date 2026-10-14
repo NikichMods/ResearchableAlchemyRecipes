@@ -32,7 +32,7 @@ namespace NikichMods.Research
                 {
                     cell = new ResearchSciencePriceCell(); cells.Add(row, cell);
                 }
-                cell.Show(row.txt_spend, fee.value, table.data.GetItemsCount("science", true));
+                cell.Show(row, fee.value, table.data.GetItemsCount("science", true));
                 shown++;
             }
             StudyTableWorkProbe.Write("RAR_PRICE_CELLS phase=ready shown=" + shown);
@@ -42,6 +42,11 @@ namespace NikichMods.Research
         {
             foreach (var cell in cells.Values) cell.Dispose();
             cells.Clear();
+        }
+
+        internal static void ApplyGeometry()
+        {
+            foreach (var cell in cells.Values) cell.ApplyGeometry();
         }
 
         internal static string Format(int price, int available, string nativeText)

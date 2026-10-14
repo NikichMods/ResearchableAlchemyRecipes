@@ -1,5 +1,9 @@
 # Study Table Work Probe
 
+## 0.1.50 native science renderer and F2 calibration
+
+Clone only the existing native icon/counter visuals so shader/tint/font/effects are retained. Open the research tab and press F2 for session-only icon X/Y/size and count X/Y/size. Positive X is right and Y is up, in game UI units from the backing center; count position is its bottom-right corner. Done logs all six values and closes the panel; F2 also closes it. Normal table input is temporarily captured and restored after release; teardown restores it too. No save/config writes, new custom MonoBehaviour or global card-redraw hook. Freeze chosen values and remove this scaffold after the user's visual acceptance. Existing suites pass; installed appearance/input/close-reopen proof remains pending.
+
 ## 0.1.49 icon creation only in the owned research tab
 
 0.1.48 is rejected after loading nonresponse and a fast same-save rollback to .47; exact cause is not isolated. Remove its global card-redraw patch and custom Unity component. Keep the large native atom/count as a plain owned view created only through the existing research-tab switch after native window layout and actual play startup. Restore original labels/dispose owned children when the table composition closes. Accepted .47 science-spend ordering and .46 paging remain unchanged. Existing suites and no-global-hook/no-custom-component metadata checks pass. Startup plus first research-tab view/close-reopen are the bounded installed check.

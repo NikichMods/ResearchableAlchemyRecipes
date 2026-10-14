@@ -26,43 +26,57 @@ namespace NikichMods.Research
             if (counter != null) Object.Destroy(counter.gameObject);
         }
 
-        internal void Show(UILabel original, int price, int available)
+        internal void Show(CraftItemGUI row, int price, int available)
         {
+            UILabel original = row.txt_spend;
             if (nativeLabel == null)
             {
                 nativeLabel = original; nativeActive = original.gameObject.activeSelf;
                 Transform box = original.transform.parent;
-                var iconObject = new GameObject("Research science icon");
-                iconObject.layer = original.gameObject.layer;
-                iconObject.transform.SetParent(box, false);
-                icon = iconObject.AddComponent<UI2DSprite>();
+                // Native item textures contain blue replacement pixels. Preserve the
+                // game's renderer/shader and tint; a bare UI2DSprite renders them blue.
+                icon = Object.Instantiate(row.item_gui.x1.icon, box, false);
+                icon.name = "Research science icon";
+                icon.color = row.item_gui.colors.normal;
                 icon.depth = original.depth;
                 icon.sprite2D = EasySpritesCollection.GetSprite(new Item("science", 1).definition.GetIcon(), false, "");
-                icon.color = Color.white;
-                icon.leftAnchor.target = box; icon.leftAnchor.relative = 0.5f; icon.leftAnchor.absolute = -16;
-                icon.rightAnchor.target = box; icon.rightAnchor.relative = 0.5f; icon.rightAnchor.absolute = 16;
-                icon.bottomAnchor.target = box; icon.bottomAnchor.relative = 0.5f; icon.bottomAnchor.absolute = -16;
-                icon.topAnchor.target = box; icon.topAnchor.relative = 0.5f; icon.topAnchor.absolute = 16;
-                icon.width = 32; icon.height = 32;
 
-                counter = Object.Instantiate(original, box, false);
+                counter = Object.Instantiate(row.item_gui.x1.counter, box, false);
                 counter.name = "Research science count";
                 counter.depth = original.depth + 1;
                 counter.pivot = UIWidget.Pivot.BottomRight;
                 counter.alignment = NGUIText.Alignment.Right;
                 counter.overflowMethod = UILabel.Overflow.ClampContent;
                 counter.maxLineCount = 1;
-                counter.leftAnchor.target = box; counter.leftAnchor.relative = 0; counter.leftAnchor.absolute = 1;
-                counter.rightAnchor.target = box; counter.rightAnchor.relative = 1; counter.rightAnchor.absolute = -1;
-                counter.bottomAnchor.target = box; counter.bottomAnchor.relative = 0; counter.bottomAnchor.absolute = 1;
-                counter.topAnchor.target = box; counter.topAnchor.relative = 0; counter.topAnchor.absolute = 17;
             }
             nativeLabel.gameObject.SetActive(false);
             icon.gameObject.SetActive(true);
             counter.gameObject.SetActive(true);
             string value = price.ToString(CultureInfo.InvariantCulture);
             counter.text = available < price ? "[ff1111]" + value + "[-]" : value;
-            icon.UpdateAnchors(); counter.UpdateAnchors();
+            ApplyGeometry();
+        }
+
+        internal void ApplyGeometry()
+        {
+            if (icon == null || counter == null || nativeLabel == null) return;
+            Transform box = nativeLabel.transform.parent;
+            int size = SciencePriceCalibration.IconSize;
+            CenterAnchors(icon, box, SciencePriceCalibration.IconX - size / 2,
+                SciencePriceCalibration.IconX - size / 2 + size,
+                SciencePriceCalibration.IconY - size / 2, SciencePriceCalibration.IconY - size / 2 + size);
+            int x = SciencePriceCalibration.CountX, y = SciencePriceCalibration.CountY;
+            counter.fontSize = SciencePriceCalibration.CountSize;
+            CenterAnchors(counter, box, x - 30, x, y, y + SciencePriceCalibration.CountSize);
+        }
+
+        private static void CenterAnchors(UIWidget widget, Transform box, int left, int right, int bottom, int top)
+        {
+            widget.leftAnchor.target = box; widget.leftAnchor.relative = 0.5f; widget.leftAnchor.absolute = left;
+            widget.rightAnchor.target = box; widget.rightAnchor.relative = 0.5f; widget.rightAnchor.absolute = right;
+            widget.bottomAnchor.target = box; widget.bottomAnchor.relative = 0.5f; widget.bottomAnchor.absolute = bottom;
+            widget.topAnchor.target = box; widget.topAnchor.relative = 0.5f; widget.topAnchor.absolute = top;
+            widget.UpdateAnchors();
         }
     }
 }

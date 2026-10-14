@@ -26,6 +26,9 @@ namespace NikichMods.Research
         private static CraftGUI Craft { get { return GUIElements.me.craft; } }
         private static ResourceBasedCraftGUI Study { get { return GUIElements.me.resource_based_craft; } }
         private static bool Active { get { return table != null && snapshot != null; } }
+        internal static bool CanCalibratePrice { get { return MainGame.game_started && !MainGame.game_starting &&
+            GUIElements.me != null && Active && selected == ResearchTab &&
+            snapshot.CraftWindow != null && snapshot.CraftWindow.is_shown_and_top && !GUIElements.me.resource_picker.is_shown; } }
         private static bool Owns(CraftGUI gui) { return Active && gui == Craft && gui.GetCrafteryWGO() == table; }
         internal static bool QuantityInputUnavailable()
         {
@@ -110,6 +113,7 @@ namespace NikichMods.Research
         internal static void Restore()
         {
             if (snapshot == null || restoring) return;
+            SciencePriceCalibration.Hide("table_closed");
             restoring = true;
             try
             {
@@ -212,6 +216,15 @@ namespace NikichMods.Research
                     study.GetComponent<UIPanel>().depth != panelDepth || craft.GetButtonTips().gameObject.activeSelf != craftTipsActive) return false;
                 foreach (var pair in chrome) if (pair.Key.activeSelf != pair.Value) return false;
                 return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(BaseGUI), "Update")]
+        private static class CalibrationKeys
+        {
+            private static bool Prefix(BaseGUI __instance)
+            {
+                return !(SciencePriceCalibration.Capturing && snapshot != null && __instance == snapshot.CraftWindow);
             }
         }
 

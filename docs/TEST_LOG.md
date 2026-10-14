@@ -1,5 +1,15 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.50 — native renderer and live price calibration
+
+Prepared from .49 with native visual-only icon/counter clones, preserving the game's replacement shader/tint/font/effects. Six bounded F2 geometry controls run in the existing plugin using the accepted capture/delayed-release pattern. No new custom Unity component, global card-redraw interception, save/fee/knowledge change. NATIVE_INTEGRATION_REVIEW.md owns the requested bounded architecture review and its remaining limits; VERIFIED_RUNTIME_DATA.md owns the READY gate. Local compile and existing suites pass; exact numbered artifact/install identity follows after source freeze. Installed native appearance/input restoration remains pending.
+
+Bounded return: load normally, open the research tab, compare atom to the native header, use F2 to tune icon X/Y/size and counter X/Y/size, choose Done (values are logged), verify normal mouse/gamepad input, close/reopen the table. F2 can also close the panel; automatic table teardown and plugin shutdown release input. Do not repeat accepted economic/quest/notification matrices.
+
+## Returned 0.1.49 — first owned view works; appearance rejected
+
+Archived log SHA-256 f545be7c783deab919ac9c782bb6ba4a537470556255f71cc8cae7aafe35f9b1 identifies .49, reaches loading progress 1, then RAR_PRICE_CELLS begin rows=14 / ready shown=14 without RAR error. Teardown records windows_destroyed/snapshot_cleared, not a normal close/reopen assertion. User reports that it mostly works but rejects the saturated blue atom and row-bottom counter. No new loading nonresponse is reported in this return. Native asset inspection identifies the missing replacement shader and motivates .50; .48's exact freeze instruction remains unknown.
+
 ## Study Table Work Probe 0.1.49 — large icons only after opening research
 
 Built/installed with game closed; frozen source c419e01aa312552abef5b078f4e46ca44cfb201e, SDK 6.0.406 Roslyn, plugin/assembly/file 0.1.49/0.1.49.0. Immutable artifacts/StudyTableWorkProbe-0.1.49/StudyTableWorkProbe-0.1.49.dll SHA-256 bffbfc89cd302867aa3d758ace4c9de8807ce9ad880eb996b7933c05dbdb19a4; manifest retained. Installed exact version/hash match, one payload; the verified working .47 and its successful-load log retained outside plugins. No original saves modified. .48 stays rejected/preserved, not overwritten.

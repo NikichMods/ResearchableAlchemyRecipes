@@ -1,0 +1,31 @@
+# Native integration review — 2026-10-15
+
+Question: does the .48 loading regression expose a general replacement of native mechanics, and how should science-price visuals be corrected without broadening that intervention?
+
+This is a bounded source/evidence review of the current research probe, not production acceptance or proof that every possible player/mod state is safe. Reviewed owners: StudyTableWorkProbe, SourceResearch, ResearchScienceReserve, ResearchRepetitionGuard, StudyTabs, ResearchCostDisplay/ResearchSciencePriceCell, RecipeGuidance/GuidanceTooltip, AvailabilityNotifications and their canonical accepted evidence.
+
+## Findings
+
+| Surface | Native owner retained / project addition | Evidence and limits |
+| --- | --- | --- |
+| Research work/payment | Native CraftDefinition/CraftComponent work and table Item science inventory; project adds registered one-time jobs, tariffs, eligibility and narrow quantity/queue guards | Accepted .42/.43 payment, restart, completion, cancellation/removal interruption slices. No separate work scheduler or science wallet. These additions remain real mod code, not vanilla behavior. |
+| Refunds | Native Cancel/StartRemovalCraft perform interruption; project records prepaid science in the table's serialized Item parameter and refunds it after the verified interruption | Accepted bounded exact refunds and unmarking. Actual demolition retains vanilla inventory loss; no cross-table bank. |
+| Knowledge/persistence | Native completed_one_time_crafts stores earned formula knowledge; discovery/notice/reservation metadata uses native serialized Item parameters | Local roundtrips/save isolation and bounded real reload acceptance. No sidecar save system. Ordinary formula definitions/material Study/manufacture are not replaced. |
+| Paint icons | Existing native BaseItemCellGUI.DrawIcon and its existing UI2DSprite | Retains native replacement shader/tint. This differs from the incorrectly constructed .48/.49 science renderer. |
+| Tab artwork | Original project PNGs assigned to existing native tab icon widgets, with accepted offsets | Existing native tab layout and snapshot restoration; no new custom Unity component. Their successful operation did not establish correctness of a newly constructed renderer. |
+| Science price | Ordered native GetSpendTxt extension after actual QueueEverything; .49 plain views created only by owned research-tab switch after load | Actual foreign-postfix regression and .47 price visibility accepted. .49 log reaches loading progress 1 and creates 14 views without RAR errors, user sees them; blue appearance/count placement rejected. |
+| Table composition | Two existing native CraftGUI/ResourceBasedCraftGUI windows, native Study and navigation; project composes tabs and restores captured geometry/key dictionaries | Accepted bounded mouse/gamepad/picker and restoration history. Scene teardown uses retained window references; destroyed-window return is distinct from ordinary close/reopen acceptance. Picker layer-warning ownership remains an existing open gate. |
+| Ingredient guidance | Native selected known card and TooltipBubbleGUI; project formats sources and positions its own bubble | Existing global WidgetsBubbleGUI/BaseBubbleGUI/UIPanel hooks immediately filter to that one owned instance/panel. They are broader engine seams and remain a sensitive integration boundary despite accepted bounded movement/geometry evidence. No new global renderer hook is needed for science prices. |
+| Notices/results | Existing native TechUnlockDialogGUI item rows/buttons and native player state; project adds eligibility aggregation, safe-delivery checks, deduplication and in-place paging | Local policy/roundtrip tests, accepted speech/window waiting and continuous paging slices. Exhaustive foreign popup/compatibility coverage is not established. Tick is inert without a pending request/page transition; no new repeating world census is added here. |
+
+## Regression and correction
+
+.48 added two independent changes together: a global CraftItemGUI.Redraw patch and a custom MonoBehaviour attached to cards. The returned log stops at loading progress .05 without a causal stack. The same-save .47 rollback loads quickly; .49 removes both additions and reaches play/the research list. This localizes the suspect delta but does not prove which instruction caused nonresponse. Do not reinstate .48 unchanged or call its precise cause solved.
+
+The appearance defect has a direct static explanation: item sprite 33400 uses shader 7928 `Unlit/Transparent Blue Color Replace`; a newly constructed UI2DSprite instead defaults to `Unlit/Transparent Colored`. Assigning the sprite alone loses the game's blue-pixel replacement. .50 clones only the existing native icon and counter visual GameObjects, preserves shader/tint/font/effects and sets the science sprite. There is no added outline layer, shader asset, interactive item cell or custom MonoBehaviour. Both positions are anchored to the cost backing's center rather than leaving the counter at the row bottom.
+
+Temporary F2 controls reuse the accepted input-capture/release pattern on the existing plugin. They only change six session-only geometry values, block the owned table's semantic input while open and restore the captured NGUI input flag on close/teardown. They add no card-redraw interception or loading-time UI creation. Remove calibration/input guards once the user's chosen values are frozen; do not ship this panel as a production feature.
+
+## Remaining proof
+
+The .50 native appearance, calibration/input restoration and ordinary close/reopen require the installed return. Existing economic/source/notification tests are preserved, not restarted. Production extraction still needs removal of diagnostic/synthetic controls and censuses, support-log review, remaining source negatives and bounded compatibility/picker-warning gates. No newly proved hidden mechanics defect was found in this bounded review; that is not an assurance of universal reliability. Continue with the narrow UI return before further architectural changes.

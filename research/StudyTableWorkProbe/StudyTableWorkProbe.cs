@@ -10,8 +10,8 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.49.0")]
-[assembly: AssemblyFileVersion("0.1.49.0")]
+[assembly: AssemblyVersion("0.1.50.0")]
+[assembly: AssemblyFileVersion("0.1.50.0")]
 
 namespace NikichMods.Research
 {
@@ -19,7 +19,7 @@ namespace NikichMods.Research
     [BepInDependency("p1xel8ted.gyk.maxbuttonsredux", BepInDependency.DependencyFlags.SoftDependency)]
     public sealed class StudyTableWorkProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.49";
+        public const string Version = "0.1.50";
         internal const string JobId = "rar_probe_work_010";
         private const string TableId = "mf_alchemy_survey";
         private const string Technology = "The Beginning Of Alchemy";
@@ -56,6 +56,7 @@ namespace NikichMods.Research
 
         private void OnDestroy()
         {
+            SciencePriceCalibration.Shutdown();
             enabledProbe = false;
             AvailabilityNotifications.Dispose();
             RecipeGuidance.Restore();
@@ -66,6 +67,7 @@ namespace NikichMods.Research
 
         private void Update()
         {
+            SciencePriceCalibration.Tick();
             AvailabilityNotifications.Tick();
             if (enabledProbe && MainGame.game_started && BaseGUI.all_guis_closed && Input.GetKeyDown(KeyCode.F6))
             {
@@ -115,6 +117,12 @@ namespace NikichMods.Research
         private void LateUpdate()
         {
             AvailabilityNotifications.ObserveShown();
+        }
+
+        private void OnGUI()
+        {
+            try { SciencePriceCalibration.Draw(); }
+            catch (Exception ex) { SciencePriceCalibration.Shutdown(); Fail(ex); }
         }
 
         internal static void Write(string message)
