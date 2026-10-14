@@ -73,10 +73,34 @@ public static class SourceTopicTests
         }
         balance.items_data.Add(new ItemDefinition { id = "zombie_juise", icon = "fixture_resurrection_icon" });
         balance.craft_data.Add(new CraftDefinition { id = "fixture_resurrection_formula", craft_type = CraftDefinition.CraftType.MixedCraft, output = new List<Item> { new Item("zombie_juise", 1) } });
+        var witch = new VendorDefinition { id = "npc_witch", start_tire = 1 };
+        AccessTools.Field(typeof(VendorDefinition), "product_types").SetValue(witch, new List<string> { "pot_base", "pot_cool" });
+        balance.vendors_data = new List<VendorDefinition> { witch };
+        foreach (string product in new[] { "pot_appetite", "pot_armor", "pot_berserk", "pot_damage", "pot_heal", "pot_heal_long", "pot_mana", "pot_speed" })
+        {
+            int tier = product == "pot_heal" || product == "pot_mana" ? 1 : product == "pot_appetite" || product == "pot_damage" || product == "pot_speed" ? 2 : 3;
+            balance.items_data.Add(new ItemDefinition { id = product, icon = "fixture_potion_icon", base_count = tier == 1 ? 10 : 5,
+                product_tier = tier, product_types = new List<string> { tier == 1 ? "pot_base" : "pot_cool" } });
+            for (int n = 0; n < (product == "pot_heal" ? 2 : 1); n++)
+                balance.craft_data.Add(new CraftDefinition { id = "fixture_" + product + "_" + n, craft_type = CraftDefinition.CraftType.MixedCraft, output = new List<Item> { new Item(product, 1) } });
+        }
         Call("Register", balance); Call("Register", balance);
-        Assert(balance.craft_data.Count == 74, "Registration duplicated native jobs");
+        Assert(balance.craft_data.Count == 91, "Registration duplicated native jobs");
         var topics = (IDictionary)source.GetField("topics", Private).GetValue(null);
-        Assert(topics.Count == 25, "Bounded registration count");
+        Assert(topics.Count == 33, "Bounded registration count");
+        var vendorData = new Item("fixture_vendor", 1);
+        var healingItem = balance.items_data.Find(i => i.id == "pot_heal");
+        Assert((int)Call("VendorStock", vendorData, false, healingItem, 1) == 10 && vendorData.inventory.Count == 0, "Cold stock projection mutates a vendor or misses first-tier stock");
+        var armorItem = balance.items_data.Find(i => i.id == "pot_armor");
+        Assert((int)Call("VendorStock", vendorData, false, armorItem, 1) == 1 && !(bool)Call("VendorVisible", true, true, 1, 3, 1), "Native cold higher-tier placeholder reveals a locked product");
+        vendorData.inventory.Add(new Item("pot_heal", 3)); vendorData.inventory.Add(new Item("pot_mana", 2));
+        Assert((int)Call("VendorStock", vendorData, true, healingItem, 1) == 3, "Initialized stock is replaced by theoretical replenishment");
+        Assert((int)Call("VendorStock", vendorData, true, armorItem, 3) == 0, "Depleted initialized stock incorrectly gets cold placeholder");
+        foreach (int tier in new[] { 1, 2, 3 })
+            foreach (int required in new[] { 1, 2, 3 })
+                Assert((bool)Call("VendorVisible", true, true, tier, required, 1) == (required <= tier), "Unlocked tier boundary changed");
+        Assert(!(bool)Call("VendorVisible", false, true, 3, 1, 1) && !(bool)Call("VendorVisible", true, false, 3, 1, 1) &&
+            !(bool)Call("VendorVisible", true, true, 3, 1, 0), "Trade/physical/current stock gates ignored");
         var churchOnly = topics["rar_probe_source_paint_0110_energy_elixir"];
         var churchSourceList = (List<CraftDefinition>)churchOnly.GetType().GetField("churchSources", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(churchOnly);
         Assert(churchSourceList.Count == 1 && ((IList)churchOnly.GetType().GetField("sources", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(churchOnly)).Count == 0, "Church-only topic incorrectly acquires room sources");
@@ -152,6 +176,21 @@ public static class SourceTopicTests
             source.GetField("snapshotSave", Private).SetValue(null, save);
             source.GetField("sourceAvailable", Private).SetValue(null, true); visible.SetValue(topic, 1);
             Assert(save.IsCraftVisible(job), "Positive native topic hidden");
+            var potionTopic = topics["rar_probe_source_paint_0110_pot_heal"];
+            var potionJob = (CraftDefinition)potionTopic.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(potionTopic);
+            potionTopic.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(potionTopic, 1);
+            Assert(!save.IsCraftVisible(potionJob), "Other source opens trade without Clotho explanation");
+            save.unlocked_phrases.Add("@clotho_trade");
+            source.GetField("sourceAvailable", Private).SetValue(null, false);
+            Assert(save.IsCraftVisible(potionJob) && !save.IsCraftVisible(job), "Clotho source requires an unrelated station or enables room topics");
+            save.black_list_of_phrases.Add("@clotho_trade");
+            Assert(!save.IsCraftVisible(potionJob), "Blacklisted trade remains a source"); save.black_list_of_phrases.Clear();
+            save.unlocked_techs.Remove("The Beginning Of Alchemy");
+            Assert(!save.IsCraftVisible(potionJob), "Potion ignores alchemy gate"); save.unlocked_techs.Add("The Beginning Of Alchemy");
+            var potionFormulas = (List<CraftDefinition>)potionTopic.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(potionTopic);
+            save.completed_one_time_crafts.Add(potionFormulas[0].id);
+            Assert(save.IsCraftVisible(potionJob) && ((List<string>)Call("GrantRemaining", save, potionFormulas)).Count == 1 && !save.IsCraftVisible(potionJob), "Partial potion knowledge is duplicated or full knowledge remains offered");
+            source.GetField("sourceAvailable", Private).SetValue(null, true);
             var resurrection = topics["rar_probe_source_paint_0110_zombie_juise"];
             var resurrectionJob = (CraftDefinition)resurrection.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(resurrection);
             resurrection.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(resurrection, 1);

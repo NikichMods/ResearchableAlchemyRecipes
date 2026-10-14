@@ -13,10 +13,12 @@ namespace NikichMods.Research
         internal const string Technology = "The Beginning Of Alchemy";
         internal const string ResurrectionTechnology = "Second chance";
         internal const string ResurrectionProduct = "zombie_juise";
+        internal const string Witch = "npc_witch";
+        internal const string TradePhrase = "@clotho_trade";
         private const string JobPrefix = "rar_probe_source_paint_0110_";
         // Preserve the handed paint job IDs; new groups reuse the same verified source owner.
-        private static readonly string[] Products = { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint", "black_paint", "blue_paint", "white_paint", "glue", "acid", "alkali", "aromatizer", "dark_elixir", "energy_elixir", "flask_green_l_plus", "flavor_enhancer", "freshener", "golden_elixir", "growth_enhancer", "preservative", "silver_elixir", "tanning_agent", ResurrectionProduct };
-        private static readonly int[] FormulaCounts = { 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 2, 1, 1 };
+        private static readonly string[] Products = { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint", "black_paint", "blue_paint", "white_paint", "glue", "acid", "alkali", "aromatizer", "dark_elixir", "energy_elixir", "flask_green_l_plus", "flavor_enhancer", "freshener", "golden_elixir", "growth_enhancer", "preservative", "silver_elixir", "tanning_agent", ResurrectionProduct, "pot_appetite", "pot_armor", "pot_berserk", "pot_damage", "pot_heal", "pot_heal_long", "pot_mana", "pot_speed" };
+        private static readonly int[] FormulaCounts = { 1, 1, 1, 1, 1, 1, 1, 3, 1, 3, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1 };
         private sealed class Topic
         {
             internal string product;
@@ -26,12 +28,15 @@ namespace NikichMods.Research
             internal readonly List<CraftDefinition> churchSources = new List<CraftDefinition>();
             internal int roomVisible;
             internal int churchVisible;
+            internal ItemDefinition vendorItem;
+            internal int vendorVisible;
             internal int visible;
         }
         private static readonly Dictionary<string, Topic> topics = new Dictionary<string, Topic>();
         private static GameSave snapshotSave;
         private static GameBalance registeredBalance;
         private static bool sourceAvailable;
+        private static VendorDefinition witchDefinition;
 
         internal static bool IsJob(string id) { return id != null && topics.ContainsKey(id); }
         internal static bool Eligible(bool alchemy, bool source, int visible, int remaining)
@@ -42,11 +47,22 @@ namespace NikichMods.Research
         {
             if (ReferenceEquals(registeredBalance, balance)) return;
             topics.Clear(); snapshotSave = null; sourceAvailable = false;
+            witchDefinition = balance.vendors_data.Find(v => v.id == Witch);
+            if (witchDefinition == null || witchDefinition.start_tire != 1 || witchDefinition.additional_types.Count != 0 ||
+                witchDefinition.not_selling.Count != 0 || witchDefinition.count_modificators.Count != 0)
+                throw new InvalidOperationException("Verified Clotho stock definition changed");
             // Resolve original definitions before appending any work to the host list.
             for (int productIndex = 0; productIndex < Products.Length; productIndex++)
             {
                 string product = Products[productIndex];
                 var topic = new Topic { product = product };
+                if (product.StartsWith("pot_", StringComparison.Ordinal))
+                {
+                    topic.vendorItem = balance.items_data.Find(item => item.id == product);
+                    if (topic.vendorItem == null || topic.vendorItem.base_count <= 0 || topic.vendorItem.product_tier < 1 || topic.vendorItem.product_tier > 3 ||
+                        !topic.vendorItem.product_types.Exists(type => witchDefinition.GetProductTypes().Contains(type)))
+                        throw new InvalidOperationException("Verified Clotho product changed: " + product);
+                }
                 foreach (var craft in balance.craft_data)
                 {
                     var output = craft.GetFirstRealOutput();
@@ -58,7 +74,7 @@ namespace NikichMods.Research
                 foreach (var craft in balance.craft_data)
                     if (craft.craft_in.Contains(Church) && craft.craft_type == CraftDefinition.CraftType.None && craft.needs.Exists(item => item.id == product)) topic.churchSources.Add(craft);
                 // Explicit audited groups; do not silently generalize to other product outputs.
-                if (topic.formulas.Count != FormulaCounts[productIndex] || (product != ResurrectionProduct && topic.sources.Count == 0 && topic.churchSources.Count == 0))
+                if (topic.formulas.Count != FormulaCounts[productIndex] || (topic.vendorItem == null && product != ResurrectionProduct && topic.sources.Count == 0 && topic.churchSources.Count == 0))
                     throw new InvalidOperationException("Verified source group changed: " + product);
                 topic.job = new CraftDefinition {
                     id = JobPrefix + product, craft_in = new List<string> { "mf_alchemy_survey" },
@@ -79,7 +95,7 @@ namespace NikichMods.Research
                 balance.craft_data.Add(topic.job);
             }
             registeredBalance = balance;
-            StudyTableWorkProbe.Write("RAR_TOPICS_REGISTER products=" + topics.Count + " source=room_church_and_resurrection_technology synthetic=False");
+            StudyTableWorkProbe.Write("RAR_TOPICS_REGISTER products=" + topics.Count + " source=room_church_resurrection_and_clotho synthetic=False");
         }
         internal static void VerifyCache(GameBalance balance)
         {
@@ -138,24 +154,57 @@ namespace NikichMods.Research
                     station.obj_def.interaction_type == ObjectDefinition.InteractionType.Craft)) churchAvailable = true;
             }
             sourceAvailable = roomAvailable || churchAvailable;
+            bool tradeKnown = TradeKnown(save);
+            var witchInstances = WorldMap.GetWorldGameObjectsByObjId(Witch);
             foreach (var topic in topics.Values)
             {
-                topic.roomVisible = 0; topic.churchVisible = 0;
+                topic.roomVisible = 0; topic.churchVisible = 0; topic.vendorVisible = 0;
                 foreach (var craft in topic.sources) if (save.IsCraftVisible(craft)) topic.roomVisible++;
                 foreach (var craft in topic.churchSources) if (save.IsCraftVisible(craft)) topic.churchVisible++;
                 topic.visible = VisibleSources(roomAvailable, topic.roomVisible, churchAvailable, topic.churchVisible);
                 if (topic.product == ResurrectionProduct) topic.visible = save.unlocked_techs.Contains(ResurrectionTechnology) ? 1 : 0;
+                if (topic.vendorItem != null)
+                {
+                    foreach (var station in witchInstances)
+                    {
+                        bool physical = !station.is_removed && !station.is_removing && !station.IsDisabled() && station.GetParamInt("disabled_interactions") == 0 &&
+                            (station.obj_def.interactive_in_tutorial || !save.IsInTutorial()) && station.obj_def.interaction_type == ObjectDefinition.InteractionType.RunScript;
+                        var data = station.data;
+                        bool initialized = Math.Abs(data.GetParam("vendor_inited", 0f) - 1f) <= 0.01f;
+                        int tier = initialized ? data.GetParamInt("vendor_tier") : witchDefinition.start_tire;
+                        if (VendorVisible(tradeKnown, physical, tier, topic.vendorItem.product_tier, VendorStock(data, initialized, topic.vendorItem, tier))) topic.vendorVisible++;
+                    }
+                    topic.visible = topic.vendorVisible;
+                }
             }
             snapshotSave = save;
             StudyTableWorkProbe.Write("RAR_TOPICS_CALL phase=after action=source_snapshot builder_present=" + (desk != null) + " room_available=" + roomAvailable +
-                " church_instances=" + churchInstances.Count + " church_available=" + churchAvailable + " resurrection_technology=" + save.unlocked_techs.Contains(ResurrectionTechnology) + " busy_ignored=True physical_source_available=" + sourceAvailable + " tutorial_blocks=" + tutorial);
+                " church_instances=" + churchInstances.Count + " church_available=" + churchAvailable + " resurrection_technology=" + save.unlocked_techs.Contains(ResurrectionTechnology) +
+                " clotho_instances=" + witchInstances.Count + " trade_known=" + tradeKnown + " busy_ignored=True physical_source_available=" + sourceAvailable + " tutorial_blocks=" + tutorial);
             Status("table_open", save);
         }
         internal static bool Available(string id, GameSave save)
         {
             Topic topic;
             return topics.TryGetValue(id, out topic) && ReferenceEquals(snapshotSave, save) &&
-                Eligible(save.unlocked_techs.Contains(Technology), topic.product == ResurrectionProduct ? save.unlocked_techs.Contains(ResurrectionTechnology) : sourceAvailable, topic.visible, Remaining(topic, save));
+                Eligible(save.unlocked_techs.Contains(Technology), topic.vendorItem != null ? TradeKnown(save) :
+                    topic.product == ResurrectionProduct ? save.unlocked_techs.Contains(ResurrectionTechnology) : sourceAvailable, topic.visible, Remaining(topic, save));
+        }
+        internal static bool TradeKnown(GameSave save)
+        {
+            return save.unlocked_phrases.Contains(TradePhrase) && !save.black_list_of_phrases.Contains(TradePhrase);
+        }
+        internal static bool VendorVisible(bool tradeKnown, bool physical, int tier, int productTier, int stock)
+        {
+            return tradeKnown && physical && productTier <= tier && stock > 0;
+        }
+        internal static int VendorStock(Item data, bool initialized, ItemDefinition item, int tier)
+        {
+            // Pure projection of the verified cold Vendor constructor; never initialize/fill a vendor here.
+            int stock = 0;
+            foreach (var entry in data.inventory) if (entry != null && entry.id == item.id && entry.value > 0) stock += entry.value;
+            if (!initialized) stock += item.product_tier > tier ? 1 : item.base_count;
+            return stock;
         }
         internal static bool ReadyToStart(string id, GameSave save)
         {
@@ -174,7 +223,7 @@ namespace NikichMods.Research
                 bool eligible = Available(topic.job.id, save) && !save.completed_one_time_crafts.Contains(topic.job.id);
                 if (eligible) offered++;
                 StudyTableWorkProbe.Write("RAR_TOPICS_PRODUCT phase=" + phase + " product=" + topic.product + " native_visible=" + topic.visible +
-                    " room_visible=" + topic.roomVisible + " church_visible=" + topic.churchVisible + " remaining=" + Remaining(topic, save) + " offered=" + eligible);
+                    " room_visible=" + topic.roomVisible + " church_visible=" + topic.churchVisible + " vendor_visible=" + topic.vendorVisible + " remaining=" + Remaining(topic, save) + " offered=" + eligible);
             }
             StudyTableWorkProbe.Write("RAR_TOPICS_STATUS phase=" + phase + " source_snapshot_current=" + ReferenceEquals(snapshotSave, save) + " offered=" + offered + " synthetic=False");
         }

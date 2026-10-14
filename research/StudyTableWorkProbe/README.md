@@ -1,5 +1,9 @@
 # Study Table Work Probe
 
+## Current candidate 0.1.38 — Clotho potion sources
+
+Registers 33 ordinary products / 42 formulas through room/church/resurrection plus eight potion products introduced by Clotho's native @clotho_trade explanation. Open trade phrase, physical NPC source, native unlocked tier and current stock govern eligibility. Cold stock is read-only predicted from the verified constructor; no window visit, custom encounter state, vendor initialization or stock fill is performed. Old jobs, costs, accepted partial wording/tooltip and vanilla Study/production remain unchanged. Local checks pass; exact installed acceptance is pending in TEST_LOG.md. On the observed tier-I save expect only unknown healing/mana topics; exercise one naturally unknown reward/native-card path without resets or purchases.
+
 Research only. No production mod or final interface. Original code is MPL-2.0.
 
 ## Current accepted research slice: 0.1.37

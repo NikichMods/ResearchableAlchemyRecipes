@@ -1,5 +1,15 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.38 — Clotho narrative/trade potion source, 2026-10-14
+
+Research candidate; installed acceptance pending. User adopts saved @clotho_trade unlock after Clotho's explicit elixir-sales introduction via either healing-elixir or cauldron restoration route. This supersedes actual-window visit semantics and proposed mod encounter state. Add eight native potion products (33 total products / 42 formulas), including two healing variants, with old IDs, single-operation/remaining-only rewards, current wording/guidance, native Study/production and costs unchanged. Legacy synthetic heal job stays hidden; no duplicate playable topic is added.
+
+Read phrase unlock/blacklist, existing npc_witch instances and physical flags, native data vendor_inited/vendor_tier/current inventory. For an uninitialized shop, pure prediction of verified native constructor stock/start tier avoids an implicit window-visit prerequisite. Registration validates the exact bounded vendor types/tier/nonempty base counts and absence of dynamic types/count modifications/not_selling exclusions. No Vendor/Trading creation, lazy wgo.vendor accessor, stock fill or save mutation for source discovery. Current stock depletion excludes that current source; locked tiers remain excluded.
+
+Compile/knowledge/quantity/source/localization suites pass; native metadata confirms 33 products / 42 formulas and eight Clotho sources. New tests cover cold stock without mutation, locked-tier placeholders, current depleted stock without artificial refill, unlocked tiers I–III, missing/blacklisted phrase, physical/source isolation, independent alchemy gate and partial-known healing reward granting only the missing variant. No custom text/font assets changed. These are lower-level properties, not installed-candidate acceptance.
+
+Minimum return: on the observed tier-I save inspect two naturally unknown topics (healing/mana), with six locked-tier products absent and old topics not duplicated; complete one naturally eligible potion and inspect its native alchemy card. No potion purchase, tier unlock, knowledge reset or repeat old full-restart matrix required. Codex reads the log. Spices remains the final ordinary source group outside this registry; economics/deferred lifecycle/production remain open.
+
 ## Source Eligibility Probe 0.1.3 — Clotho trade source, 2026-10-14
 **Returned bounded source observation:** archive work/evidence/source-0.1.3-return/launch-1.log SHA-256 1125e7385c60a9f63407f87410876574105fbf7d0613f9aee611726574ffccab. Loader/READY and installed DLL hash match exact 0.1.3. F9 completes all eight rows, RESULT/DONE, no RAR_SOURCE_ERROR. Shown source 336 is indexed, not removed/GD-disabled/interactions-disabled; tier=1, @clotho_trade unlocked and not blacklisted. pot_heal/pot_mana each have stock=10/drawing=10/active_cells=1/no lock; formulas remaining=2/1. Each of the other six potion products has stock=1/drawing=1/active_cells=1 under a tier lock; pot_speed remaining=0, the other five remaining=1. This validates the positive already-open trade owner and distinguishes stock/cell activity from exposure.
 
