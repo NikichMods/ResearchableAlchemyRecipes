@@ -2,6 +2,48 @@
 
 Status: user-proposed utility ranges and design judgment, not adopted prices. Research runtime costs stay diagnostic. The prior quantitative study counted material Study expenditure only; it did not value failed mixtures, material acquisition/processing time, certainty of outcome or convenience. Its 2–3 science result is a comparison anchor, not a ceiling on a richer player-facing fee.
 
+## Current reduced-price working list
+
+The user's next instruction adopts decorative paints at 1 and black/white at 2, and asks for a complete review list using a lower 1/2/4/8/12 scale. Former 5 maps to 4, 10 to 8, and 15 or 10–15 to 12. Acid at 2 is tentative; the list below recommends that value for its quest role. Unresolved 5–10 ranges use 4 for optional/situational products. Exact assignments below remain a review proposal except the explicitly adopted paints; no runtime price changes or faith/work/energy decisions follow from this list. Even science fees correspond to whole sheets at 2 science per paper; decorative 1 is the explicit exception. Historical higher-price tables below remain comparison evidence.
+
+| Product | Science |
+| --- | ---: |
+| Yellow paint | 1 |
+| Green paint | 1 |
+| Brown paint | 1 |
+| Red paint | 1 |
+| Dark green paint | 1 |
+| Dark violet paint | 1 |
+| Violet paint | 1 |
+| Blue paint | 1 |
+| Black paint | 2 |
+| White paint | 2 |
+| Glue | 4 |
+| Acid | 2 |
+| Alkali | 4 |
+| Aromatizer | 8 |
+| Dark elixir | 12 |
+| Energy elixir (fertilizer) | 4 |
+| Balsamic solution | 4 |
+| Flavor enhancer | 12 |
+| Freshener | 4 |
+| Golden elixir | 12 |
+| Growth enhancer | 4 |
+| Preservative | 4 |
+| Silver elixir | 12 |
+| Tanning agent | 8 |
+| Appetite potion | 4 |
+| Armour potion | 4 |
+| Berserk potion | 4 |
+| Damage potion | 4 |
+| Healing potion | 4 |
+| Long restoration potion | 4 |
+| Energy potion (drinkable) | 4 |
+| Speed potion | 8 |
+| Zombie juice | 4 |
+
+Totals: 17 practical topics 102, eight decorative topics 8, eight drinkable potions 36; all 33 topics 146 science = 73 sheets of paper-equivalent value. Black/white paint, growth/flavor enhancers and zombie juice total 24 science. These are research fees only, not total progression expenditure. Dark remains 12 under the user's explicit 10–15 -> 12 mapping, despite its conditional usefulness; a reduction to 8 would lower the catalog total to 142, but is not silently selected. Healing 4 is a proposed early-quest fee, not an already individually accepted value.
+
 ## User proposal preserved
 
 The user explicitly describes these values as preliminary and requests a usefulness review, especially for embalming products. Decorative research should have a small but meaningful price; one science feels token-like to the user. Early/middle themes suggest 5–10, middle roughly 10, late roughly 15. Speed is considered especially valuable and proposed at least 10. A native quest asking for an alchemical product must establish immediate awareness; that source rule is adopted independently of these prices.
