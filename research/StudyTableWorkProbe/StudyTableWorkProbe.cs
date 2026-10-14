@@ -10,8 +10,8 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.43.0")]
-[assembly: AssemblyFileVersion("0.1.43.0")]
+[assembly: AssemblyVersion("0.1.44.0")]
+[assembly: AssemblyFileVersion("0.1.44.0")]
 
 namespace NikichMods.Research
 {
@@ -19,7 +19,7 @@ namespace NikichMods.Research
     [BepInDependency("p1xel8ted.gyk.maxbuttonsredux", BepInDependency.DependencyFlags.SoftDependency)]
     public sealed class StudyTableWorkProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.43";
+        public const string Version = "0.1.44";
         internal const string JobId = "rar_probe_work_010";
         private const string TableId = "mf_alchemy_survey";
         private const string Technology = "The Beginning Of Alchemy";
@@ -48,7 +48,8 @@ namespace NikichMods.Research
                 Localization.Inject();
                 QuantityInputCompatibility.Install(harmony, StudyTabs.QuantityInputUnavailable, RecipeGuidance.QuantityUnavailableReason);
                 enabledProbe = true;
-                Write("RAR_WORK_READY version=" + Version + " hash=" + actual + " save_persistent=True reward_probe=True");
+                AvailabilityNotifications.Install();
+                Write("RAR_WORK_READY version=" + Version + " hash=" + actual + " save_persistent=True reward_probe=True notice_hooks=" + AvailabilityNotifications.Installed);
             }
             catch (Exception ex) { Fail(ex); }
         }
@@ -56,6 +57,7 @@ namespace NikichMods.Research
         private void OnDestroy()
         {
             enabledProbe = false;
+            AvailabilityNotifications.Dispose();
             RecipeGuidance.Restore();
             StudyTabs.Restore();
             if (harmony != null) harmony.UnpatchSelf();
@@ -64,6 +66,17 @@ namespace NikichMods.Research
 
         private void Update()
         {
+            AvailabilityNotifications.Tick();
+            if (enabledProbe && MainGame.game_started && BaseGUI.all_guis_closed && Input.GetKeyDown(KeyCode.F6))
+            {
+                ResearchCompletion.Show("black_paint", 2, null, true); // Explicit session-only UI example; no grant.
+                return;
+            }
+            if (enabledProbe && MainGame.game_started && BaseGUI.all_guis_closed && Input.GetKeyDown(KeyCode.F7))
+            {
+                AvailabilityNotifications.PreviewMenu();
+                return;
+            }
             if (registrationSeen && MainGame.game_started && BaseGUI.all_guis_closed && Input.GetKeyDown(KeyCode.F9))
             {
                 try
@@ -99,6 +112,11 @@ namespace NikichMods.Research
             catch (Exception ex) { Fail(ex); }
         }
 
+        private void LateUpdate()
+        {
+            AvailabilityNotifications.ObserveShown();
+        }
+
         internal static void Write(string message)
         {
             if (Log == null) return;
@@ -106,6 +124,7 @@ namespace NikichMods.Research
             if (message.StartsWith("RAR_TOPICS_PRODUCT ", StringComparison.Ordinal) ||
                 message.StartsWith("RAR_TOPICS_CARD ", StringComparison.Ordinal) ||
                 message.StartsWith("RAR_TOPICS_NATIVE_LIST ", StringComparison.Ordinal)) Log.LogDebug(message);
+            else if (message.StartsWith("RAR_NOTICE_ERROR ", StringComparison.Ordinal)) Log.LogError(message);
             else Log.LogInfo(message);
         }
         internal static void Fail(Exception ex)

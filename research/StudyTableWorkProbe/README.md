@@ -1,16 +1,10 @@
 # Study Table Work Probe
 
-## Unnumbered development after accepted 0.1.43
+## 0.1.44 compact result and availability notification check
 
-SourceResearch's compact completion summary now uses native OpenAsItemsList (one product, newly learned count, localized completion heading) after the unchanged GrantRemaining. No formula ingredients or duplicate variant rows appear in the result. Current strings are 45 keys/11 locales; existing suites and 27 native font-route glyph checks pass. This is compile-check development source, not a replacement of the immutable installed 0.1.43.
+Research candidate, not production acceptance. Native result: one product row and newly learned count, preserving GrantRemaining. Notices: source events schedule a settled safe refresh, native three-row pages use Next/Close, and native player Item flags mark shown products only. Pre-alchemy/empty initial sets remain quiet; already announced products do not repeat after reload/source return. Optional notice hooks have separate ownership and session failure containment. No new scroll engine, recipe definitions, fees/refunds or material Study behavior.
 
-AvailabilityNoticeState and NotificationStateTests cover quiet/empty first overview, current eligibility, displayed-only deduplication, native Item roundtrip, source return/save isolation and delivery-blocker policy. The module is not connected to game events or UI yet. Oversized list presentation awaits the user's scrollable-list versus short-pages choice; native info mode has three rows and TextWindowGUI has no scroll. No new numbered artifact/installation is made until integration is ready. DESIGN.md and VERIFIED_RUNTIME_DATA.md own recovery/readiness limits.
-
-0.1.43 reduces work to 2/2/3/5/8 while keeping science/energy/zero faith, refunds interrupted research when native StartRemovalCraft replaces it, and moves repeated detailed source/card censuses to Debug. Refund is on the same table before actual destruction; ordinary inventory loss during demolition remains native. See docs/TEST_LOG.md and RESEARCH_WORK_LIFECYCLE.md for accepted 0.1.42 results and the minimal changed-path return.
-
-0.1.42 integrates the adopted 33-product tariff and zero faith, full-price remaining-formula research, save-backed prepaid science metadata and same-table refund after native cancellation. F9 explicitly cancels exactly one active study-table job through the native owner (vanilla material or recipe research); it is diagnostic, not production UI. Vanilla material/removal observation is read-only; no demolition compensation or removal restriction is added. See docs/RESEARCH_WORK_LIFECYCLE.md for scope, fixture limits and minimal return.
-
-0.1.41 adds bounded native task awareness for Clotho healing and Astrologer acid. Visible/Complete journal records are read at the existing source snapshot/payment seams; no trade visit or physical source station is required for those exact requests. See docs/QUEST_RESEARCH_SOURCES.md for native owners, offline checks and pending installed gates. Price values remain diagnostic; user-proposed research economics are not bundled.
+All existing suites plus notice policy/native Item serialization/page/metadata tests pass. Strings cover 54 keys x 11 locales; 27 native font checks pass. Full loader/UI/event/close execution remains a real-game gate. See docs/RESEARCH_NOTIFICATIONS.md for method, exact limits and five short observations. F6 opens a labelled result UI example (black paint/count 2, no formula grant). F7 opens labelled session-only initial-overview/blocking-window scenarios using detached state; real save knowledge/discovery/notification flags are unchanged by previews. Real automatic notices do persist their announced-product flags. Normal save/menu reload checks their suppression; no quest reset, fresh trade visit or replay of accepted work/refund matrices is needed.
 
 ## Current accepted research slice 0.1.40 — actual Clotho trade discovery
 

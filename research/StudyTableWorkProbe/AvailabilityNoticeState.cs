@@ -39,6 +39,11 @@ namespace NikichMods.Research
             if (any) playerData.SetParam(Initial, 1f);
         }
 
+        internal static List<string> Page(List<string> pending)
+        {
+            return pending.GetRange(0, Math.Min(3, pending.Count));
+        }
+
         internal static bool Safe(bool playing, bool starting, bool paused, bool playerControlDisabled,
             bool windowsClosed, bool tooltip, bool speech, bool cornerTalk, bool contextMenu, bool inputHeld)
         {

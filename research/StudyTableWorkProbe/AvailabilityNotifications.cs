@@ -1,0 +1,301 @@
+// SPDX-License-Identifier: MPL-2.0
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Reflection;
+using HarmonyLib;
+using UnityEngine;
+
+namespace NikichMods.Research
+{
+    internal static class AvailabilityNotifications
+    {
+        private static readonly FieldInfo Tooltips = AccessTools.Field(typeof(TooltipBubbleGUI), "_all");
+        private static readonly FieldInfo Speech = AccessTools.Field(typeof(SpeechBubbleGUI), "all");
+        private static readonly MethodInfo PlayerControl = AccessTools.Method(typeof(BaseCharacterComponent), "PlayerControlIsDisabled");
+        private static readonly Type[] TargetTypes = { typeof(MainGame), typeof(MainGame), typeof(GameSave), typeof(GameSave), typeof(GameSave), typeof(GameSave), typeof(EnvironmentEngine), typeof(WorldMap) };
+        private static readonly string[] TargetNames = { "OnGameLoaded", "OnGameStartedPlaying", "UnlockTech", "UnlockCraft", "SetTaskState", "OnFinishedCraft", "OnEndOfDay", "RescanWGOsList" };
+        private static readonly Type[] HandlerTypes = { typeof(Loading), typeof(Loaded), typeof(Technology), typeof(CraftUnlock), typeof(Task), typeof(CraftFinished), typeof(Day), typeof(WorldRefresh) };
+        private static Harmony eventHarmony;
+        private static bool installed, loaded, disabled, dirty, pageOpen, nextPage;
+        private static int quietFrame = -1, requestFrame, generation;
+        private static GameSave boundSave;
+        private static Item previewData;
+        private static List<string> previewProducts;
+        private static TechUnlockDialogGUI owner;
+        private static GameObject countContainer;
+        private static bool priorContainerActive;
+        private static Item displayedData;
+        private static List<string> displayedPage;
+        private static bool displayedInitial, displayedPreview;
+        private static int openedFrame, displayedRemaining;
+        private static int lastWait = -1;
+        internal static bool Installed { get { return installed && !disabled; } }
+
+        internal static void Install()
+        {
+            if (Tooltips == null || Speech == null || PlayerControl == null || PlayerControl.ReturnType != typeof(bool) || PlayerControl.GetParameters().Length != 0)
+            { Fail(new InvalidOperationException("Missing verified notification overlay/control contract")); return; }
+            try
+            {
+                // Optional hooks have separate ownership; a notice failure cannot abort the research patches.
+                eventHarmony = new Harmony("nikichmods.research.studytablework.notices");
+                for (int i = 0; i < TargetTypes.Length; i++)
+                {
+                    var method = AccessTools.DeclaredMethod(TargetTypes[i], TargetNames[i]);
+                    var handler = new HarmonyMethod(AccessTools.Method(HandlerTypes[i], i == 0 ? "Prefix" : "Postfix"));
+                    if (i == 0) eventHarmony.Patch(method, prefix: handler);
+                    else eventHarmony.Patch(method, postfix: handler);
+                }
+                BaseGUI.on_window_opened += WindowOpened;
+                installed = true;
+                BaseGUI.on_window_closed += WindowClosed;
+            }
+            catch (Exception ex) { Fail(ex); } // Any partially installed hooks become inert for this session.
+        }
+        internal static void Dispose()
+        {
+            if (installed)
+            {
+                BaseGUI.on_window_opened -= WindowOpened;
+                BaseGUI.on_window_closed -= WindowClosed;
+                installed = false;
+            }
+            Reset();
+            if (eventHarmony != null)
+            {
+                try { eventHarmony.UnpatchSelf(); }
+                catch (Exception ex) { Fail(ex); }
+                eventHarmony = null;
+            }
+        }
+        private static void RestoreContainer()
+        {
+            if (countContainer != null) countContainer.SetActive(priorContainerActive);
+            countContainer = null;
+        }
+        private static void Reset()
+        {
+            var previousOwner = owner;
+            bool closeOwnPage = pageOpen;
+            generation++;
+            RestoreContainer();
+            loaded = false; dirty = false; pageOpen = false; nextPage = false;
+            quietFrame = -1; boundSave = null; previewData = null; previewProducts = null; owner = null;
+            displayedData = null; displayedPage = null;
+            lastWait = -1;
+            if (closeOwnPage && previousOwner != null && previousOwner.is_shown) previousOwner.Hide(false);
+        }
+        internal static void Request()
+        {
+            if (!loaded || disabled) return;
+            dirty = true; quietFrame = -1; requestFrame = Time.frameCount;
+        }
+        private static void WindowOpened(BaseGUI gui)
+        {
+            // A foreign replacement of this same shared instance ends our ownership.
+            if (pageOpen && gui == owner)
+            {
+                generation++; RestoreContainer(); pageOpen = false; nextPage = false;
+                displayedData = null; displayedPage = null;
+            }
+            Request();
+        }
+        private static void WindowClosed(BaseGUI gui)
+        {
+            if (pageOpen && gui == owner) return; // Our on-hide callback decides Next versus dismissal.
+            Request();
+        }
+        private static bool HasOverlay(FieldInfo field)
+        {
+            var collection = field.GetValue(null) as ICollection;
+            if (collection == null) throw new InvalidOperationException("Notification overlay collection changed");
+            return collection.Count != 0;
+        }
+        private static bool ManagedHintShown(GUIElements gui)
+        {
+            var bubble = gui.bubble_widgets_container;
+            return bubble != null && bubble.gameObject.activeInHierarchy && bubble.widget != null && bubble.widget.alpha > 0f &&
+                bubble.data != null && bubble.data.has_data;
+        }
+        internal static void Tick()
+        {
+            if (!StudyTableWorkProbe.enabledProbe || !loaded || disabled || !dirty || pageOpen) return;
+            try
+            {
+                var game = MainGame.me;
+                if (!MainGame.game_started || game == null || game.player == null || game.save == null) return;
+                if (!ReferenceEquals(boundSave, game.save))
+                {
+                    boundSave = game.save; previewData = null; previewProducts = null;
+                    quietFrame = -1; requestFrame = Time.frameCount;
+                }
+                var gui = game.gui_elements;
+                bool alchemy = previewData != null || game.save.unlocked_techs.Contains(SourceResearch.Technology);
+                if (!alchemy) { dirty = false; quietFrame = -1; return; }
+                bool tooltips = HasOverlay(Tooltips);
+                bool managedHint = gui != null && ManagedHintShown(gui);
+                bool speech = HasOverlay(Speech);
+                bool controlDisabled = game.player_char == null || (bool)PlayerControl.Invoke(game.player_char, null);
+                bool inputHeld = Input.anyKey || Input.GetMouseButton(0) || Input.GetMouseButton(1);
+                bool safe = gui != null && AvailabilityNoticeState.Safe(MainGame.game_started && !MainGame.disable_all_game,
+                    MainGame.game_starting, MainGame.paused, controlDisabled,
+                    BaseGUI.all_guis_closed, tooltips || managedHint, speech, gui.corner_talk.is_shown,
+                    gui.context_menu_bubble.is_shown, inputHeld);
+                if (!safe || Time.frameCount <= requestFrame)
+                {
+                    quietFrame = -1;
+                    // Bounded explicit-preview evidence; no ordinary per-frame success logging.
+                    int mask = (BaseGUI.all_guis_closed ? 0 : 1) | (controlDisabled ? 2 : 0) | (tooltips ? 4 : 0) |
+                        (managedHint ? 8 : 0) | (speech ? 16 : 0) | (inputHeld ? 32 : 0) | (MainGame.paused ? 64 : 0);
+                    if (previewData != null && mask != lastWait)
+                        StudyTableWorkProbe.Write("RAR_NOTICE_WAIT preview=True mask=" + mask + " windows_closed=" + BaseGUI.all_guis_closed +
+                            " control_disabled=" + controlDisabled + " tooltips=" + tooltips + " managed_hint=" + managedHint + " speech=" + speech + " input_held=" + inputHeld);
+                    lastWait = mask;
+                    return;
+                }
+                if (quietFrame < 0) { quietFrame = Time.frameCount; return; }
+                if (Time.frameCount <= quietFrame) return;
+                dirty = false; quietFrame = -1;
+                Item data = previewData ?? game.player.data;
+                var eligible = previewProducts;
+                if (eligible == null)
+                {
+                    if (!alchemy) return; // No world read or consumed overview before native access.
+                    SourceResearch.RefreshForNotices(game.save);
+                    eligible = SourceResearch.AvailableProducts(game.save);
+                }
+                var pending = AvailabilityNoticeState.Pending(data, alchemy, eligible);
+                if (pending.Count == 0) return;
+                ShowPage(data, pending);
+            }
+            catch (Exception ex) { Fail(ex); }
+        }
+        private static void ShowPage(Item data, List<string> pending)
+        {
+            var page = AvailabilityNoticeState.Page(pending);
+            bool more = pending.Count > page.Count;
+            bool initial = AvailabilityNoticeState.IsInitial(data);
+            bool preview = previewData != null;
+            owner = MainGame.me.gui_elements.tech_dialog;
+            countContainer = owner.subheader_container;
+            priorContainerActive = countContainer.activeSelf;
+            countContainer.SetActive(true);
+            string subheader = initial ? Localization.Get(Localization.Key.NoticeHowTo) : "";
+            if (more)
+            {
+                if (subheader.Length != 0) subheader += "\n";
+                subheader += Localization.Get(Localization.Key.NoticeMore).Replace("{0}", (pending.Count - page.Count).ToString(CultureInfo.InvariantCulture));
+            }
+            var items = new List<Item>();
+            foreach (string product in page) items.Add(new Item(product, 1));
+            int token = generation;
+            nextPage = false;
+            owner.OpenAsItemsList(subheader, items, delegate {
+                if (token != generation) return;
+                RestoreContainer(); pageOpen = false;
+                displayedData = null; displayedPage = null;
+                if (nextPage) Request();
+                else { dirty = false; quietFrame = -1; previewData = null; previewProducts = null; }
+            });
+            owner.label_header.text = Localization.Get(preview ? Localization.Key.NoticePreview : Localization.Key.NoticeTitle);
+            var buttons = owner.GetComponentInChildren<DialogButtonsGUI>(true);
+            buttons.Set(more ? Localization.Get(Localization.Key.Next) : GJL.L("OK"), delegate { ClosePage(more); },
+                more ? Localization.Get(Localization.Key.Close) : null, more ? new GJCommons.VoidDelegate(delegate { ClosePage(false); }) : null,
+                null, null, GameKey.Select, GameKey.Back);
+            owner.UpdateAllAnchors();
+            if (!owner.is_shown || !owner.add_to_opened_stack) throw new InvalidOperationException("Native notice page did not enter its window stack");
+            pageOpen = true; dirty = false;
+            displayedData = data; displayedPage = page;
+            displayedInitial = initial; displayedPreview = preview; displayedRemaining = pending.Count - page.Count;
+            openedFrame = Time.frameCount;
+        }
+        internal static void ObserveShown()
+        {
+            if (disabled || !pageOpen || displayedPage == null) return;
+            try
+            {
+                // A later frame/top-of-stack observation avoids consuming a page hidden/replaced
+                // by another native popup in the same opening frame.
+                if (owner == null || !owner.is_shown_and_top || Time.frameCount <= openedFrame) return;
+                AvailabilityNoticeState.MarkDisplayed(displayedData, displayedPage);
+                StudyTableWorkProbe.Write("RAR_NOTICE_SHOWN preview=" + displayedPreview + " initial=" + displayedInitial + " products=" + string.Join(",", displayedPage) + " remaining=" + displayedRemaining + " persistence=" + (displayedPreview ? "session_only" : "native_player_params"));
+                displayedData = null; displayedPage = null;
+            }
+            catch (Exception ex) { Fail(ex); }
+        }
+        private static void ClosePage(bool continuePages)
+        {
+            if (!pageOpen) return;
+            ObserveShown();
+            nextPage = continuePages;
+            owner.Hide(true); // Native on-hide callback schedules later delivery, never opens inside a key callback.
+        }
+        private static void Fail(Exception ex)
+        {
+            if (disabled) return;
+            disabled = true; dirty = false; RestoreContainer();
+            StudyTableWorkProbe.Write("RAR_NOTICE_ERROR action=disabled_for_session research_preserved=True " + ex);
+        }
+        private static void Preview(bool blocker)
+        {
+            boundSave = MainGame.me.save;
+            previewData = new Item("science", 1); // Unattached session-only state; no inventory/save mutation.
+            lastWait = -1;
+            previewProducts = SourceResearch.PreviewProducts();
+            if (blocker)
+                MainGame.me.gui_elements.dialog.OpenOK(Localization.Get(Localization.Key.NoticeBlocker), null,
+                    Localization.Get(Localization.Key.NoticePreviewWarning));
+            Request();
+            StudyTableWorkProbe.Write("RAR_NOTICE_PREVIEW scenario=" + (blocker ? "occupied_native_dialog" : "initial_full_registry") + " persistent=False formulas_changed=False");
+        }
+        internal static void PreviewMenu()
+        {
+            MainGame.me.gui_elements.dialog.Open(Localization.Get(Localization.Key.NoticePreview),
+                Localization.Get(Localization.Key.NoticeFirst), delegate { Preview(false); },
+                Localization.Get(Localization.Key.NoticeBlocker), delegate { Preview(true); }, null,
+                GameKey.Select, GameKey.Option1, Localization.Get(Localization.Key.NoticePreviewWarning));
+        }
+        private static class Loading
+        {
+            private static void Prefix() { if (disabled) return; try { Reset(); } catch (Exception ex) { Fail(ex); } }
+        }
+        private static class Loaded
+        {
+            private static void Postfix()
+            {
+                if (disabled) return;
+                loaded = true; Request();
+                StudyTableWorkProbe.Write("RAR_NOTICE_LOAD armed=True sources_read=False");
+            }
+        }
+        private static class Technology
+        {
+            private static void Postfix() { Request(); }
+        }
+        private static class CraftUnlock
+        {
+            private static void Postfix() { Request(); }
+        }
+        private static class Task
+        {
+            private static void Postfix() { Request(); }
+        }
+        private static class CraftFinished
+        {
+            private static void Postfix(CraftDefinition craft)
+            {
+                if (!disabled && craft != null && (craft is ObjectCraftDefinition || SourceResearch.IsJob(craft.id) || craft.craft_type == CraftDefinition.CraftType.MixedCraft)) Request();
+            }
+        }
+        private static class Day
+        {
+            private static void Postfix() { Request(); }
+        }
+        private static class WorldRefresh
+        {
+            private static void Postfix() { Request(); }
+        }
+    }
+}

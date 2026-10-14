@@ -13,7 +13,7 @@ namespace NikichMods.Research
             return Localization.Get(Localization.Key.NewRecipes).Replace("{0}", count.ToString(CultureInfo.InvariantCulture));
         }
 
-        internal static void Show(string product, int learned, GJCommons.VoidDelegate onClosed)
+        internal static void Show(string product, int learned, GJCommons.VoidDelegate onClosed, bool preview = false)
         {
             if (learned == 0) return;
             string count = CountText(learned);
@@ -31,11 +31,11 @@ namespace NikichMods.Research
                 });
                 // Native info mode owns the single product row, focus, font, resizing and close.
                 // Set its public heading after the native generic-information writer.
-                gui.label_header.text = Localization.Get(Localization.Key.ResearchCompleted);
+                gui.label_header.text = Localization.Get(preview ? Localization.Key.ResultPreview : Localization.Key.ResearchCompleted);
                 gui.UpdateAllAnchors();
             }
             catch { container.SetActive(priorActive); throw; }
-            StudyTableWorkProbe.Write("RAR_RESEARCH_RESULT product=" + product + " new_recipes=" + learned + " rows=1 native_info=True");
+            StudyTableWorkProbe.Write("RAR_RESEARCH_RESULT product=" + product + " new_recipes=" + learned + " rows=1 native_info=True preview=" + preview);
         }
     }
 }

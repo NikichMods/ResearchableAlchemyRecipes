@@ -141,6 +141,14 @@ namespace NikichMods.Research
         }
         internal static void Refresh(GameSave save)
         {
+            RefreshCore(save, "table_open");
+        }
+        internal static void RefreshForNotices(GameSave save)
+        {
+            RefreshCore(save, "notice_delivery");
+        }
+        private static void RefreshCore(GameSave save, string phase)
+        {
             snapshotSave = null; sourceAvailable = false;
             StudyTableWorkProbe.Write("RAR_TOPICS_CALL phase=before action=source_snapshot");
             // Lookup scans the existing WorldMap list; no singleton load, spawn or scene activation.
@@ -188,7 +196,7 @@ namespace NikichMods.Research
             StudyTableWorkProbe.Write("RAR_TOPICS_CALL phase=after action=source_snapshot builder_present=" + (desk != null) + " room_available=" + roomAvailable +
                 " church_instances=" + churchInstances.Count + " church_available=" + churchAvailable + " resurrection_technology=" + save.unlocked_techs.Contains(ResurrectionTechnology) +
                 " clotho_instances=" + witchInstances.Count + " trade_known=" + tradeKnown + " busy_ignored=True physical_source_available=" + sourceAvailable + " tutorial_blocks=" + tutorial);
-            Status("table_open", save);
+            Status(phase, save);
         }
         internal static bool Available(string id, GameSave save)
         {
@@ -201,6 +209,17 @@ namespace NikichMods.Research
         {
             return save.unlocked_phrases.Contains(TradePhrase) && !save.black_list_of_phrases.Contains(TradePhrase);
         }
+        internal static List<string> AvailableProducts(GameSave save)
+        {
+            var result = new List<string>();
+            foreach (string product in Products)
+            {
+                string id = JobPrefix + product;
+                if (Available(id, save) && !save.completed_one_time_crafts.Contains(id)) result.Add(product);
+            }
+            return result;
+        }
+        internal static List<string> PreviewProducts() { return new List<string>(Products); }
         internal static bool HasDiscovery(Item playerData, string product)
         {
             return playerData != null && playerData.GetParamInt(DiscoveryPrefix + product) == 1;

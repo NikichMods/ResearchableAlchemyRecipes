@@ -1,0 +1,35 @@
+# Availability notifications and compact result — research 0.1.44
+
+PRODUCT_REQUIREMENTS.md owns the adopted semantics. This is a research implementation with local checks; installed rendering, loader/event execution and exact-candidate acceptance remain pending. It does not select production source/toolchain/CI or promote the probe to main.
+
+## Mechanism and boundaries
+
+ResearchCompletion presents one native item row and this completion's learned count through TechUnlockDialogGUI.OpenAsItemsList, after the unchanged GrantRemaining. A scoped heading/count-container override is restored on close/failure. Ordinary technology windows and the frozen synthetic knowledge experiment remain unchanged.
+
+AvailabilityNotifications subscribes to native window events and owns eight separate optional Harmony hooks for loaded-game, tech/craft/task/day/world refresh boundaries. Loading first invalidates the old save/session/page; actual post-load playing enables later delivery. Callbacks only mark a refresh request. Pending-frame checks wait for the native window stack, tooltip/speech registries, visible generic hint container, corner/context presentation, native player-control/build state, starting/pause/disable flags and held input. Delivery occurs in a settled later update, not inside a window/key callback. World/source scanning occurs only for a pending request after access/safety, never while merely loading or on idle frames.
+
+The final displayed set is recomputed through the existing SourceResearch physical/source/quest/trade/technology/remaining-knowledge predicates. Native Item parameters rar_notice_seen_<product> and rar_notice_initial record shown pages only. There is no sidecar, persisted pending queue, duplicated source journal, currency or recipe knowledge. F8 work cleanup preserves these gameplay notice flags. Real source/discovery policies, research fees/work/refunds, native material Study and manufacture are unchanged.
+
+The user delegates oversized-list selection to simplicity/reliability. Three-product native information pages reuse verified item rows/icons/names/fonts/layout and DialogButtonsGUI Next/Close. Next schedules the following page after native Hide and input release; Back/Close dismisses without immediately reopening. Unseen pages remain unannounced and may appear after a later source/window/load request; already shown products never repeat. First nonempty overview includes the accepted study-table explanation; pre-alchemy or empty eligibility consumes nothing. Save changes invalidate old pages/previews, while persisted flags remain scoped to their native player Item.
+
+Shown-page commit waits for a later-frame native is_shown_and_top observation rather than merely successful Open return. A page replaced/hidden by a native popup in its opening frame does not consume its topic flags; native shared-instance replacement invalidates our pending page. This is a window-state commit boundary, not a claim to measure the player's attention or universal foreign render surfaces.
+
+Optional notice patch installation has separate ownership from mandatory research PatchAll. Failure disables notices for the session and makes partial event hooks inert; research remains enabled. Disposal removes only this module's events/patch owner. No universal third-party-overlay or modded scripted-state coverage is claimed.
+
+## Local checks and remaining runtime gate
+
+Compilation and the existing knowledge/source/quantity suites pass. NotificationStateTests checks quiet/empty initial states, displayed-only deduplication, current-set revalidation, source return, actual native Item binary roundtrip, unrelated parameters/save isolation, 33 topics across 11 bounded pages, early close/reload and ten unsafe-delivery inputs. Eight native hook targets are unambiguous, and the two window events exist on the actual host. All 54 strings cover 11 locales; the 27 native font-route checks have no missing glyphs.
+
+Full detour execution for Unity-dependent methods cannot be proved in the standalone CLR: the attempted installed-assembly detour ladder reaches Unity ECall preparation restrictions there. Metadata/local policy checks do not masquerade as a loader test. Native loaded-game activation and real UI timing/geometry/Next/Back are the remaining exact-candidate gate. TEST_LOG.md owns frozen artifact/install/return identity.
+
+## Small installed check
+
+Use the existing authorized test save and installed mod set. Do not reset quests, knowledge, vendor tiers or replay accepted payment/removal/recipe-persistence matrices.
+
+1. Load normally. If alchemy is unlocked and eligible unannounced topics exist, observe the first actual page after loading/other windows settle. Inspect title, study-table explanation, names/icons and Next/Close. Before alchemy or with no eligible topics, quiet behavior is expected; do not force such a save just for this check.
+2. F6, with windows closed: inspect the explicitly labelled result-interface example for black paint and count 2, then close. This calls the real result renderer only; it teaches no formulas, starts no work and spends nothing. Check readable count/title and normal OK/Back.
+3. F7 -> Initial overview: an explicitly labelled session-only 33-product UI example. Exercise at least two pages with Next, hover/focus a product and close early with Back/Close. Inspect readable rows, remaining count and absence of overlays/input errors. No player's source/knowledge/notice flags are modified by this preview.
+4. F7 -> Blocking window: keep the native blocking dialog open briefly. The queued preview must wait. Close it; the first preview page may then appear after input/window settlement. Close normally. Preview state clears on dismissal/completion/load/disposal.
+5. For the real announcement flags, save and reload normally after noting the actually shown products. Those products must not be announced again; previously unseen remaining pages may be offered. A whole-process restart or fresh Clotho visit is unnecessary for this bounded check. If source eligibility naturally changes, observe its new-topic notification, but do not manufacture progression.
+
+The agent reads and archives accessible logs. Screenshots/user judgment supply readability, wording and interaction acceptance. Sparse RAR_NOTICE_SHOWN includes preview/initial/products/remaining/storage mode; preview markers explicitly state no persistent or formula changes. F6/F7 are research-only controls and must be removed before production.
