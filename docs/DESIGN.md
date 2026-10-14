@@ -3,6 +3,25 @@
 Current adopted direction: study-table research plus informational alchemy guidance. The user adopts contextual ingredient guidance at known native recipes as the initial goal; a standalone journal is deferred and not required for the first version. This is design work, not a verified implementation architecture.
 
 ## Current recovery entry point — 2026-10-14
+This working segment is finished at the user's request. Resume from this checkpoint in the next chat; do not start another runtime candidate merely to recover. Branch: research/study-table-work. main remains the stable/documentation baseline; production source/toolchain/version is not selected. Actual local files and ignored LOCAL_ENVIRONMENT.md must be recovered before checkout work.
+
+Installed research baseline: StudyTableWorkProbe 0.1.40, exact compiled source a8ff5aa27d7c4d646ba33b7b79b5e66b06880f57; immutable DLL SHA-256 7e7ecfda4e4618609fbd012958f7bdef9124ecf83c3a08437d6bc7c5bf4cc7fa. One active study payload; SourceEligibilityProbe is completed/removed. TEST_LOG.md owns exact build/install/returned identities and bounded acceptance. Source artifacts and old payloads are preserved; no DLL/save cleanup or repeat F9 is needed for recovery.
+
+User accepts actual Clotho visit -> topic availability -> saving/exiting/loading with discovery retained -> mana research -> ordinary alchemy card. Archived return SHA-256 2abd6aba1aaa9fb993292bbbae1de363affb850a4c5c97116eb05cb4d2dda489. This return does not claim manufacture, full higher-tier/source-negative/compatibility coverage or partial-wording visual acceptance. Prior room/church/resurrection and guidance/language-switch/motion acceptance remain bounded under TEST_LOG.md.
+
+Adopted discovery rule: all saves require opening Clotho trade; that event introduces all currently stocked potion products on unlocked tiers without scrolling/hover/purchase. A tier upgrade alone requires another opening. Old saves revisit once; never infer save age or use vendor_inited/quest trade unlock as proof of a visit. Stable per-product rar_seen_clotho_ flags use the player's native serialized Item parameters, survive work cleanup and remain save-specific; native binary Item roundtrip plus returned save/reload pass. Phrase/physical/tier/current stock/alchemy/remaining-knowledge gates remain. No sidecar or general encounter journal exists.
+
+Ordinary source accounting is complete: 33 mod-research products / 42 formulas plus native-disclosed Spices / one formula = 34 ordinary products / 43 formulas. Vanilla Clotho disclosure already teaches Spices when its ordinary demand source becomes accessible, so do not add a redundant paid job or replay the quest. AWARENESS_SOURCE_AUDIT.md owns this accounting/reopen condition and its limits; native quest memory-potion paid-topic coverage and exhaustive installed eligibility are not implied. Ingredient guidance separately has its accepted 44-formula / 36-input non-slime-source audit; do not confuse these populations.
+
+Adopted partial-only text: `Часть рецептов известна. Открыть все варианты.` Implemented for all eleven native languages; 43-key/11-locale and 27 native font checks pass. User forgot visual inspection; check at the next convenient naturally partial topic rather than reopen wording discussion or reset knowledge. Accepted guidance geometry/palette/overlap/movement and ordinary native names/icons remain unchanged.
+
+Next substantive step: research economics. Recover PRODUCT_REQUIREMENTS.md and existing cost reasoning below before proposing concrete faith/science/energy/work values and treatment of partial knowledge/variant counts. Current one-faith/one-science/two-work/ten-energy values are diagnostic, not final adopted balance. Confirm consequential price/product choices before implementation. Then finish unfinished-work save/restart, cancellation/refunds (including station science), reward-dialog refinement and production setup/acceptance.
+
+Deferred notifications are adopted in PRODUCT_REQUIREMENTS.md: native-style message listing newly available research, safely delivered around trade/technology/reward/other popup/tooltip windows, with aggregation/deduplication and replayable test scenarios so the user need not naturally replay every event. No mechanism/hook/initial-load/reload policy is selected and no notification code exists. Schedule this after economics/lifecycle dependencies, before final player-flow acceptance. Do not invent a popup stack owner or notify over an occupied window.
+
+Shared workflow remains DevRules/CODEX_WORKFLOW.md: read/archive local logs autonomously; verify exact candidate and closed host, backup prior DLL outside plugins, install/hash-check one active payload, preserve unrelated mods/saves and immutable artifacts. Give contextual progress and the next reasoned step; report coherent milestones against the project goal. No new test matrix, branch switch, main merge/release or toolchain selection follows this handoff.
+
+## Historical recovery entries — superseded by the checkpoint above
 **Accepted 0.1.40 / ordinary-source accounting closure:** user verifies before/after actual Clotho trade, saved exit/reload persistence and mana research/native card; TEST_LOG.md owns exact returned evidence/limits. All-language partial wording is implemented/checked but the user forgot visual inspection, so that narrow presentation acceptance remains pending. Preserve immutable installed 0.1.40; no new runtime build/replay is needed merely for acceptance.
 
 The final Spices group follows verified vanilla authored learning (witch graph 140 trade-request unlock -> 142 formula reveal). On the normal route its one formula is already known when the relevant Merchant demand becomes accessible. Do not add a redundant paid topic. AWARENESS_SOURCE_AUDIT.md owns corpus accounting and reopen condition: 33 mod-research products / 42 formulas plus one vanilla-disclosed product / formula = all 34 ordinary products / 43 formulas accounted for. This is not exhaustive installed source-state/compatibility/native quest/production acceptance. Current positive source expansion slice closes; source families/higher trade tiers/physical negatives keep their bounded test limits.
@@ -158,7 +177,7 @@ The authorized native formula reward/persistence investigation passed its bounde
 
 1. After The Beginning Of Alchemy, can recipe research precede access to further manufacturing equipment/technology, particularly Advanced alchemy? The foundational access gate is adopted; later production capability remains separate.
 2. Exact faith/science/energy/work costs and treatment of partially known products.
-3. Exact contextual guidance UI at native recipe components and whether a locked table entry explains the alchemy prerequisite before access opens. Standalone journal is deferred.
+3. Deferred research-availability notifications: exact safe delivery, aggregation/deduplication and initial-load/reload behavior after verifying the native popup/stack owner. Contextual guidance appearance is accepted within TEST_LOG.md limits; standalone journal remains deferred.
 4. Cancellation behavior for paid research, including station science, after representative native behavior is verified.
 
 These are open decisions, not implicitly accepted defaults. The separate paid reagent-source stage, per-formula research buttons, automatic study of all sources, automatic formula reveal on awareness and a combined targeted-purchasing feature are not the chosen direction.
@@ -177,7 +196,7 @@ Research-method choice follows DevRules: reuse accepted evidence first, inspect 
 
 ## Immediate next step
 
-The positive automatic room-paint 0.1.10 flow is accepted; use the current recovery entry point above for presentation correction and remaining source/guidance gates. Native remaining-formula reward/persistence has passed its bounded 0.1.7 check; do not repeat that synthetic matrix as a prerequisite. General source coverage, negative states, guidance UI and final economics remain separate gates.
+Use the current recovery checkpoint above. The next workstream is final research economics after ordinary source accounting closure; current accepted installed 0.1.40 and its evidence are preserved. Do not repeat prior synthetic knowledge, observer or positive source matrices solely for recovery. Deferred lifecycle/refunds/notifications/reward presentation and production gates remain separate.
 
 ## Historical UI and knowledge investigation
 

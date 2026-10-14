@@ -1,5 +1,9 @@
 # Verified host evidence
 
+## Current source/persistence evidence checkpoint — 2026-10-14
+
+Installed research 0.1.40 has accepted Clotho trade discovery, saved reload persistence and mana learning/native-card evidence in TEST_LOG.md. Native discovery uses save-specific player Item parameters; GameSave serialized inventory composition and native Item binary roundtrip are verified, with the returned save/reload path observed. AWARENESS_SOURCE_AUDIT.md owns ordinary 34-product/43-formula source accounting: 33 mod-research groups/42 formulas plus one native Spices disclosure. PRODUCT_REQUIREMENTS.md owns actual-window/tier discovery and deferred notification semantics. No broad installed source-state/compatibility, partial-text visual or production promotion is inferred. Resume economics through DESIGN.md; old sections below retain their historical evidence limits.
+
 ## Overlapping tooltip render groups — 1.407 static evidence
 
 Returned 0.1.30 now has explicit user acceptance for the current overlap correction. Screenshot shows the native ingredient bubble wholly covering guidance; installed DLL identity is unchanged and the returned log records 22 panel groups at 4999/5000 with zero probe errors or broken-marker records. TEST_LOG.md owns hashes and private evidence paths. This closes the observed overlap presentation, not all foreign panel stacks/languages/lifecycle cases.
