@@ -2,6 +2,8 @@
 
 ## Study Table Work Probe 0.1.41 — native quest-request awareness, 2026-10-14
 
+Clean compiled source 5af2c664afd9d519bf5e370ac60f65eba7a693a9; immutable artifacts/StudyTableWorkProbe-0.1.41/StudyTableWorkProbe-0.1.41.dll SHA-256 76eeba71fabd2305b363ceed1583caf5c5ac9bd79b5baa976e04e2c107b74798. Built with SDK 6.0.406 Roslyn and recorded build-identity.json. Installed with game closed at canonical StudyTableWorkProbe.dll; installed hash matches and exactly one probe payload remains. Accepted 0.1.40 DLL backed up outside plugins and hash checked; pre-install log preserved with SHA-256 2abd6aba1aaa9fb993292bbbae1de363affb850a4c5c97116eb05cb4d2dda489. Installation identity is verified; installed behavior and user acceptance remain pending.
+
 Candidate scope: Clotho's assigned healing task and Astrologer's assigned acid task are independent awareness sources using existing save-backed KnownNPC tasks, Visible/Complete. Foundational alchemy and remaining native knowledge still gate research. No trade visit, stock or physical source station is required for these two requests. No final price changes, new quest flags, automatic formula grant, startup observer or new Harmony seam. QUEST_RESEARCH_SOURCES.md owns exact native writers/census and readiness bounds.
 
 Local compile/knowledge/quantity/source/localization suites pass. New host-assembly checks exercise absent NPC/no creation, exact assigned and fulfilled tasks, unrelated-task/product isolation, native KnownNPCList binary roundtrip/save isolation, real patched IsCraftVisible with no trade/physical source, pre-alchemy rejection, partial-healing visibility and fully-known healing/acid suppression. These checks are not installed assignment/save-reload/menu/payment acceptance.
