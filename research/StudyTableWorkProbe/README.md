@@ -1,5 +1,7 @@
 # Study Table Work Probe
 
+0.1.42 integrates the adopted 33-product tariff and zero faith, full-price remaining-formula research, save-backed prepaid science metadata and same-table refund after native cancellation. F9 explicitly cancels exactly one active study-table job through the native owner (vanilla material or recipe research); it is diagnostic, not production UI. Vanilla material/removal observation is read-only; no demolition compensation or removal restriction is added. See docs/RESEARCH_WORK_LIFECYCLE.md for scope, fixture limits and minimal return.
+
 0.1.41 adds bounded native task awareness for Clotho healing and Astrologer acid. Visible/Complete journal records are read at the existing source snapshot/payment seams; no trade visit or physical source station is required for those exact requests. See docs/QUEST_RESEARCH_SOURCES.md for native owners, offline checks and pending installed gates. Price values remain diagnostic; user-proposed research economics are not bundled.
 
 ## Current accepted research slice 0.1.40 — actual Clotho trade discovery

@@ -9,6 +9,16 @@ using HarmonyLib;
 
 public static class SourceTopicTests
 {
+    private static bool ScienceCapacity(string item_id, ref int __result)
+    {
+        if (item_id != "science") return true;
+        __result = 1000; return false;
+    }
+    private static bool LedgerDefinition(Item __instance, ref ItemDefinition __result)
+    {
+        if (__instance.id != "science" && !__instance.id.StartsWith("fixture_table") && __instance.id != "fixture_legacy_table") return true;
+        __result = new ItemDefinition { id = __instance.id, stack_count = 1000 }; return false;
+    }
     private const BindingFlags Private = BindingFlags.NonPublic | BindingFlags.Static;
     private static Type source;
     // The standalone CLR has no Unity Resources ECalls. Bag-item initialization is unrelated
@@ -41,6 +51,9 @@ public static class SourceTopicTests
         try
         {
             fixture.Patch(AccessTools.Method(typeof(Item), "CheckAndInitBagItem"), prefix: new HarmonyMethod(typeof(SourceTopicTests), "SkipBagInitialization"));
+            // The offline fixture supplies station capacity; native AddItem refund and serialization still run.
+            fixture.Patch(AccessTools.Method(typeof(Item), "CanAddCount", new[] { typeof(string), typeof(bool), typeof(bool) }), prefix: new HarmonyMethod(typeof(SourceTopicTests), "ScienceCapacity"));
+            fixture.Patch(AccessTools.PropertyGetter(typeof(Item), "definition"), prefix: new HarmonyMethod(typeof(SourceTopicTests), "LedgerDefinition"));
             Run(dir);
         }
         finally { fixture.UnpatchSelf(); }
@@ -128,6 +141,34 @@ public static class SourceTopicTests
         Assert(balance.craft_data.Count == 91, "Registration duplicated native jobs");
         var topics = (IDictionary)source.GetField("topics", Private).GetValue(null);
         Assert(topics.Count == 33, "Bounded registration count");
+        int totalScience = 0, totalWork = 0, totalEnergy = 0;
+        var feeGroups = new Dictionary<int, int>();
+        foreach (DictionaryEntry entry in topics)
+        {
+            var definition = (CraftDefinition)entry.Value.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(entry.Value);
+            Assert(definition.needs.Count == 0 && definition.needs_from_wgo.Count == 1 && definition.needs_from_wgo[0].id == "science", "Research unexpectedly charges faith or another item");
+            int fee = definition.needs_from_wgo[0].value;
+            totalScience += fee; totalWork += (int)definition.craft_time.default_value; totalEnergy += (int)definition.energy.default_value;
+            feeGroups[fee] = feeGroups.ContainsKey(fee) ? feeGroups[fee] + 1 : 1;
+        }
+        Assert(totalScience == 132 && totalWork == 158 && totalEnergy == 202 && feeGroups.Count == 5 &&
+            feeGroups[1] == 8 && feeGroups[2] == 4 && feeGroups[4] == 14 && feeGroups[8] == 5 && feeGroups[10] == 2,
+            "Registered native jobs differ from the adopted catalog tariff");
+        var reserve = asm.GetType("NikichMods.Research.ResearchScienceReserve", true);
+        var tableLedger = new Item("fixture_table", 1);
+        tableLedger.inventory.Add(new Item("science", 12));
+
+        reserve.GetMethod("Record", Private).Invoke(null, new object[] { tableLedger, 8 });
+        var restoredLedger = SmartSerializer.Deserialize<Item>(SmartSerializer.Serialize<Item>(tableLedger));
+        Assert(restoredLedger.GetItemsCount("science", true) == 12 && (int)reserve.GetMethod("Read", Private).Invoke(null, new object[] { restoredLedger }) == 8,
+            "Native Item roundtrip loses the outstanding paid fee");
+        Assert((int)reserve.GetMethod("Refund", Private).Invoke(null, new object[] { restoredLedger, 1 }) == 8 &&
+            restoredLedger.GetItemsCount("science", true) == 20 && (int)reserve.GetMethod("Read", Private).Invoke(null, new object[] { restoredLedger }) == 0,
+            "Cancellation fails to restore exact prepaid science");
+        Assert(tableLedger.GetItemsCount("science", true) == 12, "Refund leaks to another save/table instance");
+        var legacyLedger = new Item("fixture_legacy_table", 1);
+        Assert((int)reserve.GetMethod("Refund", Private).Invoke(null, new object[] { legacyLedger, 1 }) == 1 && legacyLedger.GetItemsCount("science", true) == 1,
+            "Legacy diagnostic prepaid fee is replaced by the current product price");
         var vendorData = new Item("fixture_vendor", 1);
         var healingItem = balance.items_data.Find(i => i.id == "pot_heal");
         Assert((int)Call("VendorStock", vendorData, false, healingItem, 1) == 10 && vendorData.inventory.Count == 0, "Cold stock projection mutates a vendor or misses first-tier stock");
@@ -202,7 +243,7 @@ public static class SourceTopicTests
         var job = (CraftDefinition)topic.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(topic);
         var visible = topic.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance);
         var formulas = (List<CraftDefinition>)topic.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(topic);
-        Assert(job.needs.Count == 1 && job.needs[0].id == "faith" && job.output.Count == 0 && job.one_time_craft && !job.CanCraftMultiple(), "Sample-free single job contract");
+        Assert(job.needs.Count == 0 && job.needs_from_wgo.Count == 1 && job.needs_from_wgo[0].id == "science" && job.output.Count == 0 && job.one_time_craft && !job.CanCraftMultiple(), "Sample-free zero-faith single job contract");
         Assert(job.icon == "fixture_native_icon_yellow_paint", "Native item icon metadata ignored");
         var enabled = asm.GetType("NikichMods.Research.StudyTableWorkProbe").GetField("enabledProbe", Private);
         enabled.SetValue(null, true);

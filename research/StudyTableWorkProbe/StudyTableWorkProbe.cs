@@ -10,8 +10,8 @@ using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
-[assembly: AssemblyVersion("0.1.41.0")]
-[assembly: AssemblyFileVersion("0.1.41.0")]
+[assembly: AssemblyVersion("0.1.42.0")]
+[assembly: AssemblyFileVersion("0.1.42.0")]
 
 namespace NikichMods.Research
 {
@@ -19,7 +19,7 @@ namespace NikichMods.Research
     [BepInDependency("p1xel8ted.gyk.maxbuttonsredux", BepInDependency.DependencyFlags.SoftDependency)]
     public sealed class StudyTableWorkProbe : BaseUnityPlugin
     {
-        public const string Version = "0.1.41";
+        public const string Version = "0.1.42";
         internal const string JobId = "rar_probe_work_010";
         private const string TableId = "mf_alchemy_survey";
         private const string Technology = "The Beginning Of Alchemy";
@@ -64,6 +64,24 @@ namespace NikichMods.Research
 
         private void Update()
         {
+            if (registrationSeen && MainGame.game_started && BaseGUI.all_guis_closed && Input.GetKeyDown(KeyCode.F9))
+            {
+                try
+                {
+                    CraftComponent target = null; int count = 0;
+                    foreach (var table in UnityEngine.Object.FindObjectsOfType<WorldGameObject>())
+                    {
+                        if (!IsTable(table) || table.is_removed) continue;
+                        var cc = table.components.craft;
+                        if (!cc.is_crafting || !ObserveStudy(cc, cc.current_craft)) continue;
+                        target = cc; count++;
+                    }
+                    Write("RAR_STUDY_CANCEL_REQUEST diagnostic_key=F9 active_tables=" + count);
+                    if (count == 1) target.Cancel(); // Actual native cancellation; no simulated progress or refund.
+                }
+                catch (Exception ex) { Fail(ex); }
+                return;
+            }
             if (MainGame.game_started)
             {
                 try { RecipeGuidance.Refresh(); }
@@ -91,6 +109,10 @@ namespace NikichMods.Research
         internal static bool IsJob(CraftDefinition craft) { return craft != null && IsJobId(craft.id); }
         internal static bool IsJobId(string id) { return id == JobId || id == FormulaKnowledge.Job || SourceResearch.IsJob(id); }
         private static bool IsTable(WorldGameObject table) { return table != null && table.obj_id == TableId; }
+        private static bool ObserveStudy(CraftComponent component, CraftDefinition craft)
+        {
+            return craft != null && IsTable(component.wgo) && (IsJob(craft) || craft.craft_type == CraftDefinition.CraftType.Survey);
+        }
 
         internal static void Cleanup()
         {
@@ -231,11 +253,11 @@ namespace NikichMods.Research
             private static void Prefix(CraftComponent __instance, CraftDefinition craft, out Resources __state)
             {
                 __state = null;
-                if (!enabledProbe || !IsJob(craft)) return;
+                if (!enabledProbe || !ObserveStudy(__instance, craft)) return;
                 try {
-                    bool sampleFree = craft.needs.Count == 1 && craft.needs[0].id == "faith" && craft.item_needs.Count == 0;
+                    bool sampleFree = craft.needs.Count == 0 && craft.item_needs.Count == 0;
                     __state = Resources.Capture(__instance.wgo);
-                    Write("RAR_WORK_START phase=before sample_free=" + sampleFree + " output_count=" + craft.output.Count + __state.Summary());
+                    Write("RAR_WORK_START phase=before job=" + craft.id + " sample_free=" + sampleFree + " output_count=" + craft.output.Count + __state.Summary());
                 }
                 catch (Exception ex) { Fail(ex); }
             }
@@ -253,8 +275,8 @@ namespace NikichMods.Research
             private static void Prefix(CraftComponent __instance, out Resources __state)
             {
                 __state = null;
-                if (!enabledProbe || !IsJob(__instance.current_craft)) return;
-                try { __state = Resources.Capture(__instance.wgo); Write("RAR_WORK_CANCEL phase=before" + __state.Summary()); }
+                if (!enabledProbe || !ObserveStudy(__instance, __instance.current_craft)) return;
+                try { __state = Resources.Capture(__instance.wgo); Write("RAR_WORK_CANCEL phase=before job=" + __instance.current_craft.id + " reserved=" + ResearchScienceReserve.Read(__instance.wgo.data) + __state.Summary()); }
                 catch (Exception ex) { Fail(ex); }
             }
             private static void Postfix(CraftComponent __instance, Resources __state)
@@ -262,6 +284,22 @@ namespace NikichMods.Research
                 if (__state == null) return;
                 try { Write("RAR_WORK_CANCEL phase=after active=" + __instance.is_crafting + " refund_as_drops=True" + Resources.Capture(__instance.wgo).Summary()); }
                 catch (Exception ex) { Fail(ex); }
+            }
+        }
+
+        [HarmonyPatch(typeof(WorldGameObject), "DestroyMe")]
+        private static class StudyRemovalObserver
+        {
+            private static void Prefix(WorldGameObject __instance)
+            {
+                if (!enabledProbe || !IsTable(__instance) || __instance.is_removed) return;
+                try
+                {
+                    var cc = __instance.components.craft;
+                    Write("RAR_STUDY_REMOVE observation_only=True active=" + cc.is_crafting + " job=" + (cc.current_craft == null ? "none" : cc.current_craft.id)
+                        + " reserved=" + ResearchScienceReserve.Read(__instance.data) + " drop_inventory=" + __instance.obj_def.drop_inventory_after_remove + Resources.Capture(__instance).Summary());
+                }
+                catch (Exception ex) { Write("RAR_STUDY_REMOVE_OBSERVER_ERROR " + ex); }
             }
         }
 
@@ -286,8 +324,9 @@ namespace NikichMods.Research
         {
             private static void Postfix(CraftComponent __instance, SerializableWGO.SerializableCraft data)
             {
-                if (!enabledProbe || !IsJobId(data.cur_craft_id)) return;
-                Write("RAR_WORK_RESTORE saved_active=" + data.is_crafting + " resolved=" + IsJob(__instance.current_craft) + " active=" + __instance.is_crafting);
+                if (!enabledProbe || !ObserveStudy(__instance, __instance.current_craft)) return;
+                Write("RAR_WORK_RESTORE job=" + data.cur_craft_id + " saved_active=" + data.is_crafting + " resolved=" + (__instance.current_craft != null)
+                    + " active=" + __instance.is_crafting + " progress=" + Number(__instance.wgo.progress) + " reserved=" + ResearchScienceReserve.Read(__instance.wgo.data) + Resources.Capture(__instance.wgo).Summary());
             }
         }
 

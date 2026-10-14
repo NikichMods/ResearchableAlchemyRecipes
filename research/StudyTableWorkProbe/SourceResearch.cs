@@ -88,6 +88,7 @@ namespace NikichMods.Research
                     one_time_craft = true, disable_multi_craft = true, enqueue_type = CraftDefinition.EnqueueType.NeverEnqueue,
                     hide_quality_icon = true, tab_id = StudyTabs.ResearchTab
                 };
+                ResearchEconomics.Apply(topic.job, product);
                 topics.Add(topic.job.id, topic);
             }
             foreach (var topic in topics.Values)

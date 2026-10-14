@@ -1,5 +1,11 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.42 — adopted tariff, native cancel refund and vanilla comparison
+
+Scope: all 33 source research jobs use adopted full-product science fees, zero faith and work/energy groups. Partial knowledge changes only remaining reward, never the fee. Payment remains native upfront reservation; a namespaced table Item parameter retains its actual paid amount, successful native cancellation returns it to the same table, completion clears it without refund or another payment. Legacy jobs without metadata retain their original one-science prepaid amount. No deferred payment or demolition compensation is implemented. RESEARCH_WORK_LIFECYCLE.md owns readiness, static owners, policy and minimal installed scenarios.
+
+Local compilation and knowledge/quantity/source/localization suites pass. All 33 actual registered definitions match approved group counts and totals 132 science/158 work/202 energy. Native Item binary roundtrip preserves outstanding fee and paid inventory; native AddItem restores exact science in a fixture with supplied engine-dependent capacity/item definitions. Refund isolation and legacy fee checks pass. These tests do not execute native Cancel/End/full save/real removal or prove installed acceptance. F9 is an explicit candidate-only call to actual native Cancel for exactly one active study-table work, including vanilla Survey. Native vanilla study costs/rewards/cancellation/destruction are observed, not changed. DestroyMe observer records removal only. Exact handed identity follows after frozen build/install.
+
 ## Study Table Work Probe 0.1.41 — native quest-request awareness, 2026-10-14
 
 Clean compiled source 5af2c664afd9d519bf5e370ac60f65eba7a693a9; immutable artifacts/StudyTableWorkProbe-0.1.41/StudyTableWorkProbe-0.1.41.dll SHA-256 76eeba71fabd2305b363ceed1583caf5c5ac9bd79b5baa976e04e2c107b74798. Built with SDK 6.0.406 Roslyn and recorded build-identity.json. Installed with game closed at canonical StudyTableWorkProbe.dll; installed hash matches and exactly one probe payload remains. Accepted 0.1.40 DLL backed up outside plugins and hash checked; pre-install log preserved with SHA-256 2abd6aba1aaa9fb993292bbbae1de363affb850a4c5c97116eb05cb4d2dda489. Installation identity is verified; installed behavior and user acceptance remain pending.
