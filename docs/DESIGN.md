@@ -47,7 +47,7 @@ Remaining work is bounded, not a reason to rerun accepted matrices:
 
 - Review source/quest runtime gaps: naturally assigned unknown Clotho healing and Astrologer acid before trade/source-station access; higher vendor tiers and physical/source-negative states. QUEST_RESEARCH_SOURCES.md and AWARENESS_SOURCE_AUDIT.md own automated versus installed limits. Missing natural saves leave those observations pending.
 - Inspect the adopted partial-topic text at a naturally partial topic when convenient; all 11 locales/font checks pass, but the latest wording still lacks explicit visual acceptance.
-- Review final reward dialog, normal player cancellation access and remaining input/compatibility boundaries. F9 is a research-only native Cancel trigger, not an adopted production control. No new cancellation button/mechanic has been selected.
+- Review final reward dialog and remaining input/compatibility boundaries. The user chooses no separate research-cancel button; it is not an unfinished release gate. Preserve interruption refunds. F9 is a research-only native Cancel trigger, not an adopted production control.
 - Implement adopted availability notifications after verifying native popup coordination. Safe timing, aggregation/deduplication, initial-load/reload policy and replayable test scenarios remain open; no notification implementation exists.
 - Select production source/build/version/CI only when these concrete dependencies require it; remove diagnostic controls/censuses, audit sparse support logs and licensing, then perform final player-flow acceptance. The research probe is not the production release.
 
@@ -62,11 +62,11 @@ Recovered clean research/study-table-work at 13a377b; installed 0.1.43 hash and 
 | Assigned unknown healing/acid before trade/source station | Exact native task/serialization/eligibility tests exist. Actual natural dialogue/menu/save states remain pending; do not manufacture quest or knowledge resets. |
 | Higher vendor tiers, depletion and physical/source negatives | Positive source slices and offline policy tests exist. Use a naturally suitable save/state for the outstanding installed boundary; ordinary-corpus accounting is already closed. |
 | Partial-topic text | All-locale/font checks pass. A convenient naturally partial topic needs only visual inspection. |
-| Ordinary cancellation access | Static review identifies upstream active-table menu blockers; RESEARCH_WORK_LIFECYCLE.md owns the finding. User asks to discuss necessity before choosing a control; a separate cancel action is not adopted. |
+| Ordinary cancellation access | Static active-table menu blockers are documented. User chooses no separate cancel button for the short-work scope; no dedicated-control release gate remains. Preserve accepted refunds; F9 stays diagnostic. |
 | Reward polish and availability notifications | Reward knowledge/persistence is accepted, presentation remains unfinished. Native popup coordination and notification lifecycle policy still need investigation/design before implementation. |
 | Production source/build/version/CI | Follow concrete dependencies after the player-flow choices/gates above; do not promote the research probe. |
 
-Current discussion: determine whether everyday pre-completion cancellation is needed at all, distinguishing refund correctness from a new player-facing control. Keep 0.1.43 and its accepted interruption/refund behavior unchanged. No UI choice, extra confirmation dialog or candidate is adopted by this review.
+Current decision: the user explicitly chooses not to implement a separate research-cancel button. Keep 0.1.43 and its accepted interruption/refund behavior unchanged; no replacement control or extra confirmation flow is adopted. Next local investigation is final reward-dialog presentation and native popup coordination for the adopted availability notifications; naturally suitable source/partial-text observations remain pending in parallel. No new candidate follows from recording this decision.
 
 ## Historical recovery entries — superseded by the checkpoint above
 **Accepted 0.1.40 / ordinary-source accounting closure:** user verifies before/after actual Clotho trade, saved exit/reload persistence and mana research/native card; TEST_LOG.md owns exact returned evidence/limits. All-language partial wording is implemented/checked but the user forgot visual inspection, so that narrow presentation acceptance remains pending. Preserve immutable installed 0.1.40; no new runtime build/replay is needed merely for acceptance.

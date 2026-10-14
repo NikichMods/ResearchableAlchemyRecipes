@@ -31,6 +31,8 @@ For an alchemical product known to the character, the player can follow a predic
 
 Payment uses native upfront science reservation, chosen after reviewing deferred-payment complications. Successful ordinary cancellation or replacement of active research by native removal work returns the full prepaid science to the same study table; already spent energy/work is not refunded. Native material studies are unchanged. Vanilla comparison is recorded: assignment returns inventory inputs but not science, and actual demolition destroys table inventory. Our reservation is returned when removal interrupts research; actual demolition still follows vanilla inventory loss. No science bank/transfer/prohibition is adopted. RESEARCH_WORK_LIFECYCLE.md owns candidate evidence and limits.
 
+The user explicitly chooses not to implement a separate research-cancel button (2026-10-14). Short adopted work makes a dedicated cancellation control unnecessary for the current scope. Preserve accepted refund behavior whenever native cancellation or removal interruption occurs. Diagnostic F9 is not a production control. This decision does not authorize a replacement hotkey, new confirmation flow or changes to ordinary material Study.
+
 ## Study-table presentation
 
 - Present ordinary material Study and recipe research as two tabs in a common native-style frame. Tabs use icons, as on vanilla workbenches, rather than permanent text captions. Exact icon choice and final presentation remain subject to visual acceptance.
