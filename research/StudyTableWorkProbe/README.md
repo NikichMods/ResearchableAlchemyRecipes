@@ -1,5 +1,9 @@
 # Study Table Work Probe
 
+## 0.1.46 science-price display and continuous notice pages
+
+Display the actual native upfront science fee in each registered research row's native spend label, using the table's inventory for shortage color. Next redraws native item rows in the existing owned window after input release, preserving source revalidation and shown-page flags. Initial safe opening and final Close/Back remain native. All local suites pass, including exact registered-price display/shortage assertions and the native row metadata check. Installed price/icon placement, uninterrupted Next, last-page OK and early Close remain the changed-path gate. No payment, work, recipe or save-format change.
+
 ## 0.1.45 UI correction
 
 Restore native notice-button label height after layout using the same final step as DialogGUI.OpenDialog. Shorten the F6 diagnostic heading in all eleven locales. Keep the adopted one-product result and synthetic count two unchanged. Existing suites/localization/font checks pass; Close readability and F6 title need bounded installed visual confirmation. No global UI patch, mechanics or persisted-state change.

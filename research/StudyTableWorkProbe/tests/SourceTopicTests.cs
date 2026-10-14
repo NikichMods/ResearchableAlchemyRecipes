@@ -150,18 +150,26 @@ public static class SourceTopicTests
         var topics = (IDictionary)source.GetField("topics", Private).GetValue(null);
         Assert(topics.Count == 33, "Bounded registration count");
         int totalScience = 0, totalWork = 0, totalEnergy = 0;
+        var displayPrice = asm.GetType("NikichMods.Research.ResearchCostDisplay", true).GetMethod("Format", Private);
         var feeGroups = new Dictionary<int, int>();
         foreach (DictionaryEntry entry in topics)
         {
             var definition = (CraftDefinition)entry.Value.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(entry.Value);
             Assert(definition.needs.Count == 0 && definition.needs_from_wgo.Count == 1 && definition.needs_from_wgo[0].id == "science", "Research unexpectedly charges faith or another item");
             int fee = definition.needs_from_wgo[0].value;
+            string expectedPrice = "[c](sci)[/c]" + fee;
+            Assert((string)displayPrice.Invoke(null, new object[] { fee, fee, "" }) == expectedPrice,
+                "Displayed science differs from the registered upfront fee");
+            Assert((string)displayPrice.Invoke(null, new object[] { fee, fee - 1, "native spend" }) ==
+                "[ff1111]" + expectedPrice + "[-]\nnative spend", "Shortage color or existing spend text lost");
             totalScience += fee; totalWork += (int)definition.craft_time.default_value; totalEnergy += (int)definition.energy.default_value;
             feeGroups[fee] = feeGroups.ContainsKey(fee) ? feeGroups[fee] + 1 : 1;
         }
         Assert(totalScience == 132 && totalWork == 107 && totalEnergy == 202 && feeGroups.Count == 5 &&
             feeGroups[1] == 8 && feeGroups[2] == 4 && feeGroups[4] == 14 && feeGroups[8] == 5 && feeGroups[10] == 2,
             "Registered native jobs differ from the adopted catalog tariff");
+        Assert((string)displayPrice.Invoke(null, new object[] { 0, 0, "native spend" }) == "native spend",
+            "Absent fee changes native spend text");
         var reserve = asm.GetType("NikichMods.Research.ResearchScienceReserve", true);
         var tableLedger = new Item("fixture_table", 1);
         tableLedger.inventory.Add(new Item("science", 12));

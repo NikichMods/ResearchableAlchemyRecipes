@@ -77,6 +77,8 @@ internal static class NotificationStateTests
                 Assert(!(bool)Call("Safe", blocked), "Unsafe UI/control/input boundary admitted: " + i);
             }
             var notices = asm.GetType("NikichMods.Research.AvailabilityNotifications", true);
+            var rows = (FieldInfo)notices.GetField("UnlockRows", Private).GetValue(null);
+            Assert(rows != null && rows.FieldType == typeof(List<TechTreeGUIUnlockItem>), "Native reusable notice rows changed");
             int bound = 0;
             var targets = (Type[])notices.GetField("TargetTypes", Private).GetValue(null);
             var targetNames = (string[])notices.GetField("TargetNames", Private).GetValue(null);

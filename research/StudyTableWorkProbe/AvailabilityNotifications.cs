@@ -14,6 +14,7 @@ namespace NikichMods.Research
         private static readonly FieldInfo Tooltips = AccessTools.Field(typeof(TooltipBubbleGUI), "_all");
         private static readonly FieldInfo Speech = AccessTools.Field(typeof(SpeechBubbleGUI), "all");
         private static readonly MethodInfo PlayerControl = AccessTools.Method(typeof(BaseCharacterComponent), "PlayerControlIsDisabled");
+        private static readonly FieldInfo UnlockRows = AccessTools.Field(typeof(TechUnlockDialogGUI), "_unlocks");
         private static readonly Type[] TargetTypes = { typeof(MainGame), typeof(MainGame), typeof(GameSave), typeof(GameSave), typeof(GameSave), typeof(GameSave), typeof(EnvironmentEngine), typeof(WorldMap) };
         private static readonly string[] TargetNames = { "OnGameLoaded", "OnGameStartedPlaying", "UnlockTech", "UnlockCraft", "SetTaskState", "OnFinishedCraft", "OnEndOfDay", "RescanWGOsList" };
         private static readonly Type[] HandlerTypes = { typeof(Loading), typeof(Loaded), typeof(Technology), typeof(CraftUnlock), typeof(Task), typeof(CraftFinished), typeof(Day), typeof(WorldRefresh) };
@@ -35,7 +36,9 @@ namespace NikichMods.Research
 
         internal static void Install()
         {
-            if (Tooltips == null || Speech == null || PlayerControl == null || PlayerControl.ReturnType != typeof(bool) || PlayerControl.GetParameters().Length != 0)
+            if (Tooltips == null || Speech == null || UnlockRows == null ||
+                UnlockRows.FieldType != typeof(List<TechTreeGUIUnlockItem>) ||
+                PlayerControl == null || PlayerControl.ReturnType != typeof(bool) || PlayerControl.GetParameters().Length != 0)
             { Fail(new InvalidOperationException("Missing verified notification overlay/control contract")); return; }
             try
             {
@@ -121,9 +124,14 @@ namespace NikichMods.Research
         }
         internal static void Tick()
         {
-            if (!StudyTableWorkProbe.enabledProbe || !loaded || disabled || !dirty || pageOpen) return;
+            if (!StudyTableWorkProbe.enabledProbe || !loaded || disabled || (!dirty && !nextPage)) return;
             try
             {
+                if (pageOpen)
+                {
+                    if (nextPage) AdvancePage();
+                    return;
+                }
                 var game = MainGame.me;
                 if (!MainGame.game_started || game == null || game.player == null || game.save == null) return;
                 if (!ReferenceEquals(boundSave, game.save))
@@ -172,16 +180,40 @@ namespace NikichMods.Research
             }
             catch (Exception ex) { Fail(ex); }
         }
-        private static void ShowPage(Item data, List<string> pending)
+        private static void AdvancePage()
+        {
+            var game = MainGame.me;
+            if (game == null || !ReferenceEquals(game.save, boundSave) || !MainGame.game_started ||
+                MainGame.game_starting || MainGame.paused || MainGame.disable_all_game ||
+                owner == null || !owner.is_shown_and_top || Time.frameCount <= requestFrame ||
+                Input.anyKey || Input.GetMouseButton(0) || Input.GetMouseButton(1) ||
+                HasOverlay(Tooltips) || HasOverlay(Speech) || ManagedHintShown(game.gui_elements) ||
+                game.gui_elements.corner_talk.is_shown || game.gui_elements.context_menu_bubble.is_shown) return;
+            Item data = previewData ?? game.player.data;
+            bool alchemy = previewData != null || game.save.unlocked_techs.Contains(SourceResearch.Technology);
+            var eligible = previewProducts;
+            if (eligible == null)
+            {
+                SourceResearch.RefreshForNotices(game.save);
+                eligible = SourceResearch.AvailableProducts(game.save);
+            }
+            var pending = AvailabilityNoticeState.Pending(data, alchemy, eligible);
+            if (pending.Count == 0) { ClosePage(false); return; }
+            ShowPage(data, pending, true);
+        }
+        private static void ShowPage(Item data, List<string> pending, bool replaceContents = false)
         {
             var page = AvailabilityNoticeState.Page(pending);
             bool more = pending.Count > page.Count;
             bool initial = AvailabilityNoticeState.IsInitial(data);
             bool preview = previewData != null;
-            owner = MainGame.me.gui_elements.tech_dialog;
-            countContainer = owner.subheader_container;
-            priorContainerActive = countContainer.activeSelf;
-            countContainer.SetActive(true);
+            if (!replaceContents)
+            {
+                owner = MainGame.me.gui_elements.tech_dialog;
+                countContainer = owner.subheader_container;
+                priorContainerActive = countContainer.activeSelf;
+                countContainer.SetActive(true);
+            }
             string subheader = initial ? Localization.Get(Localization.Key.NoticeHowTo) : "";
             if (more)
             {
@@ -192,13 +224,32 @@ namespace NikichMods.Research
             foreach (string product in page) items.Add(new Item(product, 1));
             int token = generation;
             nextPage = false;
-            owner.OpenAsItemsList(subheader, items, delegate {
-                if (token != generation) return;
-                RestoreContainer(); pageOpen = false;
-                displayedData = null; displayedPage = null;
-                if (nextPage) Request();
-                else { dirty = false; quietFrame = -1; previewData = null; previewProducts = null; }
-            });
+            if (!replaceContents)
+                owner.OpenAsItemsList(subheader, items, delegate {
+                    if (token != generation) return;
+                    RestoreContainer(); pageOpen = false; nextPage = false;
+                    displayedData = null; displayedPage = null;
+                    dirty = false; quietFrame = -1; previewData = null; previewProducts = null;
+                });
+            else
+            {
+                // Native info row rendering, without closing/reopening the window.
+                // Run on a later update, outside native button/key enumeration.
+                var rows = (List<TechTreeGUIUnlockItem>)UnlockRows.GetValue(owner);
+                if (rows.Count < page.Count) throw new InvalidOperationException("Native notice rows changed");
+                owner.subheader.text = subheader;
+                for (int i = 0; i < rows.Count; i++)
+                {
+                    if (i >= items.Count) { rows[i].Draw(null, null); continue; }
+                    var definition = items[i].definition;
+                    rows[i].Draw(new TechUnlock.TechUnlockData {
+                        sprite = EasySpritesCollection.GetSprite(definition.GetIcon(), false, ""),
+                        name = definition.GetItemName(true), quality_icon = definition.TryGetQualitySprite(),
+                        description = definition.GetItemDescription(null)
+                    }, null);
+                }
+                owner.table.Reposition();
+            }
             owner.label_header.text = Localization.Get(preview ? Localization.Key.NoticePreview : Localization.Key.NoticeTitle);
             var buttons = owner.GetComponentInChildren<DialogButtonsGUI>(true);
             buttons.Set(more ? Localization.Get(Localization.Key.Next) : GJL.L("OK"), delegate { ClosePage(more); },
@@ -210,6 +261,7 @@ namespace NikichMods.Research
             foreach (var button in buttons.GetComponentsInChildren<DialogButtonGUI>(true)) button.RestoreHeight();
             if (!owner.is_shown || !owner.add_to_opened_stack) throw new InvalidOperationException("Native notice page did not enter its window stack");
             pageOpen = true; dirty = false;
+            nextPage = false;
             displayedData = data; displayedPage = page;
             displayedInitial = initial; displayedPreview = preview; displayedRemaining = pending.Count - page.Count;
             openedFrame = Time.frameCount;
@@ -233,7 +285,8 @@ namespace NikichMods.Research
             if (!pageOpen) return;
             ObserveShown();
             nextPage = continuePages;
-            owner.Hide(true); // Native on-hide callback schedules later delivery, never opens inside a key callback.
+            if (continuePages) requestFrame = Time.frameCount;
+            else owner.Hide(true);
         }
         private static void Fail(Exception ex)
         {

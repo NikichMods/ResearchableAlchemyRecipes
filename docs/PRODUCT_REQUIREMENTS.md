@@ -86,6 +86,8 @@ The user explicitly chooses not to implement a separate research-cancel button (
 
 ## Research-availability notifications
 
+User clarification (2026-10-15): show the science icon and exact upfront fee in the research list before starting work; insufficient table science should be apparent. This adds presentation, not a second payment or a change to the adopted tariff. The user also requests eliminating the reported world-screen flash between notice pages if simple/reliable: prefer updating existing native rows in the still-open owned window, retaining deferred input handling, source revalidation, safe initial delivery, foreign-window ownership and displayed-only flags. Do not add animation/overlay infrastructure merely to hide the gap.
+
 - The user wants a player-visible notification when new research topics become available, identifying the products together. Opening Clotho trade is a representative event; the broader source families must be considered too. Do not require a study-table visit merely to learn that new topics exist.
 - User accepts the proposed distinction/presentation on 2026-10-14: availability message heading `Доступны новые исследования`, with newly available product names grouped together. This message offers paid topics and does not announce learned recipes. Deliver after the occupied window closes at a verified safe boundary; the exact native mechanism remains open.
 - User accepts the initial-overview/deduplication direction: once per save, show currently eligible unknown/partial topics; later announce only topics becoming available for the first time. Reload, repeated Clotho visits and disappearance/reappearance of an already announced source do not repeat that topic's notification.
