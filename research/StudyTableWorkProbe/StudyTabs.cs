@@ -100,6 +100,7 @@ namespace NikichMods.Research
                     if (BaseGUI.for_gamepad) { Craft.GetGamepadController().Enable(); Craft.GetGamepadController().ReinitItems(true); }
                 }
                 Craft.UpdateAllAnchors();
+                if (id == ResearchTab) ResearchCostDisplay.Refresh(Craft);
                 Sounds.OnGUITabClick();
                 StudyTableWorkProbe.Write("RAR_TABS_SWITCH tab=" + id + " outer=" + Craft.is_shown + " study=" + Study.is_shown + " study_top=" + Study.is_shown_and_top);
             }
@@ -112,6 +113,7 @@ namespace NikichMods.Research
             restoring = true;
             try
             {
+                ResearchCostDisplay.Restore();
                 var saved = snapshot;
                 table = null;
                 snapshot = null;

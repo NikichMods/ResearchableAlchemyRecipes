@@ -193,6 +193,10 @@ public static class SourceTopicTests
         Assert(topics.Count == 33, "Bounded registration count");
         int totalScience = 0, totalWork = 0, totalEnergy = 0;
         var displayPrice = asm.GetType("NikichMods.Research.ResearchCostDisplay", true).GetMethod("Format", Private);
+        Assert(!typeof(UnityEngine.MonoBehaviour).IsAssignableFrom(asm.GetType("NikichMods.Research.ResearchSciencePriceCell", true)),
+            "Science price view must not add a custom Unity component to the load lifecycle");
+        Assert(asm.GetType("NikichMods.Research.ResearchCostDisplay", true).GetNestedType("PriceCell", BindingFlags.NonPublic) == null,
+            "Science appearance must not reintroduce the global native card redraw hook");
         var feeGroups = new Dictionary<int, int>();
         foreach (DictionaryEntry entry in topics)
         {

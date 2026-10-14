@@ -1,5 +1,9 @@
 # Study Table Work Probe
 
+## 0.1.49 icon creation only in the owned research tab
+
+0.1.48 is rejected after loading nonresponse and a fast same-save rollback to .47; exact cause is not isolated. Remove its global card-redraw patch and custom Unity component. Keep the large native atom/count as a plain owned view created only through the existing research-tab switch after native window layout and actual play startup. Restore original labels/dispose owned children when the table composition closes. Accepted .47 science-spend ordering and .46 paging remain unchanged. Existing suites and no-global-hook/no-custom-component metadata checks pass. Startup plus first research-tab view/close-reopen are the bounded installed check.
+
 ## 0.1.48 larger native science atom
 
 Use the game's science item sprite at 32x32 in the existing right cost backing, with a native-styled count at bottom right. Only registered study-table research rows use this owned view; restore the original spend label before native redraw/reuse. Retain exact fee/shortage data and the accepted QueueEverything ordering, continuous notice pages and tab restoration. No new assets, strings, window or payment changes. Existing suites pass; icon/count size and table reopen remain the installed visual check.

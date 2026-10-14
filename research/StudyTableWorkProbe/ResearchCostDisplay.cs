@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using HarmonyLib;
 
@@ -7,28 +8,40 @@ namespace NikichMods.Research
 {
     internal static class ResearchCostDisplay
     {
-        [HarmonyPatch(typeof(CraftItemGUI), "Redraw")]
-        private static class PriceCell
+        private static readonly Dictionary<CraftItemGUI, ResearchSciencePriceCell> cells = new Dictionary<CraftItemGUI, ResearchSciencePriceCell>();
+
+        // Called only by the owned study-table tab switch, after the native window
+        // is open. No new global card hook or custom Unity component participates in load.
+        internal static void Refresh(CraftGUI window)
         {
-            private static void Prefix(CraftItemGUI __instance)
+            if (!StudyTableWorkProbe.enabledProbe || !MainGame.game_started || MainGame.game_starting ||
+                window == null || !window.is_shown) return;
+            var table = window.GetCrafteryWGO();
+            if (ReferenceEquals(table, null) || table.obj_id != "mf_alchemy_survey") return;
+            StudyTableWorkProbe.Write("RAR_PRICE_CELLS phase=begin rows=" + window.list_items.Count);
+            int shown = 0;
+            foreach (var row in window.list_items)
             {
-                var previous = __instance.GetComponent<ResearchSciencePriceCell>();
-                if (previous != null) previous.Restore();
-            }
-            [HarmonyPriority(Priority.Last)]
-            private static void Postfix(CraftItemGUI __instance)
-            {
-                var craft = __instance.current_craft;
-                if (!StudyTableWorkProbe.enabledProbe || craft == null || !SourceResearch.IsJob(craft.id) ||
-                    __instance.txt_spend == null) return;
-                var table = __instance.craft_gui_interface.GetCrafteryWGO();
-                if (ReferenceEquals(table, null) || table.obj_id != "mf_alchemy_survey") return;
+                if (row == null || !row.gameObject.activeSelf || row.txt_spend == null) continue;
+                var craft = row.current_craft;
+                if (craft == null || !SourceResearch.IsJob(craft.id)) continue;
                 var fee = craft.needs_from_wgo.Find(item => item.id == "science");
-                if (fee == null) return;
-                var cell = __instance.GetComponent<ResearchSciencePriceCell>();
-                if (cell == null) cell = __instance.gameObject.AddComponent<ResearchSciencePriceCell>();
-                cell.Show(__instance.txt_spend, fee.value, table.data.GetItemsCount("science", true));
+                if (fee == null) continue;
+                ResearchSciencePriceCell cell;
+                if (!cells.TryGetValue(row, out cell))
+                {
+                    cell = new ResearchSciencePriceCell(); cells.Add(row, cell);
+                }
+                cell.Show(row.txt_spend, fee.value, table.data.GetItemsCount("science", true));
+                shown++;
             }
+            StudyTableWorkProbe.Write("RAR_PRICE_CELLS phase=ready shown=" + shown);
+        }
+
+        internal static void Restore()
+        {
+            foreach (var cell in cells.Values) cell.Dispose();
+            cells.Clear();
         }
 
         internal static string Format(int price, int available, string nativeText)

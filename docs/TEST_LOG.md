@@ -1,5 +1,9 @@
 # Diagnostic runtime tests
 
+## Same-save rollback comparison — 0.1.47 after 0.1.48 nonresponse
+
+2026-10-15: user confirms the same save loads normally/quickly after the verified rollback. Archived log work/evidence/work-0.1.47-rollback-return/LogOutput.log SHA-256 b0a11f7614a146b8bc1f8d2bf7462388aa826fe86786563a5dd2de43cd49c056 identifies 0.1.47, reaches loading progress 1 and RAR_NOTICE_LOAD, with no RAR module error marker in this snapshot. Treat .48 as a loading regression in this comparison, not ordinary slow loading; exact instruction/stack causing nonresponse remains unknown. Larger-icon presentation has not been exercised successfully. No original saves modified during rollback/collection. Do not repeat .48 unchanged merely to inspect its icon.
+
 ## Study Table Work Probe 0.1.48 — larger native science item icon
 
 Further user clarification: the same save normally loads in about one second; on .48 after about five seconds Windows displayed its standard unresponsive-application Wait/Close dialog. Treat this as a reported UI nonresponse, not merely an unusually short patience threshold. A persistent hang/root cause is still not isolated by the truncated logs. This supersedes the earlier suggestion to normalize the attempt by waiting about a minute: next observe the same save on the already restored exact .47 and compare responsiveness. No automatic exact-.48 retry or speculative fix follows before that baseline return.

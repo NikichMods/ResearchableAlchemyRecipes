@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace NikichMods.Research
 {
-    // Owned visuals only. Native row destruction owns these children; before each
-    // redraw restore the original label so pooled/unrelated cards retain native UI.
-    public sealed class ResearchSciencePriceCell : MonoBehaviour
+    // Plain owned view, created only after the player opens the research tab.
+    // The owning table window restores native labels and disposes the children.
+    internal sealed class ResearchSciencePriceCell
     {
         private UILabel nativeLabel, counter;
         private UI2DSprite icon;
@@ -17,6 +17,13 @@ namespace NikichMods.Research
             if (icon != null) icon.gameObject.SetActive(false);
             if (counter != null) counter.gameObject.SetActive(false);
             if (nativeLabel != null) nativeLabel.gameObject.SetActive(nativeActive);
+        }
+
+        internal void Dispose()
+        {
+            Restore();
+            if (icon != null) Object.Destroy(icon.gameObject);
+            if (counter != null) Object.Destroy(counter.gameObject);
         }
 
         internal void Show(UILabel original, int price, int available)
