@@ -1,5 +1,11 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.48 — larger native science item icon
+
+Built and installed with game closed; exact frozen source 504933528dc16cfd876bd5a158e2943ae4e002fd, SDK 6.0.406 Roslyn, plugin/assembly/file 0.1.48/0.1.48.0. Immutable artifacts/StudyTableWorkProbe-0.1.48/StudyTableWorkProbe-0.1.48.dll SHA-256 2fa8a4c089a30ff08de3940f2ec44a1b0426732d894d81b1a603b8ddc0445a31; manifest retained. Canonical installed version/hash match, one active payload; previous 0.1.47/log preserved outside plugins. No original saves changed.
+
+Only changed presentation: an owned native science-item sprite at 32x32 in the existing right cost backing, with a cloned native-style numeric label at bottom right. Original spend label is restored and owned widgets hidden before every native row redraw; only registered research at the actual study table shows the owned view afterwards. Child lifetime follows the native row. Existing QueueEverything-ordered text remains fallback; same native fee/table-stock data, counters and insufficient-stock color. No price/faith/work/knowledge/notification change, new assets or strings. Compilation and all existing suites pass, including the real QueueEverything ordering/shortage/isolation regression. Actual native sprite size, counter placement and redraw/reopen appearance remain the installed visual gate. Check a research-list screenshot and close/reopen; no spending, quest, paging or lifecycle matrix repeat is needed.
+
 ## Study Table Work Probe 0.1.47 — final science-price writer and captured tab windows
 
 Returned 2026-10-15: user screenshots show science fees 2/4 in the list; this closes the price-presence failure. User requests larger icons occupying most of the right square, using the neighboring native material-study cell as reference. Captured log work/evidence/work-0.1.47-return/LogOutput.log SHA-256 f9769d5ea85a6b08b0df86777e7e63cdf08f31aa9c29a0d647e3ad8a737520e7 identifies 0.1.47 and five normal RAR_TABS_RESTORE layout_restored=True markers, with no RAR_TABS_RESTORE_ERROR in this snapshot. This bounds the close/restoration correction; it does not prove every teardown sequence. Previous small (sci) symbol is native inline spend markup, distinct from the larger native science item sprite used by material Study. The new size request is presentation tuning, not a price/payment change.
