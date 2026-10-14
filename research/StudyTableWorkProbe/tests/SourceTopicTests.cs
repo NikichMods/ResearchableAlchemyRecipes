@@ -21,6 +21,8 @@ public static class SourceTopicTests
     }
     private const BindingFlags Private = BindingFlags.NonPublic | BindingFlags.Static;
     private static Type source;
+    private static string queueDirectory;
+    private static bool EmptyNativeSpend(ref string __result) { __result = ""; return false; }
     private static CraftComponent refundComponent;
     private static WorldGameObject refundTable;
     private static bool RefundTable(object __instance, ref WorldGameObject __result)
@@ -49,7 +51,7 @@ public static class SourceTopicTests
             foreach (string dir in args) { string path = Path.Combine(dir, new AssemblyName(e.Name).Name + ".dll"); if (File.Exists(path)) return Assembly.LoadFrom(path); }
             return null;
         };
-        try { RunWithFixture(args[0]); Console.WriteLine("PASS source topics: native visibility, independent gates, remaining reward, save isolation, cleanup and registration identity"); return 0; }
+        try { queueDirectory = args[4]; RunWithFixture(args[0]); Console.WriteLine("PASS source topics: native visibility, independent gates, remaining reward, save isolation, cleanup and registration identity"); return 0; }
         catch (Exception ex) { Console.WriteLine(ex); return 1; }
     }
     private static void RunWithFixture(string dir)
@@ -65,6 +67,46 @@ public static class SourceTopicTests
             Run(dir);
         }
         finally { fixture.UnpatchSelf(); }
+    }
+    private static void CheckQueuePrice(Assembly asm, GameBalance balance)
+    {
+        var native = AccessTools.Method(typeof(CraftDefinition), "GetSpendTxt");
+        var foreignAssembly = Assembly.Load(File.ReadAllBytes(Path.Combine(queueDirectory, "QueueEverything.dll")));
+        var foreign = foreignAssembly.GetType("QueueEverything.CraftDefinitionPatches", true)
+            .GetMethod("CraftDefinition_GetSpendTxt", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+        var ours = asm.GetType("NikichMods.Research.ResearchCostDisplay", true)
+            .GetNestedType("SpendText", BindingFlags.NonPublic).GetMethod("Postfix", Private);
+        var enabled = asm.GetType("NikichMods.Research.StudyTableWorkProbe", true).GetField("enabledProbe", Private);
+        bool previous = (bool)enabled.GetValue(null);
+        var nativeFixture = new Harmony("rar.offline.price.native-fixture");
+        var ourPatch = new Harmony("rar.offline.price.ours");
+        var queuePatch = new Harmony("p1xel8ted.gyk.queueeverything");
+        try
+        {
+            // Supply the known empty vanilla spend result without Unity engine calculations;
+            // both competing postfixes and Harmony ordering are real installed code.
+            nativeFixture.Patch(native, prefix: new HarmonyMethod(typeof(SourceTopicTests), "EmptyNativeSpend"));
+            ourPatch.Patch(native, postfix: new HarmonyMethod(ours));
+            queuePatch.Patch(native, postfix: new HarmonyMethod(foreign)); // Deliberately register foreign last.
+            enabled.SetValue(null, true);
+            var table = (WorldGameObject)FormatterServices.GetUninitializedObject(typeof(WorldGameObject));
+            table.obj_id = "mf_alchemy_survey";
+            var inventory = new Item("fixture_table_price", 1);
+            inventory.inventory.Add(new Item("science", 5));
+            table.RestoreSavedInventory(inventory);
+            var healing = balance.craft_data.Find(c => c.id == "rar_probe_source_paint_0110_pot_heal");
+            Assert(healing.GetSpendTxt(table, 1) == "[c](sci)[/c]2", "Installed QueueEverything overwrites research science price");
+            inventory.inventory.Clear();
+            Assert(healing.GetSpendTxt(table, 1) == "[ff1111][c](sci)[/c]2[-]", "Queue coexistence loses science shortage color");
+            table.obj_id = "fixture_other_station";
+            Assert(healing.GetSpendTxt(table, 1) == "", "Science display changes another station");
+            table.obj_id = "mf_alchemy_survey";
+            Assert(new CraftDefinition { id = "fixture_unrelated" }.GetSpendTxt(table, 1) == "", "Science display changes unrelated craft");
+            ourPatch.UnpatchSelf();
+            Assert(healing.GetSpendTxt(table, 1) == "", "Foreign price baseline was not reproduced after removing our patch");
+            Console.WriteLine("PASS actual QueueEverything spend postfix: later registration, science price/shortage, foreign-station/craft isolation and unpatch baseline");
+        }
+        finally { enabled.SetValue(null, previous); queuePatch.UnpatchSelf(); ourPatch.UnpatchSelf(); nativeFixture.UnpatchSelf(); }
     }
     private static void Run(string dir)
     {
@@ -170,6 +212,7 @@ public static class SourceTopicTests
             "Registered native jobs differ from the adopted catalog tariff");
         Assert((string)displayPrice.Invoke(null, new object[] { 0, 0, "native spend" }) == "native spend",
             "Absent fee changes native spend text");
+        CheckQueuePrice(asm, balance);
         var reserve = asm.GetType("NikichMods.Research.ResearchScienceReserve", true);
         var tableLedger = new Item("fixture_table", 1);
         tableLedger.inventory.Add(new Item("science", 12));

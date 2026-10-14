@@ -1,5 +1,9 @@
 # Study Table Work Probe
 
+## 0.1.47 QueueEverything price ordering and tab restoration
+
+Run the scoped science spend postfix after QueueEverything's result replacement. A regression using the actual installed foreign postfix reproduces 0.1.46's empty price and checks ordering, shortage color, unrelated crafts/stations and unpatch baseline. Tab restoration uses the exact snapshot windows even if GUIElements.me is gone, and clears snapshots of destroyed windows. Continuous paging is accepted from 0.1.46 and unchanged. Price visibility and ordinary close/teardown logs remain the narrow installed check; no research payment or recipe replay is needed.
+
 ## 0.1.46 science-price display and continuous notice pages
 
 Display the actual native upfront science fee in each registered research row's native spend label, using the table's inventory for shortage color. Next redraws native item rows in the existing owned window after input release, preserving source revalidation and shown-page flags. Initial safe opening and final Close/Back remain native. All local suites pass, including exact registered-price display/shortage assertions and the native row metadata check. Installed price/icon placement, uninterrupted Next, last-page OK and early Close remain the changed-path gate. No payment, work, recipe or save-format change.

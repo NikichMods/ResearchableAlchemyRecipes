@@ -11,6 +11,7 @@ $outDir = Join-Path $repoRoot ('artifacts/StudyTableWorkProbe-'+$version)
 $managed = Join-Path $GameRoot 'Graveyard Keeper_Data/Managed'
 $core = Join-Path $GameRoot 'BepInEx/core'
 $foreign = Join-Path $GameRoot 'BepInEx/plugins/MaxButtonsRedux'
+$queue = Join-Path $GameRoot 'BepInEx/plugins/QueueEverything'
 $refs = @('mscorlib.dll','System.dll','System.Core.dll','Assembly-CSharp.dll','Assembly-CSharp-firstpass.dll','UnityEngine.dll','UnityEngine.CoreModule.dll') | ForEach-Object { Join-Path $managed $_ }
 $refs += @('BepInEx.dll','0Harmony.dll') | ForEach-Object { Join-Path $core $_ }
 foreach ($testName in @('KnowledgeStateTests','QuantityCompatibilityTests','SourceTopicTests','NotificationStateTests')) {
@@ -20,6 +21,6 @@ foreach ($testName in @('KnowledgeStateTests','QuantityCompatibilityTests','Sour
     $compilerArgs += Join-Path $PSScriptRoot ('tests/'+$testName+'.cs')
     & (Join-Path $DotnetRoot 'dotnet.exe') (Join-Path $DotnetRoot 'sdk/6.0.406/Roslyn/bincore/csc.dll') @compilerArgs
     if ($LASTEXITCODE -ne 0) { throw "Test compilation failed: $testName" }
-    & $output $outDir $managed $core $foreign
+    & $output $outDir $managed $core $foreign $queue
     if ($LASTEXITCODE -ne 0) { throw "Test failed: $testName" }
 }

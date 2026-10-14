@@ -20,6 +20,8 @@ namespace NikichMods.Research
         [HarmonyPatch(typeof(CraftDefinition), "GetSpendTxt")]
         private static class SpendText
         {
+            [HarmonyAfter("p1xel8ted.gyk.queueeverything")]
+            [HarmonyPriority(Priority.Last)]
             private static void Postfix(CraftDefinition __instance, WorldGameObject wgo, ref string __result)
             {
                 if (!StudyTableWorkProbe.enabledProbe || !SourceResearch.IsJob(__instance.id) ||

@@ -115,10 +115,19 @@ namespace NikichMods.Research
                 var saved = snapshot;
                 table = null;
                 snapshot = null;
-                if (Study.is_shown) Study.Hide(false);
-                saved.Restore(Study, Craft);
-                bool restored = saved.Matches(Study, Craft);
-                StudyTableWorkProbe.Write("RAR_TABS_RESTORE study_shown=" + Study.is_shown + " layout_restored=" + restored);
+                // Restore the exact windows captured at entry. The global GUIElements
+                // owner can already be gone during plugin/scene teardown.
+                var study = saved.StudyWindow;
+                var craft = saved.CraftWindow;
+                if (study == null || craft == null)
+                {
+                    StudyTableWorkProbe.Write("RAR_TABS_RESTORE status=windows_destroyed snapshot_cleared=True");
+                    return;
+                }
+                if (study.is_shown) study.Hide(false);
+                saved.Restore(study, craft);
+                bool restored = saved.Matches(study, craft);
+                StudyTableWorkProbe.Write("RAR_TABS_RESTORE study_shown=" + study.is_shown + " layout_restored=" + restored);
                 if (!restored) throw new InvalidOperationException("Survey layout rollback did not match snapshot");
             }
             catch (Exception ex)
@@ -162,6 +171,8 @@ namespace NikichMods.Research
 
         private sealed class Snapshot
         {
+            internal readonly ResourceBasedCraftGUI StudyWindow;
+            internal readonly CraftGUI CraftWindow;
             internal readonly List<KeyMap> keyMaps = new List<KeyMap>();
             private readonly Vector3 position;
             private readonly Vector3 tipsPosition;
@@ -170,6 +181,7 @@ namespace NikichMods.Research
             private readonly Dictionary<GameObject, bool> chrome = new Dictionary<GameObject, bool>();
             internal Snapshot(ResourceBasedCraftGUI study, CraftGUI craft)
             {
+                StudyWindow = study; CraftWindow = craft;
                 position = study.transform.localPosition;
                 tipsPosition = study.GetButtonTips().transform.localPosition;
                 panelDepth = study.GetComponent<UIPanel>().depth;
