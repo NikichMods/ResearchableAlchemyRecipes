@@ -37,6 +37,12 @@ The user explicitly chooses not to implement a separate research-cancel button (
 
 - Present ordinary material Study and recipe research as two tabs in a common native-style frame. Tabs use icons, as on vanilla workbenches, rather than permanent text captions. Exact icon choice and final presentation remain subject to visual acceptance.
 
+## Research completion presentation
+
+- User adopts the compact completion result on 2026-10-14: native-style window, Russian heading `Исследование завершено`, one native product icon/name row and `Новых рецептов: N`.
+- N counts only the formulas newly learned by this completion, including partially known products. Do not repeat previously known formulas, show duplicate product rows per formula or list recipe ingredients/manufacturing variants in the result window. Ordinary native alchemy lists and contextual guidance remain the place to inspect and compare variants.
+- Preserve the already accepted native knowledge/reward/save path; this is presentation work. Apply the selected-language localization policy to new visible text. Exact native UI seam, final layout and installed visual acceptance remain to be verified.
+
 ## Contextual recipe guidance
 
 - Custom visible text follows the game's selected language, covering all 11 native locales with Russian/English prioritized. Item/equipment/NPC names and fonts remain native; unknown locale codes fall back to English. Study marks retain atomic wrapping and source indentation in every language. LOCALIZATION.md owns implementation/evidence limits; translation completeness is separate from installed rendering/editorial acceptance.
@@ -81,6 +87,7 @@ The user explicitly chooses not to implement a separate research-cancel button (
 ## Deferred research-availability notifications
 
 - The user wants a player-visible notification when new research topics become available, identifying the products together. Opening Clotho trade is a representative event; the broader source families must be considered too. Do not require a study-table visit merely to learn that new topics exist.
+- User accepts the proposed distinction/presentation on 2026-10-14: availability message heading `Доступны новые исследования`, with newly available product names grouped together. This message offers paid topics and does not announce learned recipes. Deliver after the occupied window closes at a verified safe boundary; initial-load/reload policy and the exact native mechanism remain open.
 - Defer this work until ordinary recipe source coverage is resolved. Prefer an appropriate native-style popup after its host owner is verified; no notification mechanism or hook is selected yet.
 - Coordinate timing with trading, technology/reward dialogs, native popups and tooltips. Notifications must not overlap/disrupt an existing window; choose a safe queue/delivery boundary and aggregate/deduplicate related new topics. Exact presentation, timing and old-save/initial-load behavior remain design choices.
 - Verify source availability transitions and window conflicts using bounded replayable/offline event fixtures and targeted native probes where needed. Do not require the user to replay every quest/unlock naturally. Distinguish such simulated checks from real native window/lifecycle acceptance.

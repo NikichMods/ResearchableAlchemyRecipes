@@ -12,6 +12,12 @@ Ordinary cancellation access follow-up (2026-10-14): native CanInteractCraft and
 
 Cancellation scope decision (2026-10-14): the user chooses no separate research-cancel button. PRODUCT_REQUIREMENTS.md owns this decision; static access findings and accepted native interruption/refund behavior remain unchanged. F9 stays diagnostic, and a dedicated cancellation control is not a remaining production gate.
 
+## Compact reward native seam — static 2026-10-14
+
+Direct IL inspection of the accepted Assembly-CSharp.dll identity verifies TechUnlockDialogGUI.OpenAsItemsList(string sub_header_translated, List<Item> items, VoidDelegate on_hide). It opens the existing native info window, clears technology cost, sets _opened_as_infobox, draws native ItemDefinition name/icon/quality/description without a TechDefinition lookup, clears unused unlock rows and installs native OK/Back closure. It neither grants items nor commits formula/technology knowledge. With one presentation item it supplies the adopted single-product summary without duplicate formula rows. OpenAsItemsList writes the generic information header; the public label_header can be set to the selected localized completion heading after that call. The supplied subheader can show the actual newly learned count. Its deferred LateUpdate -> UpdateWidgets only updates widget geometry/anchors, not those text values.
+
+This is a verified static research seam, not implemented/installed visual acceptance. SourceResearch.GrantRemaining and the real research-completion trigger remain the independent reward owners. Keep notification delivery/window coordination separate. Native _unlocks capacity is three, so this one-product seam must not silently become the arbitrary-length availability-list implementation. Private tools/IL remain ignored work/palette/inspect-reward-dialog-private.cs and reward-dialog-il-private.txt; no host source/assets are published.
+
 ## Overlapping tooltip render groups — 1.407 static evidence
 
 Returned 0.1.30 now has explicit user acceptance for the current overlap correction. Screenshot shows the native ingredient bubble wholly covering guidance; installed DLL identity is unchanged and the returned log records 22 panel groups at 4999/5000 with zero probe errors or broken-marker records. TEST_LOG.md owns hashes and private evidence paths. This closes the observed overlap presentation, not all foreign panel stacks/languages/lifecycle cases.

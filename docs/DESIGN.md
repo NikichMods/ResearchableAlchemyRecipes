@@ -68,6 +68,14 @@ Recovered clean research/study-table-work at 13a377b; installed 0.1.43 hash and 
 
 Current decision: the user explicitly chooses not to implement a separate research-cancel button. Keep 0.1.43 and its accepted interruption/refund behavior unchanged; no replacement control or extra confirmation flow is adopted. Next local investigation is final reward-dialog presentation and native popup coordination for the adopted availability notifications; naturally suitable source/partial-text observations remain pending in parallel. No new candidate follows from recording this decision.
 
+## Adopted compact reward presentation — 2026-10-14
+
+User accepts one native-style `Исследование завершено` window containing the native product icon/name and `Новых рецептов: N`, where N counts this completion's newly learned formulas only. Individual manufacturing variants/ingredients do not need to appear at completion; ordinary alchemy cards/guidance own later comparison. PRODUCT_REQUIREMENTS.md owns the adopted result and the distinct grouped `Доступны новые исследования` availability message. No layout implementation or runtime acceptance is implied.
+
+Static follow-up verifies a suitable existing info mode: TechUnlockDialogGUI.OpenAsItemsList draws one native item row plus translated subheader, with a scoped post-open localized heading assignment and native OK/Back close. It does not grant items or technology knowledge; accepted GrantRemaining remains the reward owner. VERIFIED_RUNTIME_DATA.md owns final-writer/capacity findings. No runtime source change or candidate is made in this design discussion; final layout/close and visual acceptance still require the real UI.
+
+Notification popup coordination and initial-load/reload policy remain separate unresolved dependencies. Decide whether an existing save receives one initial overview or only later newly available topics, and whether reappearance of the same previously announced topic warrants another message. These choices are not adopted by approval of the completion presentation. The native three-row info mode cannot be assumed to fit a whole notification batch; verify a suitable list owner separately. Do not bundle unverified notification delivery into reward polish.
+
 ## Historical recovery entries — superseded by the checkpoint above
 **Accepted 0.1.40 / ordinary-source accounting closure:** user verifies before/after actual Clotho trade, saved exit/reload persistence and mana research/native card; TEST_LOG.md owns exact returned evidence/limits. All-language partial wording is implemented/checked but the user forgot visual inspection, so that narrow presentation acceptance remains pending. Preserve immutable installed 0.1.40; no new runtime build/replay is needed merely for acceptance.
 
