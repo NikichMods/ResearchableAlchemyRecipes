@@ -4,7 +4,7 @@ Status: user-proposed utility ranges and design judgment, not adopted prices. Re
 
 ## Current reduced-price working list
 
-The user's next instruction adopts decorative paints at 1 and black/white at 2, and asks for a complete review list using a lower 1/2/4/8/12 scale. Former 5 maps to 4, 10 to 8, and 15 or 10–15 to 12. Acid at 2 is tentative; the list below recommends that value for its quest role. Unresolved 5–10 ranges use 4 for optional/situational products. Exact assignments below remain a review proposal except the explicitly adopted paints; no runtime price changes or faith/work/energy decisions follow from this list. Even science fees correspond to whole sheets at 2 science per paper; decorative 1 is the explicit exception. Historical higher-price tables below remain comparison evidence.
+The user's next instruction adopts decorative paints at 1 and black/white at 2, and asks for a complete review list using a lower scale, subsequently revised to 1/2/4/8/10. The latest instruction lowers every remaining 12-science topic to 10: golden and silver elixirs. Those two assignments are adopted. Acid at 2 is tentative; the list below recommends that value for its quest role. Unresolved 5–10 ranges use 4 for optional/situational products. Exact assignments below remain a review proposal except the explicitly adopted paints; no runtime price changes or faith/work/energy decisions follow from this list. Even science fees correspond to whole sheets at 2 science per paper; decorative 1 is the explicit exception. Historical higher-price tables below remain comparison evidence.
 
 | Product | Science |
 | --- | ---: |
@@ -27,10 +27,10 @@ The user's next instruction adopts decorative paints at 1 and black/white at 2, 
 | Balsamic solution | 4 |
 | Flavor enhancer | 8 |
 | Freshener | 4 |
-| Golden elixir | 12 |
+| Golden elixir | 10 |
 | Growth enhancer | 4 |
 | Preservative | 4 |
-| Silver elixir | 12 |
+| Silver elixir | 10 |
 | Tanning agent | 8 |
 | Appetite potion | 4 |
 | Armour potion | 4 |
@@ -42,11 +42,11 @@ The user's next instruction adopts decorative paints at 1 and black/white at 2, 
 | Speed potion | 8 |
 | Zombie juice | 4 |
 
-Totals after the subsequent explicit corrections: 17 practical topics 98, eight decorative topics 8, eight drinkable potions 34; all 33 topics 140 science = 70 sheets of paper-equivalent value. Black/white paint, growth/flavor enhancers and zombie juice total 20 science. These are research fees only. The user adopts flavor enhancer 8, healing 2, dark elixir 8, growth enhancer 4, freshener (incense I) 4 and aromatizer (incense II) 8. The request to price both tier-II fertilizer inputs at 8 is interpreted as energy_elixir for boost I/II and flavor_enhancer for quality II: these are separate fertilizers, not two elixirs jointly required in the quality-II recipe. The same energy-elixir topic serves both boost tiers, so its fee 8 also applies when initially researched for tier I. Native consumer census confirms energy_elixir -> sack_clock_silver/gold, growth_enhancer -> sack_star_silver, flavor_enhancer -> sack_star_gold, freshener -> incense_1 and aromatizer -> incense_2. Other rows retain the preceding proposal; no runtime costs changed.
+Totals after the subsequent explicit corrections: 17 practical topics 94, eight decorative topics 8, eight drinkable potions 34; all 33 topics 136 science = 68 sheets of paper-equivalent value. Black/white paint, growth/flavor enhancers and zombie juice total 20 science. These are research fees only. The user adopts flavor enhancer 8, healing 2, dark elixir 8, growth enhancer 4, freshener (incense I) 4 and aromatizer (incense II) 8. The request to price both tier-II fertilizer inputs at 8 is interpreted as energy_elixir for boost I/II and flavor_enhancer for quality II: these are separate fertilizers, not two elixirs jointly required in the quality-II recipe. The same energy-elixir topic serves both boost tiers, so its fee 8 also applies when initially researched for tier I. Native consumer census confirms energy_elixir -> sack_clock_silver/gold, growth_enhancer -> sack_star_silver, flavor_enhancer -> sack_star_gold, freshener -> incense_1 and aromatizer -> incense_2. Other rows retain the preceding proposal; no runtime costs changed.
 
 ## User's personal priority split of the reduced list
 
-The user identifies 20 products as personally important, not universally mandatory for completion: black/white paint, glue, acid, alkali, aromatizer, dark elixir, fertilizer energy elixir, balsamic solution, flavor enhancer, freshener, golden elixir, growth enhancer, preservative, silver elixir, tanning agent, healing potion, drinkable energy potion, speed potion and zombie juice. At current fees these total 112 science (56 paper): four topics at 2, eight at 4, six at 8 and two at 12. The remaining 13 topics are optional for this player: eight decorative paints at 1 (8 total) and appetite/armour/berserk/damage/long-restoration potions at 4 (20 total), totaling 28 science (14 paper). Full catalog remains 140 science (70 paper). This personal split replaces neither the earlier computational 17-product population nor source/eligibility rules; it is a new pricing-burden lens. These figures exclude ordinary material Study and all non-science research/production costs; already-known topics can reduce actual expenditure.
+The user identifies 20 products as personally important, not universally mandatory for completion: black/white paint, glue, acid, alkali, aromatizer, dark elixir, fertilizer energy elixir, balsamic solution, flavor enhancer, freshener, golden elixir, growth enhancer, preservative, silver elixir, tanning agent, healing potion, drinkable energy potion, speed potion and zombie juice. At current fees these total 108 science (54 paper): four topics at 2, eight at 4, six at 8 and two at 10. The remaining 13 topics are optional for this player: eight decorative paints at 1 (8 total) and appetite/armour/berserk/damage/long-restoration potions at 4 (20 total), totaling 28 science (14 paper). Full catalog is now 136 science (68 paper). This personal split replaces neither the earlier computational 17-product population nor source/eligibility rules; it is a new pricing-burden lens. These figures exclude ordinary material Study and all non-science research/production costs; already-known topics can reduce actual expenditure.
 
 ## Historical higher-price proposal
 
