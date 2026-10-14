@@ -17,6 +17,8 @@ Adopted partial-only text: `Часть рецептов известна. Отк
 
 Next substantive step: research economics. Recover PRODUCT_REQUIREMENTS.md and existing cost reasoning below before proposing concrete faith/science/energy/work values and treatment of partial knowledge/variant counts. Current one-faith/one-science/two-work/ten-energy values are diagnostic, not final adopted balance. Confirm consequential price/product choices before implementation. Then finish unfinished-work save/restart, cancellation/refunds (including station science), reward-dialog refinement and production setup/acceptance.
 
+Economics exploration has now resumed: RESEARCH_ECONOMICS.md owns the 2026-10-14 comparison of player discovery routes, native resource yields, design references and pricing families. Variant-count pricing is rejected by the user; science-led pricing remains a preferred hypothesis, with exact resource mix/prices/partial treatment open. Next compare a low uniform tariff with fixed product role/progression bands; no new runtime build is required for that comparison.
+
 Deferred notifications are adopted in PRODUCT_REQUIREMENTS.md: native-style message listing newly available research, safely delivered around trade/technology/reward/other popup/tooltip windows, with aggregation/deduplication and replayable test scenarios so the user need not naturally replay every event. No mechanism/hook/initial-load/reload policy is selected and no notification code exists. Schedule this after economics/lifecycle dependencies, before final player-flow acceptance. Do not invent a popup stack owner or notify over an occupied window.
 
 Shared workflow remains DevRules/CODEX_WORKFLOW.md: read/archive local logs autonomously; verify exact candidate and closed host, backup prior DLL outside plugins, install/hash-check one active payload, preserve unrelated mods/saves and immutable artifacts. Give contextual progress and the next reasoned step; report coherent milestones against the project goal. No new test matrix, branch switch, main merge/release or toolchain selection follows this handoff.
@@ -174,6 +176,8 @@ The authorized native formula reward/persistence investigation passed its bounde
 - Actual save-backed formula knowledge takes priority. A partially known product can show its existing formulas and offer study of the remainder. How to price partial knowledge is unresolved; do not present an already-known formula as a new reward.
 
 ## Remaining user-owned decisions
+
+Economics discussion resumed on 2026-10-14: user rejects variant-count pricing because alternate methods do not establish product utility and secondary/decorative topics should remain inexpensive. Science is the preferred main-cost hypothesis; zero/one faith and fixed versus progression-related tariffs remain open. See RESEARCH_ECONOMICS.md for native paper-yield evidence, player reports, design references, competing models and provisional comparison anchors. No concrete price, partial discount, dynamic progression rule or runtime change is adopted.
 
 1. After The Beginning Of Alchemy, can recipe research precede access to further manufacturing equipment/technology, particularly Advanced alchemy? The foundational access gate is adopted; later production capability remains separate.
 2. Exact faith/science/energy/work costs and treatment of partially known products.
