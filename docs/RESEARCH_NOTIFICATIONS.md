@@ -1,5 +1,7 @@
 # Availability notifications and compact result — research 0.1.44
 
+0.1.45 follow-up: the bounded 0.1.44 return confirms actual real-page progression, blocked-preview waiting/delivery and no real repeated notices after the captured reload, with the limits in TEST_LOG.md. The user reports unreadable Close and a clipped diagnostic result heading; otherwise observed UI satisfactory. Restore native button-label height after our final anchor update, as ordinary DialogGUI.OpenDialog does, and shorten ResultPreview in eleven locales. User explicitly keeps the adopted result layout and synthetic F6 count two. All existing suites and 27 native font checks pass; corrected Close readability and short F6 heading remain the only changed-path visual checks. No repeated source/lifecycle matrix is needed.
+
 PRODUCT_REQUIREMENTS.md owns the adopted semantics. This is a research implementation with local checks; installed rendering, loader/event execution and exact-candidate acceptance remain pending. It does not select production source/toolchain/CI or promote the probe to main.
 
 ## Mechanism and boundaries

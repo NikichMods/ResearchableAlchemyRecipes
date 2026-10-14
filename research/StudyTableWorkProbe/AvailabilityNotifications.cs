@@ -205,6 +205,9 @@ namespace NikichMods.Research
                 more ? Localization.Get(Localization.Key.Close) : null, more ? new GJCommons.VoidDelegate(delegate { ClosePage(false); }) : null,
                 null, null, GameKey.Select, GameKey.Back);
             owner.UpdateAllAnchors();
+            // Match DialogGUI.OpenDialog: anchor layout can collapse a previously hidden
+            // button label. Restore its native cached vertical offsets after layout.
+            foreach (var button in buttons.GetComponentsInChildren<DialogButtonGUI>(true)) button.RestoreHeight();
             if (!owner.is_shown || !owner.add_to_opened_stack) throw new InvalidOperationException("Native notice page did not enter its window stack");
             pageOpen = true; dirty = false;
             displayedData = data; displayedPage = page;

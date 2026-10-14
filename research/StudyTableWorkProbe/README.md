@@ -1,5 +1,9 @@
 # Study Table Work Probe
 
+## 0.1.45 UI correction
+
+Restore native notice-button label height after layout using the same final step as DialogGUI.OpenDialog. Shorten the F6 diagnostic heading in all eleven locales. Keep the adopted one-product result and synthetic count two unchanged. Existing suites/localization/font checks pass; Close readability and F6 title need bounded installed visual confirmation. No global UI patch, mechanics or persisted-state change.
+
 ## 0.1.44 compact result and availability notification check
 
 Research candidate, not production acceptance. Native result: one product row and newly learned count, preserving GrantRemaining. Notices: source events schedule a settled safe refresh, native three-row pages use Next/Close, and native player Item flags mark shown products only. Pre-alchemy/empty initial sets remain quiet; already announced products do not repeat after reload/source return. Optional notice hooks have separate ownership and session failure containment. No new scroll engine, recipe definitions, fees/refunds or material Study behavior.
