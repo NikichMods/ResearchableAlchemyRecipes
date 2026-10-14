@@ -1,5 +1,13 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.47 — final science-price writer and captured tab windows
+
+Built and installed with host closed; exact source 2f71d2f5a8aa9aa994a91a71b7385b80fd81519a, SDK 6.0.406 Roslyn, plugin/assembly/file 0.1.47/0.1.47.0. Immutable artifacts/StudyTableWorkProbe-0.1.47/StudyTableWorkProbe-0.1.47.dll SHA-256 bc5538875100ee6672f2cc227085a27ebea7a2928f0306cf9079196ae2c90b07; manifest retained. Canonical installed payload matches exact hash/version, one active copy; previous immutable 0.1.46 and pre-install log preserved outside plugins. No original saves modified.
+
+ResearchCostDisplay's existing scoped postfix now explicitly follows QueueEverything's owner at Priority.Last. A regression with the actual installed QueueEverything postfix first reproduced 0.1.46's empty price, then passed with the correction, including later foreign registration, enough/insufficient science, unrelated station/craft fallthrough and unpatch-to-empty baseline. Only the Unity-dependent native original calculation is supplied as empty text; competing postfixes/order are real. All existing suites pass. StudyTabs.Restore uses its entry snapshot's original windows rather than GUIElements.me; destroyed windows discard their obsolete snapshot, live windows retain Matches-checked restoration. No new strings, assets, payments or notice-page changes.
+
+Remaining installed check: science icons/counts visible in the research list (healing/acid/white paint 2, glue/alkali 4 on the reported save), ordinary table close/reopen and absence of the previous restoration exception on the next collected close/teardown log. Do not repeat accepted continuous paging, quest, work/payment/reward matrices. Rendering and teardown acceptance are pending; no main promotion is implied.
+
 ## Study Table Work Probe 0.1.46 — visible science fees and continuous pages
 
 Returned 2026-10-15: user explicitly accepts paging without blinking; exact log/installed hash matches 0.1.46 and five real pages end at remaining=0. Science prices remain absent in the supplied table screenshot, so that independent visual gate fails. Archived log work/evidence/work-0.1.46-return/LogOutput.log SHA-256 72c0584078d664d2f91fd0bfb5404e3483e37b580d795aaf1e7e3f55f8593601 also contains RAR_TABS_RESTORE_ERROR: NullReferenceException in StudyTabs.get_Study -> Restore when the global GUI lookup is unavailable. Do not call the whole log clean or infer no effect from the later timing. Screenshot retained alongside the log. Continuous paging is closed and is not to be replayed for the price correction.
