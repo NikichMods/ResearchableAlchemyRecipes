@@ -284,10 +284,8 @@ namespace NikichMods.Research
             StudyTableWorkProbe.Write("RAR_TOPICS_REWARD product=" + topic.product + " learned=" + learned.Count + " remaining=" + Remaining(topic, save));
             if (learned.Count != 0)
             {
-                // Same accepted native disclosure path as 0.1.7; no manufactured completion for formulas.
-                var tech = new TechDefinition { id = topic.product, price = new GameRes() };
-                tech.crafts.AddRange(learned);
-                GUIElements.me.tech_dialog.Open(tech, delegate { Status("reward_dialog_closed", save); }, true, false, false, true);
+                // Knowledge is already committed through GrantRemaining. Presentation adds no reward.
+                ResearchCompletion.Show(topic.product, learned.Count, delegate { Status("reward_dialog_closed", save); });
             }
         }
         internal static int Cleanup(GameSave save)

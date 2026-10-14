@@ -1,5 +1,11 @@
 # Study Table Work Probe
 
+## Unnumbered development after accepted 0.1.43
+
+SourceResearch's compact completion summary now uses native OpenAsItemsList (one product, newly learned count, localized completion heading) after the unchanged GrantRemaining. No formula ingredients or duplicate variant rows appear in the result. Current strings are 45 keys/11 locales; existing suites and 27 native font-route glyph checks pass. This is compile-check development source, not a replacement of the immutable installed 0.1.43.
+
+AvailabilityNoticeState and NotificationStateTests cover quiet/empty first overview, current eligibility, displayed-only deduplication, native Item roundtrip, source return/save isolation and delivery-blocker policy. The module is not connected to game events or UI yet. Oversized list presentation awaits the user's scrollable-list versus short-pages choice; native info mode has three rows and TextWindowGUI has no scroll. No new numbered artifact/installation is made until integration is ready. DESIGN.md and VERIFIED_RUNTIME_DATA.md own recovery/readiness limits.
+
 0.1.43 reduces work to 2/2/3/5/8 while keeping science/energy/zero faith, refunds interrupted research when native StartRemovalCraft replaces it, and moves repeated detailed source/card censuses to Debug. Refund is on the same table before actual destruction; ordinary inventory loss during demolition remains native. See docs/TEST_LOG.md and RESEARCH_WORK_LIFECYCLE.md for accepted 0.1.42 results and the minimal changed-path return.
 
 0.1.42 integrates the adopted 33-product tariff and zero faith, full-price remaining-formula research, save-backed prepaid science metadata and same-table refund after native cancellation. F9 explicitly cancels exactly one active study-table job through the native owner (vanilla material or recipe research); it is diagnostic, not production UI. Vanilla material/removal observation is read-only; no demolition compensation or removal restriction is added. See docs/RESEARCH_WORK_LIFECYCLE.md for scope, fixture limits and minimal return.
