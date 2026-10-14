@@ -53,6 +53,21 @@ Remaining work is bounded, not a reason to rerun accepted matrices:
 
 First action in the next chat: recover actual files/Git state, read this checkpoint and the owners above, then rank the remaining evidence gaps by what can be verified locally and what needs a natural gameplay observation. The hypothesis is that existing native quest/source owners cover the final goal-directed availability paths; a discrepancy should lead to a narrow owner correction, not a broader always-visible catalog. Explain the next bounded check before preparing a candidate; do not fabricate a new version merely for the handoff.
 
+## Remaining-gate review — 2026-10-14
+
+Recovered clean research/study-table-work at 13a377b; installed 0.1.43 hash and native assembly/resources identities match the accepted checkpoint. No rebuild, installation or replay is required.
+
+| Gap | Existing evidence / cheapest next layer |
+| --- | --- |
+| Assigned unknown healing/acid before trade/source station | Exact native task/serialization/eligibility tests exist. Actual natural dialogue/menu/save states remain pending; do not manufacture quest or knowledge resets. |
+| Higher vendor tiers, depletion and physical/source negatives | Positive source slices and offline policy tests exist. Use a naturally suitable save/state for the outstanding installed boundary; ordinary-corpus accounting is already closed. |
+| Partial-topic text | All-locale/font checks pass. A convenient naturally partial topic needs only visual inspection. |
+| Ordinary cancellation access | Static review identifies upstream active-table menu blockers; RESEARCH_WORK_LIFECYCLE.md owns the finding. User asks to discuss necessity before choosing a control; a separate cancel action is not adopted. |
+| Reward polish and availability notifications | Reward knowledge/persistence is accepted, presentation remains unfinished. Native popup coordination and notification lifecycle policy still need investigation/design before implementation. |
+| Production source/build/version/CI | Follow concrete dependencies after the player-flow choices/gates above; do not promote the research probe. |
+
+Current discussion: determine whether everyday pre-completion cancellation is needed at all, distinguishing refund correctness from a new player-facing control. Keep 0.1.43 and its accepted interruption/refund behavior unchanged. No UI choice, extra confirmation dialog or candidate is adopted by this review.
+
 ## Historical recovery entries — superseded by the checkpoint above
 **Accepted 0.1.40 / ordinary-source accounting closure:** user verifies before/after actual Clotho trade, saved exit/reload persistence and mana research/native card; TEST_LOG.md owns exact returned evidence/limits. All-language partial wording is implemented/checked but the user forgot visual inspection, so that narrow presentation acceptance remains pending. Preserve immutable installed 0.1.40; no new runtime build/replay is needed merely for acceptance.
 
