@@ -22,7 +22,7 @@ For an alchemical product known to the character, the player can follow a predic
 - Respect previously known formulas and material studies, irrespective of whether knowledge came from crafting, vanilla authored disclosure or this mod.
 - Recipe research is a single work operation. Quantity/queue extensions must not charge for repeated copies of the same research, and fully known products must not start another paid investigation.
 - One product research reveals its remaining formulas. If some are already known, display them immediately and label the remaining topic as studying other manufacturing methods.
-- Current Russian partial-topic indication `Другие способы изготовления` is accepted in 0.1.35. Clearer wording may be considered later from the perspective of a player adding the mod to an existing playthrough; no replacement wording is adopted yet.
+- Adopted Russian partial-topic indication: `Часть рецептов известна. Открыть все варианты.` It explicitly states prior knowledge and complete research coverage. Show it only for partially known product groups; all-unknown topics do not need the explanation. This replaces the earlier accepted `Другие способы изготовления`; generic unknown-recipe wording was rejected because it failed to distinguish partial topics.
 - Knowledge remains available for repeated reference and across recipes. Ordinary repeat manufacture pays production costs, not another information fee.
 - Research uses faith, science, energy and work time in the style of vanilla study. Exact values are deferred. Recipe knowledge and guidance are the reward; additional red/green/blue technology-point rewards are not required.
 

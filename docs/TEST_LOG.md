@@ -1,5 +1,11 @@
 # Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.39 — adopted partial-topic wording, 2026-10-14
+
+Research candidate; installed acceptance pending. User selects RU `Часть рецептов известна. Открыть все варианты.` All eleven localized equivalents are updated. Preserve the established registered-job-only native description hook, partial-knowledge condition, original description/title/icon and native layout. Ordinary unknown topics and fully known exclusion remain unchanged. Contains all source behavior from 0.1.38, which the user explicitly has not tested yet; do not claim accepted Clotho integration. This combines wording and source return into one candidate rather than replaying untested 0.1.38 separately.
+
+Compile and knowledge/quantity/source/localization suites pass. Exact RU/EN replacement assertions pass; all 43 keys x 11 locales and 27 native font checks pass with no missing glyphs. No hook, source, knowledge, payment, mechanics, assets or geometry change from 0.1.38. Scope remains 33 products / 42 formulas. Minimum observation: tier-I healing/mana topic listing and one naturally unknown completion/native card; inspect one naturally partial product's adopted text/readable layout when available. No synthetic reset, potion purchase, trade-window replay or full language/restart matrix required. Read the returned log directly; visual acceptance remains user-owned.
+
 ## Study Table Work Probe 0.1.38 — Clotho narrative/trade potion source, 2026-10-14
 
 Clean source dfd944ba173dd4ff591213eb3550d12ae5e78ffc, SDK 6.0.406 Roslyn. Immutable artifacts/StudyTableWorkProbe-0.1.38/StudyTableWorkProbe-0.1.38.dll SHA-256 f51cf7d925c6710c7ee0863a1586384f2de6c7e4a0c2aa5fe875bc2fac03bb6b; plugin/assembly/file version checks pass. Installed with game closed at canonical StudyTableWorkProbe.dll, exact installed hash verified. Previous 0.1.37 exact payload backed up outside plugins; one active study DLL and no source observer remain. Preserved pre-install log SHA-256 1125e7385c60a9f63407f87410876574105fbf7d0613f9aee611726574ffccab. Loader/topic/reward return remains pending.

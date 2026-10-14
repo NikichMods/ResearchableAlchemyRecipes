@@ -1,5 +1,9 @@
 # Study Table Work Probe
 
+## Current candidate 0.1.39 — adopted partial-topic wording
+
+RU: Часть рецептов известна. Открыть все варианты. Updated all eleven locales; partial-only description behavior and geometry stay unchanged. Includes untested 0.1.38 Clotho potion source behavior; one combined installed return is needed, without a separate 0.1.38 run. Local suites/all-language/font checks pass. TEST_LOG.md owns exact identity and pending acceptance.
+
 ## Current candidate 0.1.38 — Clotho potion sources
 
 Registers 33 ordinary products / 42 formulas through room/church/resurrection plus eight potion products introduced by Clotho's native @clotho_trade explanation. Open trade phrase, physical NPC source, native unlocked tier and current stock govern eligibility. Cold stock is read-only predicted from the verified constructor; no window visit, custom encounter state, vendor initialization or stock fill is performed. Old jobs, costs, accepted partial wording/tooltip and vanilla Study/production remain unchanged. Local checks pass; exact installed acceptance is pending in TEST_LOG.md. On the observed tier-I save expect only unknown healing/mana topics; exercise one naturally unknown reward/native-card path without resets or purchases.

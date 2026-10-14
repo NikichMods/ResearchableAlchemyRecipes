@@ -139,7 +139,7 @@ public static class SourceTopicTests
         Assert((string)Call("Describe", blackId, descriptionSave, "native description") == "native description", "Unknown topic marked as alternative research");
         descriptionSave.completed_one_time_crafts.Add(blackFormulas[0].id);
         var descriptionBefore = new HashSet<string>(descriptionSave.completed_one_time_crafts);
-        Assert((string)Call("Describe", blackId, descriptionSave, "native description") == "native description\nДругие способы изготовления", "Partial topic loses native description or explanation");
+        Assert((string)Call("Describe", blackId, descriptionSave, "native description") == "native description\nЧасть рецептов известна. Открыть все варианты.", "Partial topic loses native description or explanation");
         var descriptionLanguage = (GJL)AccessTools.Field(typeof(GJL), "cur_lng").GetValue(null);
         foreach (string locale in GJL.LANGUAGES)
         {
@@ -148,7 +148,7 @@ public static class SourceTopicTests
             Assert(!string.IsNullOrWhiteSpace(description) && !description.Contains(blackFormulas[0].id), "Partial explanation absent or leaks formula identity: " + locale);
         }
         descriptionLanguage.id = "en";
-        Assert((string)Call("Describe", blackId, descriptionSave, "") == "Other manufacturing methods", "Partial description retained its old language");
+        Assert((string)Call("Describe", blackId, descriptionSave, "") == "Some recipes are known. Unlock all variants.", "Partial description retained its old language");
         descriptionLanguage.id = "ru";
         Assert((string)Call("Describe", "ordinary_craft", descriptionSave, "unchanged") == "unchanged", "Partial label affects ordinary crafts");
         Assert((string)Call("Describe", blackId, null, "unchanged") == "unchanged", "Description requires loaded save");
