@@ -243,8 +243,9 @@ public static class SourceTopicTests
             totalScience += fee; totalWork += (int)definition.craft_time.default_value; totalEnergy += (int)definition.energy.default_value;
             feeGroups[fee] = feeGroups.ContainsKey(fee) ? feeGroups[fee] + 1 : 1;
         }
-        Assert(totalScience == 132 && totalWork == 107 && totalEnergy == 202 && feeGroups.Count == 5 &&
-            feeGroups[1] == 8 && feeGroups[2] == 4 && feeGroups[4] == 14 && feeGroups[8] == 5 && feeGroups[10] == 2,
+        Assert(totalScience == 212 && totalWork == 107 && totalEnergy == 202 && feeGroups.Count == 7 &&
+            feeGroups[1] == 8 && feeGroups[2] == 2 && feeGroups[4] == 1 && feeGroups[6] == 1 &&
+            feeGroups[8] == 14 && feeGroups[10] == 5 && feeGroups[14] == 2,
             "Registered native jobs differ from the adopted catalog tariff");
         Assert((string)displayPrice.Invoke(null, new object[] { 0, 0, "native spend" }) == "native spend",
             "Absent fee changes native spend text");
@@ -262,7 +263,7 @@ public static class SourceTopicTests
             "Cancellation fails to restore exact prepaid science");
         Assert(tableLedger.GetItemsCount("science", true) == 12, "Refund leaks to another save/table instance");
         var fallbackLedger = new Item("fixture_table_fallback", 1);
-        Assert((int)reserve.GetMethod("Refund", Private).Invoke(null, new object[] { fallbackLedger, 8 }) == 8 && fallbackLedger.GetItemsCount("science", true) == 8,
+        Assert((int)reserve.GetMethod("Refund", Private).Invoke(null, new object[] { fallbackLedger, 14 }) == 14 && fallbackLedger.GetItemsCount("science", true) == 14,
             "Captured paid fee fallback was lost");
         var removalLedger = new Item("fixture_table_removal", 1);
         removalLedger.inventory.Add(new Item("science", 12));
@@ -272,6 +273,9 @@ public static class SourceTopicTests
         refundComponent = (CraftComponent)FormatterServices.GetUninitializedObject(typeof(CraftComponent));
         refundComponent.is_crafting = true;
         refundComponent.current_craft = balance.craft_data.Find(c => c.id == "rar_research_aromatizer");
+        Assert(refundComponent.current_craft.needs_from_wgo[0].value == 10 &&
+            (int)reserve.GetMethod("Read", Private).Invoke(null, new object[] { removalLedger }) == 8,
+            "Updated tariff fixture must retain the different old prepaid fee");
         var removalAdvice = reserve.GetNestedType("Removal", BindingFlags.NonPublic);
         object[] beforeRemoval = { refundComponent, null };
         removalAdvice.GetMethod("Prefix", Private).Invoke(null, beforeRemoval);
@@ -283,7 +287,7 @@ public static class SourceTopicTests
         refundComponent.current_craft = removalCraft;
         removalAdvice.GetMethod("Postfix", Private).Invoke(null, new object[] { refundComponent, removalCraft, beforeRemoval[1] });
         Assert(removalLedger.GetItemsCount("science", true) == 20 && (int)reserve.GetMethod("Read", Private).Invoke(null, new object[] { removalLedger }) == 0,
-            "Successful removal replacement loses the research reserve");
+            "Successful removal replacement loses or reprices the old research reserve");
         object[] repeatedRemoval = { refundComponent, null };
         removalAdvice.GetMethod("Prefix", Private).Invoke(null, repeatedRemoval);
         removalAdvice.GetMethod("Postfix", Private).Invoke(null, new object[] { refundComponent, removalCraft, repeatedRemoval[1] });

@@ -6,43 +6,46 @@ namespace NikichMods.ResearchableAlchemyRecipes
 {
     internal static class ResearchEconomics
     {
-        private static readonly Dictionary<string, int> Prices = new Dictionary<string, int> {
-            { "yellow_paint", 1 }, { "green_paint", 1 }, { "brown_paint", 1 }, { "red_paint", 1 },
-            { "d_green_paint", 1 }, { "d_violet_paint", 1 }, { "violet_paint", 1 }, { "blue_paint", 1 },
-            { "black_paint", 2 }, { "white_paint", 2 }, { "acid", 2 }, { "pot_heal", 2 },
-            { "glue", 4 }, { "alkali", 4 }, { "energy_elixir", 4 }, { "flask_green_l_plus", 4 },
-            { "freshener", 4 }, { "growth_enhancer", 4 }, { "preservative", 4 }, { "zombie_juise", 4 },
-            { "pot_appetite", 4 }, { "pot_armor", 4 }, { "pot_berserk", 4 }, { "pot_damage", 4 },
-            { "pot_heal_long", 4 }, { "pot_mana", 4 },
-            { "aromatizer", 8 }, { "dark_elixir", 8 }, { "flavor_enhancer", 8 },
-            { "tanning_agent", 8 }, { "pot_speed", 8 },
-            { "silver_elixir", 10 }, { "golden_elixir", 10 }
+        private struct Cost
+        {
+            internal readonly int science, work, energy;
+            internal Cost(int science, int work, int energy)
+            { this.science = science; this.work = work; this.energy = energy; }
+        }
+        // Science is independent of the accepted short work/energy budgets.
+        private static readonly Cost Decorative = new Cost(1, 2, 2);
+        private static readonly Cost Early = new Cost(2, 2, 3);
+        private static readonly Cost White = new Cost(4, 2, 3);
+        private static readonly Cost Acid = new Cost(6, 2, 3);
+        private static readonly Cost Practical = new Cost(8, 3, 6);
+        private static readonly Cost Advanced = new Cost(10, 5, 12);
+        private static readonly Cost Premium = new Cost(14, 8, 15);
+        private static readonly Dictionary<string, Cost> Costs = new Dictionary<string, Cost> {
+            { "yellow_paint", Decorative }, { "green_paint", Decorative }, { "brown_paint", Decorative }, { "red_paint", Decorative },
+            { "d_green_paint", Decorative }, { "d_violet_paint", Decorative }, { "violet_paint", Decorative }, { "blue_paint", Decorative },
+            { "black_paint", Early }, { "white_paint", White }, { "acid", Acid }, { "pot_heal", Early },
+            { "glue", Practical }, { "alkali", Practical }, { "energy_elixir", Practical }, { "flask_green_l_plus", Practical },
+            { "freshener", Practical }, { "growth_enhancer", Practical }, { "preservative", Practical }, { "zombie_juise", Practical },
+            { "pot_appetite", Practical }, { "pot_armor", Practical }, { "pot_berserk", Practical }, { "pot_damage", Practical },
+            { "pot_heal_long", Practical }, { "pot_mana", Practical },
+            { "aromatizer", Advanced }, { "dark_elixir", Advanced }, { "flavor_enhancer", Advanced },
+            { "tanning_agent", Advanced }, { "pot_speed", Advanced },
+            { "silver_elixir", Premium }, { "golden_elixir", Premium }
         };
-        internal static int Science(string product)
+        private static Cost Get(string product)
         {
-            int price;
-            if (!Prices.TryGetValue(product, out price)) throw new InvalidOperationException("Unknown research price: " + product);
-            return price;
+            Cost cost;
+            if (!Costs.TryGetValue(product, out cost)) throw new InvalidOperationException("Unknown research cost: " + product);
+            return cost;
         }
-        internal static int Work(int science)
-        {
-            switch (science)
-            {
-                case 1: case 2: return 2;
-                case 4: return 3;
-                case 8: return 5;
-                case 10: return 8;
-                default: throw new InvalidOperationException("Unknown research work group: " + science);
-            }
-        }
-        internal static int Energy(int science) { return (int)Math.Round(2 + 13 * (science - 1) / 9.0); }
+        internal static int Science(string product) { return Get(product).science; }
         internal static void Apply(CraftDefinition job, string product)
         {
-            int price = Science(product);
+            var cost = Get(product);
             job.needs = new List<Item>();
-            job.needs_from_wgo = new List<Item> { new Item("science", price) };
-            job.craft_time = new SmartExpression { default_value = Work(price) };
-            job.energy = new SmartExpression { default_value = Energy(price) };
+            job.needs_from_wgo = new List<Item> { new Item("science", cost.science) };
+            job.craft_time = new SmartExpression { default_value = cost.work };
+            job.energy = new SmartExpression { default_value = cost.energy };
         }
     }
 }
