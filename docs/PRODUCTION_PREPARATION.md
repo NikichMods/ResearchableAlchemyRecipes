@@ -2,7 +2,7 @@
 
 ## Status and evidence
 
-Preparation started at the user's request on 2026-10-15. The user subsequently explicitly waived unpublished research-build/save compatibility and authorized the necessary extraction. Production development source is extracted on `codex/feature/production-extraction`: one assembly, `src/`, a thin Plugin entry, `tests/`, numeric development version 0.1.0 and plugin ID `nikichmods.researchablealchemyrecipes`. Local compile/test preparation reuses the existing explicit-reference Roslyn path; hosted provisioning/CI and final distributable acceptance are not selected. PRODUCT_REQUIREMENTS.md owns the transition exception; DESIGN.md owns the next action.
+Preparation started at the user's request on 2026-10-15. The user subsequently explicitly waived unpublished research-build/save compatibility and authorized the necessary extraction. Production development source is extracted on `codex/feature/production-extraction`: one assembly, `src/`, a thin Plugin entry, `tests/`, numeric development version 0.1.0 and plugin ID `nikichmods.researchablealchemyrecipes`. Local compile/test preparation reuses the existing explicit-reference Roslyn path; hosted provisioning/CI is unselected; exact-candidate normal-flow acceptance is recorded in TEST_LOG.md and stable publication remains a separate decision. PRODUCT_REQUIREMENTS.md owns the transition exception; DESIGN.md owns the next action.
 
 Inspected checkout: `research/study-table-work`, HEAD `0b9047d70dd8a69090dcbefddba2c9d843deabcb`, clean at entry. Its tracked StudyTableWorkProbe source/build/tests/assets have no diff from frozen compiled source `8b3faebe9f65e095aa8a6217fe8d6b23390ec4f2` (.57). There are 21 top-level C# files and four existing CLR test programs. Exact immutable build/install identity and bounded accepted runtime slices remain in TEST_LOG.md. This initial map was documentation-only. The authorized extraction below adds separate production development source and local checks without rerunning accepted gameplay matrices.
 
@@ -83,7 +83,7 @@ Final candidate checks cover extraction: loader/identity/sparse normal log; ordi
 
 ## Next action
 
-The extraction is locally checked. Failure-path audit below establishes the next bounded implementation gate. No synthetic-save investigation/legacy transition is required.
+Extraction and the failure-path gate below are implemented; four suites and the exact installed 0.1.0 requested normal-flow return are accepted under TEST_LOG.md. Next finish publication/package/readme/licensing readiness around the unchanged artifact and obtain the explicit stable-promotion decision. No synthetic-save transition or replay is required.
 
 ## Failure-path gate — 2026-10-15, before mutation
 
