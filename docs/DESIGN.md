@@ -2,7 +2,7 @@
 
 ## Current recovery entry point — 2026-10-15
 
-Continue here in a new chat. The user requests a documentation handoff, not another candidate, test matrix, main promotion or release. The next work block is production preparation: map retained gameplay/runtime code against research-only controls, fixtures and diagnostics before choosing the production source/build/version/CI. Do not begin by repeating accepted checks.
+Continue here in a new chat. The user has started production preparation (2026-10-15). The source boundary map is complete in [PRODUCTION_PREPARATION.md](PRODUCTION_PREPARATION.md): retained gameplay/UI/persistence, research controls/fixtures/observers, mixed owners, existing build/tests and extraction gates. No production source/build/version/CI or candidate is selected yet. Do not begin by repeating accepted checks.
 
 ### Exact working and installed state
 
@@ -33,14 +33,14 @@ Source accounting is 33 paid products/42 formulas plus native-disclosed Spices/o
 
 | Work / observation | What remains and why |
 | --- | --- |
-| Production extraction | Map research controls/setup/cleanup/censuses versus required runtime owners; retain accepted native mechanics and persistent data. Then propose the smallest production structure/build/version/CI and final check. No production toolchain or release identity is selected yet. |
+| Production extraction | Source map and smallest structure/check proposal are complete in PRODUCTION_PREPARATION.md. Next resolve legacy synthetic-save definition requirements and mandatory activation/failure/settlement ownership; then select production source/build/version/CI. Retain accepted mechanics/data; no toolchain or release identity selected yet. |
 | Native higher Clotho tier event | Hook/policy and source fixtures exist, F7 wording accepted, but a genuine later trade-tier increase without revisiting is not installed-accepted. Observe naturally when possible; do not force tier/quest/knowledge resets. |
 | Acid quest-only isolation | Native task predicate is verified; no scanned suitable natural save combines assigned acid task, unknown formula and absent ordinary source. Keep pending; accepted healing quest-only offering is separate. |
 | Physical/source negatives | First-trade/locked-tier negative is accepted. General removal/disable/inaccessibility and exhaustive stock/source permutations are not; census presence does not prove physical access. |
 | Compatibility/performance | This picker warning attribution is closed. Broader foreign overlays, arbitrary mod stacks and CPU/GC/frame-time measurements are not proved. Source audit finds event/on-demand price/header refresh; existing active-card guidance and pending-notice callbacks still run from Update. Do not claim zero per-frame work/overhead. |
 | Final acceptance/distribution | Remove diagnostic controls, audit sparse support logs and licensing, choose concrete build gates and final player flow; explicit stable acceptance remains required before runtime promotion/release. |
 
-First useful action in the next chat: inspect current research module entry points and existing build/tests, then produce a small retained/remove/change map with the reason for each boundary. This determines whether production extraction can preserve the accepted implementation with minimal movement. Do not add a framework, new global hook, separate wallet/save system or routine full test replay just for cleanup.
+First useful action: use PRODUCTION_PREPARATION.md and existing native evidence to determine minimum safe handling of saved synthetic job/snapshot references and startup/failure/settlement ownership after cleanup-only dependencies disappear. Real SourceResearch job IDs contain `rar_probe_` but are persistent gameplay IDs; preserve them unless a separately verified transition is needed. These questions determine the remaining entry/registration boundary before extraction. Do not add a framework, new global hook, separate wallet/save system or routine full test replay just for cleanup.
 
 ### Recovery evidence and private tooling
 
@@ -48,4 +48,4 @@ Read DevRules/WORKING_RULES.md, this repository's AGENTS.md and relevant owning 
 
 Private reflection inspectors were repaired after the named inspect-static-font-private.exe unhandled TypeLoadException (wrong native assembly plus missing entry-point catch). Reuse the guarded cross-assembly template in LOCAL_ENVIRONMENT.md; normal errors return stderr/exit1. This explains the captured diagnostic failure, not every Windows dialog reported that day. Never copy private context/machine paths/raw game assets into tracked files.
 
-Historical design/recovery notes are preserved in [the archive](archive/DESIGN_HISTORY_2026-10-15.md); its old pending/current instructions are not the next plan. TEST_LOG.md retains immutable candidate history. No new runtime build or test is needed merely for this handoff.
+Historical design/recovery notes are preserved in [the archive](archive/DESIGN_HISTORY_2026-10-15.md); its old pending/current instructions are not the next plan. TEST_LOG.md retains immutable candidate history. The preparation map changes no runtime/build/install/save state and requires no new runtime matrix.
