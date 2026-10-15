@@ -83,7 +83,7 @@ Final candidate checks cover extraction: loader/identity/sparse normal log; ordi
 
 ## Next action
 
-Installed 0.1.2 corrects [audit A1/A2](PRODUCTION_AUDIT.md) under their READY gates and extended local fault checks, retaining 0.1.1 initial-only overlay waiting. TEST_LOG.md owns exact build/install identity and pending ordinary return; RESEARCH_NOTIFICATIONS.md owns the inherited focused later-thought/Next/Close check. Next collect the bounded normal-play return, then reassess publication/package/readme/licensing readiness before an explicit stable-promotion decision. Accepted 0.1.0 evidence and all handed artifacts remain immutable; no synthetic-save transition or old matrix replay is required. Rendered Unity fault cleanup retains its documented limits.
+Installed 0.1.2 corrects [audit A1/A2](PRODUCTION_AUDIT.md) under their READY gates and extended local fault checks, retaining 0.1.1 initial-only overlay waiting. TEST_LOG.md owns exact build/install identity and pending ordinary return; RESEARCH_NOTIFICATIONS.md owns the inherited focused later-thought/Next/Close check. The user requests handoff to another chat for release-documentation preparation: follow DESIGN.md's first-action section, prepare README/install/upgrade/package/licensing/release notes now and retain the bounded runtime return accurately. No game fault harness or user diagnostic key is required. Stable publication still requires explicit acceptance and exact release identity. Resume numbering at 0.1.58 for a genuinely new candidate; do not rebuild solely for renumbering. Accepted evidence and handed artifacts remain immutable; no synthetic-save transition or old matrix replay is required.
 
 ## Failure-path gate — 2026-10-15, before mutation
 
