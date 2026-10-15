@@ -83,6 +83,8 @@ Final candidate checks cover extraction: loader/identity/sparse normal log; ordi
 
 ## Next action
 
+The subsequent user-requested [production audit](PRODUCTION_AUDIT.md) takes precedence over the publication-first ordering below: address A1/A2 containment gaps under focused READY gates before claiming complete failure containment. This is source-review evidence, not a reported installed failure; immutable 0.1.0 and accepted normal flow remain unchanged.
+
 Extraction and the failure-path gate below are implemented; four suites and the exact installed 0.1.0 requested normal-flow return are accepted under TEST_LOG.md. Next finish publication/package/readme/licensing readiness around the unchanged artifact and obtain the explicit stable-promotion decision. No synthetic-save transition or replay is required.
 
 ## Failure-path gate — 2026-10-15, before mutation

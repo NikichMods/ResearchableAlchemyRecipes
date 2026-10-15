@@ -29,6 +29,10 @@ TEST_LOG.md owns exact candidates/logs and limits. Accepted bounded slices inclu
 
 Source accounting is 33 paid products/42 formulas plus native-disclosed Spices/one formula (34 ordinary products/43 formulas). Ingredient guidance separately covers the 44-formula/36-input audit; do not expand the paid registry. Research localization has 55 keys; extracted production has 22 retained keys across 11 native locales. Local tests pass; installed rendering/editorial bounds remain in LOCALIZATION.md/TEST_LOG.md.
 
+### Reliability audit takes precedence — 2026-10-15
+
+The requested production reliability/simplicity audit is recorded in [PRODUCTION_AUDIT.md](PRODUCTION_AUDIT.md). Architecture remains justified, but A1/A2 identify source-established containment gaps: pre-Fail cleanup/teardown ordering and optional notice disable with an owned page. No installed failure is claimed. Resolve these bounded gaps before relying on complete failure containment/publication readiness, with per-property READY gates and focused checks; do not rebuild immutable 0.1.0 or replay accepted matrices. This supersedes the publication-first next-action wording below. Audit changed documentation only; installed candidate and normal-flow acceptance remain unchanged.
+
 ### Remaining limits and next action
 
 | Work / observation | What remains and why |
