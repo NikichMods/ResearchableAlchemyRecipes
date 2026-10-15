@@ -13,7 +13,7 @@ namespace NikichMods.Research
         private bool nativeActive;
         // User selected in .50: UI units from the cost backing center.
         private const int IconX = 0, IconY = 0, IconSize = 40;
-        private const int CountX = 17, CountY = -19, CountSize = 16;
+        private const int CountX = 17, CountY = -19;
 
         internal void Restore()
         {
@@ -29,7 +29,7 @@ namespace NikichMods.Research
             if (counter != null) Object.Destroy(counter.gameObject);
         }
 
-        internal void Show(CraftItemGUI row, int price, int available)
+        internal void Show(CraftItemGUI row, UILabel headerCounter, int price, int available)
         {
             UILabel original = row.txt_spend;
             if (nativeLabel == null)
@@ -44,7 +44,14 @@ namespace NikichMods.Research
                 icon.depth = original.depth;
                 icon.sprite2D = EasySpritesCollection.GetSprite(new Item("science", 1).definition.GetIcon(), false, "");
 
-                counter = Object.Instantiate(row.item_gui.x1.counter, box, false);
+                counter = Object.Instantiate(headerCounter, box, false);
+                // Use the header's tiny native font and locale route, retaining the
+                // existing gold/shortage presentation of the research price.
+                var priceStyle = row.item_gui.x1.counter;
+                counter.color = priceStyle.color;
+                counter.effectStyle = priceStyle.effectStyle;
+                counter.effectColor = priceStyle.effectColor;
+                counter.effectDistance = priceStyle.effectDistance;
                 counter.name = "Research science count";
                 counter.depth = original.depth + 1;
                 counter.pivot = UIWidget.Pivot.BottomRight;
@@ -66,8 +73,7 @@ namespace NikichMods.Research
             Transform box = nativeLabel.transform.parent;
             CenterAnchors(icon, box, IconX - IconSize / 2, IconX + IconSize / 2,
                 IconY - IconSize / 2, IconY + IconSize / 2);
-            counter.fontSize = CountSize;
-            CenterAnchors(counter, box, CountX - 30, CountX, CountY, CountY + CountSize);
+            CenterAnchors(counter, box, CountX - 30, CountX, CountY, CountY + counter.fontSize);
         }
 
         private static void CenterAnchors(UIWidget widget, Transform box, int left, int right, int bottom, int top)

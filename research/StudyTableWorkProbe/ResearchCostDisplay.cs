@@ -32,7 +32,7 @@ namespace NikichMods.Research
                 {
                     cell = new ResearchSciencePriceCell(); cells.Add(row, cell);
                 }
-                cell.Show(row, fee.value, table.data.GetItemsCount("science", true));
+                cell.Show(row, window.object_info.right_item_prefab.x1.counter, fee.value, table.data.GetItemsCount("science", true));
                 shown++;
             }
             StudyTableWorkProbe.Write("RAR_PRICE_CELLS phase=ready shown=" + shown);

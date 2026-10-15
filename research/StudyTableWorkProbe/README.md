@@ -1,5 +1,9 @@
 # Study Table Work Probe
 
+## 0.1.55 native header-sized price digits
+
+Use the native header counter's tiny font/locale component for price digits instead of the row's larger font. Keep the existing price tint/effects, shortage rule, atom and positions. First-trade/locked-tier source check is accepted from .54; only new digit size needs visual inspection. No new hook/polling/calibration.
+
 ## 0.1.54 Clotho trade tiers and causal notices
 
 First actual trade introduces stocked unlocked-tier potions. Later native tier increases request safe source reconciliation and automatically introduce stocked higher-tier topics without revisiting; load/current-source refresh catches missed events. First acquaintance, legacy discovery and origin remain save-specific native Item data. Never observe the tier setter, which native price/progress queries temporarily modify. No new frame scan, vendor initialization or formula grant.

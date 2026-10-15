@@ -6,7 +6,9 @@ Current state: room/church/resurrection technology coverage is accepted within r
 
 ## Ordinary corpus source closure — 2026-10-14
 
-## Natural negative-state candidate — 2026-10-15
+## Accepted natural first-trade / locked-tier slice — 2026-10-15
+
+User completed the following selected-save procedure and confirms every expected before/after result. TEST_LOG.md owns exact .54 return/log and limits. This closes first acquaintance and locked-tier-stock exclusion in that slice; a genuine later tier increase and physical-source negatives remain separate. Do not rerun the procedure for the .55 price-font correction.
 
 Read-only census of 42 existing save/backup files (one locations-only file excluded) finds 33 with native alchemy access; all 33 contain a serialized church-workbench entry. This does not prove current physical accessibility or exclude disabled/removing states. No alchemy-open/stored-church-absent candidate was found. No Vendor/Trading construction, filling, ToWGO, live scene loading or save writes were used.
 

@@ -1,5 +1,13 @@
 ﻿# Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.55 — match price digits to native header
+
+User requests smaller price digits matching the native header. Native evidence distinguishes tiny header font from small row font at identical nominal16 and identical ancestor scale; .55 clones the header counter font/locale component, preserving prior price colors/effects, atom size and positions. Remove fixed CountSize override. No new hook, frame work, payment/source change or calibration. Exact artifact/install identity follows source freeze. Check only price-digit size against header; source tests below are closed and must not be repeated.
+
+## Accepted .54 first-trade and locked-tier source check
+
+User confirms all prescribed before/after trade expectations on the selected natural tier-I save. Installed .54 identity matches; archived return log SHA-256 6a0be4754115ecaf4e703b8f3ec628d5e02c5ae423d4bc886740c20aade7108f identifies .54 and actual Clotho native_window=True/tier1/newly_seen2 discovery; no error/actual-tier-commit match. This accepts mana/energy research absence before first trade, presence afterwards and exclusion of unknown locked-tier products despite stocked rows. It does not prove a real tier-up event or physical-source absence. User screenshot also shows the naturally partial white-paint topic with the full adopted Russian partial-knowledge text visible; no additional reading/reset exercise is needed for that layout observation. Price digit size is separately rejected and corrected by .55.
+
 ## Next .54 source-negative check — selected natural tier-I save
 
 Read-only source-state census inspects 42 existing save/backup files; raw derived table SHA-256 49b71de6f36d50498c9a742963adcb28ec7b40f7eeba5128938d85e8c0d0237d. No original save or installed DLL was changed. Identified primary candidate SHA-256 e5f3666f8332d14a50e47b5e5552f02f7916334afd9d8fc62107d5ba7483c4c5, native menu 21 Sep 2026 03:44, skull44/cross20, day37. AWARENESS_SOURCE_AUDIT.md owns the derived tier/stock/knowledge/acquaintance distinctions and exact expected before/after trade behavior; private .dat/.info copies preserve the candidate bytes. Await only no-discovery mana absence -> actual trade opening -> mana topic presence with higher-tier topics excluded. Healing is independently quest-aware; speed already known is not evidence of locked-tier exclusion. No resources or progression changes required. This cannot close the real tier-up event or physical-source-negative gates.
