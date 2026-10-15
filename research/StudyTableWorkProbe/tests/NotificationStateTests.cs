@@ -69,6 +69,25 @@ internal static class NotificationStateTests
             }
             Assert(pages == 11, "Full 33-topic batch loses, repeats or exceeds native page capacity");
             Assert(((List<string>)Call("Page", new List<string>())).Count == 0, "Empty page is not empty");
+            var causeData = new Item("fixture_notice_mixed", 1);
+            var mixed = new List<string> { "ordinary1", "clotho1", "ordinary2", "clotho2", "clotho3", "ordinary3", "clotho4" };
+            Func<string, bool> fromClotho = product => product.StartsWith("clotho", StringComparison.Ordinal);
+            var causePage = (List<string>)Call("CausePage", Pending(causeData, true, mixed.ToArray()), fromClotho);
+            Assert(causePage.Count == 3 && causePage.TrueForAll(product => fromClotho(product)),
+                "Expansion explanation contaminates unrelated rows");
+            Call("MarkDisplayed", causeData, causePage);
+            causeData = SmartSerializer.Deserialize<Item>(SmartSerializer.Serialize<Item>(causeData));
+            var remainder = Pending(causeData, true, mixed.ToArray());
+            causePage = (List<string>)Call("CausePage", remainder, fromClotho);
+            Assert(remainder.Count == 4 && causePage.Count == 1 && causePage[0] == "clotho4",
+                "Reload skips unseen cause rows or fills them with unrelated products");
+            Call("MarkDisplayed", causeData, causePage);
+            var ordinaryPage = (List<string>)Call("CausePage", Pending(causeData, true, mixed.ToArray()), fromClotho);
+            Assert(ordinaryPage.Count == 3 && ordinaryPage.TrueForAll(product => !fromClotho(product)),
+                "Mixed-source batch loses generic rows");
+            Call("MarkDisplayed", causeData, ordinaryPage);
+            Assert(Pending(causeData, true, mixed.ToArray()).Count == 0, "Cause grouping repeats or loses topics");
+            Console.WriteLine("PASS mixed-source notice pages: isolated cause text, max-three rows, short cause page, generic continuation and displayed-only reload");
             var safe = new object[] { true, false, false, false, true, false, false, false, false, false };
             Assert((bool)Call("Safe", safe), "Clear gameplay does not permit delivery");
             for (int i = 0; i < safe.Length; i++)

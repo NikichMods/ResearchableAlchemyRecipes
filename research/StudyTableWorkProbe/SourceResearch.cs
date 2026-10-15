@@ -16,6 +16,8 @@ namespace NikichMods.Research
         internal const string Witch = "npc_witch";
         internal const string TradePhrase = "@clotho_trade";
         private const string DiscoveryPrefix = "rar_seen_clotho_";
+        private const string Acquaintance = "rar_clotho_trade_tier";
+        private const string ExpansionPrefix = "rar_clotho_expanded_";
         private const string JobPrefix = "rar_probe_source_paint_0110_";
         // Preserve the handed paint job IDs; new groups reuse the same verified source owner.
         private static readonly string[] Products = { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint", "black_paint", "blue_paint", "white_paint", "glue", "acid", "alkali", "aromatizer", "dark_elixir", "energy_elixir", "flask_green_l_plus", "flavor_enhancer", "freshener", "golden_elixir", "growth_enhancer", "preservative", "silver_elixir", "tanning_agent", ResurrectionProduct, "pot_appetite", "pot_armor", "pot_berserk", "pot_damage", "pot_heal", "pot_heal_long", "pot_mana", "pot_speed" };
@@ -167,6 +169,12 @@ namespace NikichMods.Research
             sourceAvailable = roomAvailable || churchAvailable;
             bool tradeKnown = TradeKnown(save);
             var witchInstances = WorldMap.GetWorldGameObjectsByObjId(Witch);
+            // Reconcile actual higher tiers after loading or a missed native event.
+            // This is the existing on-demand source read, never a new frame scan.
+            foreach (var station in witchInstances)
+                if (tradeKnown && WitchPhysical(station, save) &&
+                    Math.Abs(station.data.GetParam("vendor_inited", 0f) - 1f) <= 0.01f)
+                    RecordExpansion(MainGame.me.player.data, station.data.GetParamInt("vendor_tier"), station.data);
             foreach (var topic in topics.Values)
             {
                 topic.roomVisible = 0; topic.churchVisible = 0; topic.vendorVisible = 0; topic.questVisible = 0;
@@ -178,8 +186,7 @@ namespace NikichMods.Research
                 {
                     foreach (var station in witchInstances)
                     {
-                        bool physical = !station.is_removed && !station.is_removing && !station.IsDisabled() && station.GetParamInt("disabled_interactions") == 0 &&
-                            (station.obj_def.interactive_in_tutorial || !save.IsInTutorial()) && station.obj_def.interaction_type == ObjectDefinition.InteractionType.RunScript;
+                        bool physical = WitchPhysical(station, save);
                         var data = station.data;
                         bool initialized = Math.Abs(data.GetParam("vendor_inited", 0f) - 1f) <= 0.01f;
                         int tier = initialized ? data.GetParamInt("vendor_tier") : witchDefinition.start_tire;
@@ -224,8 +231,48 @@ namespace NikichMods.Research
         {
             return playerData != null && playerData.GetParamInt(DiscoveryPrefix + product) == 1;
         }
+        private static bool WitchPhysical(WorldGameObject station, GameSave save)
+        {
+            return !station.is_removed && !station.is_removing && !station.IsDisabled() && station.GetParamInt("disabled_interactions") == 0 &&
+                (station.obj_def.interactive_in_tutorial || !save.IsInTutorial()) && station.obj_def.interaction_type == ObjectDefinition.InteractionType.RunScript;
+        }
+        internal static int AcquaintanceTier(Item playerData)
+        {
+            if (playerData == null) return 0;
+            int tier = playerData.GetParamInt(Acquaintance);
+            if (tier > 0) return tier;
+            // Prior candidates saved product discovery, not an independent visit flag.
+            foreach (var topic in topics.Values)
+                if (topic.vendorItem != null && HasDiscovery(playerData, topic.product))
+                    tier = Math.Max(tier, topic.vendorItem.product_tier);
+            return tier;
+        }
+        internal static bool IsClothoExpansion(Item playerData, string product)
+        {
+            return playerData != null && playerData.GetParamInt(ExpansionPrefix + product) == 1;
+        }
+        internal static int RecordExpansion(Item playerData, int tier, Item vendorData)
+        {
+            int knownTier = AcquaintanceTier(playerData);
+            if (knownTier <= 0 || tier <= knownTier) return 0;
+            // Freeze the evidence tier before adding legacy discoveries at a higher tier.
+            if (playerData.GetParamInt(Acquaintance) != knownTier) playerData.SetParam(Acquaintance, knownTier);
+            int added = 0;
+            foreach (var topic in topics.Values)
+            {
+                if (topic.vendorItem == null || topic.vendorItem.product_tier <= knownTier ||
+                    topic.vendorItem.product_tier > tier || HasDiscovery(playerData, topic.product) ||
+                    VendorStock(vendorData, true, topic.vendorItem, tier) <= 0) continue;
+                playerData.SetParam(DiscoveryPrefix + topic.product, 1f);
+                playerData.SetParam(ExpansionPrefix + topic.product, 1f);
+                added++;
+            }
+            return added;
+        }
         internal static int RecordTrade(Item playerData, int tier, IEnumerable<Item> stock)
         {
+            int knownTier = AcquaintanceTier(playerData);
+            playerData.SetParam(Acquaintance, knownTier > 0 ? knownTier : tier);
             int added = 0;
             foreach (var topic in topics.Values)
             {
@@ -237,6 +284,27 @@ namespace NikichMods.Research
                 added++;
             }
             return added;
+        }
+        [HarmonyPatch(typeof(Vendor), "TryLevelUpVendor")]
+        private static class TierDiscovery
+        {
+            private static void Prefix(Vendor __instance, out int __state)
+            {
+                __state = StudyTableWorkProbe.enabledProbe && __instance.id == Witch ? __instance.cur_tier : -1;
+            }
+            private static void Postfix(Vendor __instance, int __state, bool __result)
+            {
+                if (__state < 0 || !__result || __instance.cur_tier <= __state || !MainGame.game_started ||
+                    MainGame.game_starting || MainGame.me == null || MainGame.me.player == null) return;
+                try
+                {
+                    // Defer discovery to the existing safe source read, after native
+                    // day/trade work and physical/access gates have settled.
+                    StudyTableWorkProbe.Write("RAR_CLOTHO_TIER_COMMITTED from=" + __state + " to=" + __instance.cur_tier);
+                    AvailabilityNotifications.Request();
+                }
+                catch (Exception ex) { StudyTableWorkProbe.Fail(ex); }
+            }
         }
         [HarmonyPatch(typeof(VendorGUI), "Open")]
         private static class TradeDiscovery
@@ -250,6 +318,7 @@ namespace NikichMods.Research
                     var trader = __instance.trading.trader;
                     var stock = new List<Item>();
                     foreach (var inventory in trader.inventory.all) stock.AddRange(inventory.data.inventory);
+                    RecordExpansion(MainGame.me.player.data, trader.cur_tier, trader.vendor_data);
                     int added = RecordTrade(MainGame.me.player.data, trader.cur_tier, stock);
                     StudyTableWorkProbe.Write("RAR_TOPICS_DISCOVERY source=clotho native_window=True tier=" + trader.cur_tier + " newly_seen=" + added + " persistence=native_player_params");
                 }

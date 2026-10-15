@@ -1,5 +1,11 @@
 # Study Table Work Probe
 
+## 0.1.54 Clotho trade tiers and causal notices
+
+First actual trade introduces stocked unlocked-tier potions. Later native tier increases request safe source reconciliation and automatically introduce stocked higher-tier topics without revisiting; load/current-source refresh catches missed events. First acquaintance, legacy discovery and origin remain save-specific native Item data. Never observe the tier setter, which native price/progress queries temporarily modify. No new frame scan, vendor initialization or formula grant.
+
+Expansion notices explain the new potion assortment and paid research, on pages separate from other sources. F7 -> assortment uses unattached Item fixtures to preview exact text/mixed paging without save/progression mutation; blocker preview remains. Existing suites/new tier/cause/reload tests and 55-key/11-locale/27-font checks pass. Native text fit and naturally occurring actual tier event remain installed gates; do not reset progress or repeat accepted matrices.
+
 ## 0.1.53 remove result-preview scaffold
 
 .52 sound accepted through actual completion and F6. Remove F6 and its synthetic result mode/heading; ordinary completion and native unlock sound stay unchanged. Remaining diagnostic tools are separate. Earlier F6 instructions below are historical.

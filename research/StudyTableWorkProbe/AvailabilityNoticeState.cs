@@ -44,6 +44,12 @@ namespace NikichMods.Research
             return pending.GetRange(0, Math.Min(3, pending.Count));
         }
 
+        internal static List<string> CausePage(List<string> pending, Func<string, bool> hasCause)
+        {
+            var cause = pending.FindAll(product => hasCause(product));
+            return Page(cause.Count == 0 ? pending : cause);
+        }
+
         internal static bool Safe(bool playing, bool starting, bool paused, bool playerControlDisabled,
             bool windowsClosed, bool tooltip, bool speech, bool cornerTalk, bool contextMenu, bool inputHeld)
         {

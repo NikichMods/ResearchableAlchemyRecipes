@@ -187,6 +187,42 @@ public static class SourceTopicTests
             !(bool)Call("HasDiscovery", restoredPlayer, "pot_armor"), "Native Item binary serialization loses discovery flags");
         var freshPlayer = new Item("fixture_other_player", 1);
         Assert(!(bool)Call("HasDiscovery", freshPlayer, "pot_heal"), "Discovery crosses saves");
+        var tierStock = new Item("fixture_clotho_stock", 1);
+        tierStock.inventory.AddRange(shopStock); // All fixture potions except depleted tier-III armor.
+        var stranger = new Item("fixture_clotho_stranger", 1);
+        Assert((int)Call("RecordExpansion", stranger, 3, tierStock) == 0 && (int)Call("AcquaintanceTier", stranger) == 0,
+            "Native tier alone manufactures first acquaintance");
+        var acquainted = new Item("fixture_clotho_visitor", 1);
+        Assert((int)Call("RecordTrade", acquainted, 1, new List<Item>()) == 0 &&
+            (int)Call("AcquaintanceTier", acquainted) == 1, "Empty actual trade loses acquaintance");
+        Assert((int)Call("RecordExpansion", acquainted, 1, tierStock) == 0,
+            "Same-tier refresh introduces goods that required an actual visit");
+        tierStock.inventory.RemoveAll(item => item.id == "pot_speed");
+        Assert((int)Call("RecordExpansion", acquainted, 2, tierStock) == 2 &&
+            !(bool)Call("HasDiscovery", acquainted, "pot_speed") && !(bool)Call("HasDiscovery", acquainted, "pot_heal_long"),
+            "Upgrade introduces depleted or still-locked goods");
+        acquainted = SmartSerializer.Deserialize<Item>(SmartSerializer.Serialize<Item>(acquainted));
+        Assert((int)Call("AcquaintanceTier", acquainted) == 1 &&
+            (bool)Call("IsClothoExpansion", acquainted, "pot_appetite"), "Reload loses acquisition tier/cause");
+        tierStock.inventory.Add(new Item("pot_speed", 1));
+        Assert((int)Call("RecordExpansion", acquainted, 2, tierStock) == 1 &&
+            (int)Call("RecordExpansion", acquainted, 2, tierStock) == 0, "Higher-tier refill requires revisit or duplicates discovery");
+        Assert((int)Call("RecordExpansion", acquainted, 3, tierStock) == 2 &&
+            !(bool)Call("HasDiscovery", acquainted, "pot_armor"), "Third-tier discovery ignores stock");
+        var legacyVisitor = new Item("fixture_clotho_legacy", 1);
+        legacyVisitor.SetParam("rar_seen_clotho_pot_mana", 1f);
+        Assert((int)Call("RecordExpansion", legacyVisitor, 2, tierStock) == 3 &&
+            (int)Call("AcquaintanceTier", legacyVisitor) == 1, "Legacy visit evidence is lost or replaced by current tier");
+        var lateVisitor = new Item("fixture_clotho_late_visitor", 1);
+        Call("RecordTrade", lateVisitor, 2, shopStock);
+        Assert((int)Call("AcquaintanceTier", lateVisitor) == 2 &&
+            !(bool)Call("IsClothoExpansion", lateVisitor, "pot_appetite") &&
+            (int)Call("RecordExpansion", lateVisitor, 2, tierStock) == 0,
+            "First visit at tier II is mislabeled as a later expansion");
+        var tierMethod = AccessTools.DeclaredMethod(typeof(Vendor), "TryLevelUpVendor");
+        Assert(tierMethod != null && tierMethod.ReturnType == typeof(bool) && tierMethod.GetParameters().Length == 0,
+            "Verified committed tier-up method changed");
+        Console.WriteLine("PASS Clotho expansion: first/empty/legacy visits, tier II/III, locked/depleted/refilled stock, native Item cause roundtrip and late acquaintance");
         host.player.RestoreSavedInventory(freshPlayer);
         Assert(balance.craft_data.Count == 91, "Registration duplicated native jobs");
         var topics = (IDictionary)source.GetField("topics", Private).GetValue(null);

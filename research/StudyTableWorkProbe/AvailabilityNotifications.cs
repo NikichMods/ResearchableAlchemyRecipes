@@ -203,7 +203,8 @@ namespace NikichMods.Research
         }
         private static void ShowPage(Item data, List<string> pending, bool replaceContents = false)
         {
-            var page = AvailabilityNoticeState.Page(pending);
+            var page = AvailabilityNoticeState.CausePage(pending, product => SourceResearch.IsClothoExpansion(data, product));
+            bool expansion = page.Count > 0 && SourceResearch.IsClothoExpansion(data, page[0]);
             bool more = pending.Count > page.Count;
             bool initial = AvailabilityNoticeState.IsInitial(data);
             bool preview = previewData != null;
@@ -214,7 +215,8 @@ namespace NikichMods.Research
                 priorContainerActive = countContainer.activeSelf;
                 countContainer.SetActive(true);
             }
-            string subheader = initial ? Localization.Get(Localization.Key.NoticeHowTo) : "";
+            string subheader = expansion ? Localization.Get(Localization.Key.ClothoAssortment).Replace("{0}", GJL.L(SourceResearch.Witch)) :
+                initial ? Localization.Get(Localization.Key.NoticeHowTo) : "";
             if (more)
             {
                 if (subheader.Length != 0) subheader += "\n";
@@ -294,22 +296,33 @@ namespace NikichMods.Research
             disabled = true; dirty = false; RestoreContainer();
             StudyTableWorkProbe.Write("RAR_NOTICE_ERROR action=disabled_for_session research_preserved=True " + ex);
         }
-        private static void Preview(bool blocker)
+        private static void Preview(bool blocker, bool expansion = false)
         {
             boundSave = MainGame.me.save;
             previewData = new Item("science", 1); // Unattached session-only state; no inventory/save mutation.
             lastWait = -1;
             previewProducts = SourceResearch.PreviewProducts();
+            if (expansion)
+            {
+                var stock = new Item("science", 1); // Unattached fixture, never a real vendor.
+                foreach (string product in previewProducts)
+                    if (product.StartsWith("pot_", StringComparison.Ordinal)) stock.inventory.Add(new Item(product, 1));
+                SourceResearch.RecordTrade(previewData, 1, stock.inventory);
+                SourceResearch.RecordExpansion(previewData, 2, stock);
+                var mixed = previewProducts.FindAll(product => SourceResearch.IsClothoExpansion(previewData, product));
+                mixed.AddRange(previewProducts.FindAll(product => !product.StartsWith("pot_", StringComparison.Ordinal)).GetRange(0, 3));
+                previewProducts = mixed;
+            }
             if (blocker)
                 MainGame.me.gui_elements.dialog.OpenOK(Localization.Get(Localization.Key.NoticeBlocker), null,
                     Localization.Get(Localization.Key.NoticePreviewWarning));
             Request();
-            StudyTableWorkProbe.Write("RAR_NOTICE_PREVIEW scenario=" + (blocker ? "occupied_native_dialog" : "initial_full_registry") + " persistent=False formulas_changed=False");
+            StudyTableWorkProbe.Write("RAR_NOTICE_PREVIEW scenario=" + (expansion ? "clotho_and_other_sources" : blocker ? "occupied_native_dialog" : "initial_full_registry") + " persistent=False formulas_changed=False");
         }
         internal static void PreviewMenu()
         {
             MainGame.me.gui_elements.dialog.Open(Localization.Get(Localization.Key.NoticePreview),
-                Localization.Get(Localization.Key.NoticeFirst), delegate { Preview(false); },
+                Localization.Get(Localization.Key.NoticeClothoCase), delegate { Preview(false, true); },
                 Localization.Get(Localization.Key.NoticeBlocker), delegate { Preview(true); }, null,
                 GameKey.Select, GameKey.Option1, Localization.Get(Localization.Key.NoticePreviewWarning));
         }
