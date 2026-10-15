@@ -1,5 +1,12 @@
 # Diagnostic runtime tests
 
+## Accepted .56 tint and native picker attribution; .57 diagnostic removal
+
+User explicitly accepts light price digits and reports completing the prescribed picker opening/cancel. Exact installed .56 digest matches d3045fdf20d5411bed3443b39b42d4cf7905cc6cc79ff025831c012347c1883d. Archived return LogOutput.log SHA-256 3f6de41c52f043bd1bad6142dfe6c9e145333073f6ad13b5af464202e96b45e9 identifies .56, five native separator mismatches (widget0/panel13), one native initialization stack and zero Exception/RAR_WORK_ERROR/RAR_NOTICE_ERROR/observer-disabled markers. Other game/mod messages are not a globally clean-log claim. Private archive work/evidence/work-0.1.56-return.
+
+VERIFIED_RUNTIME_DATA.md owns exact native InventoryPanelGUI.DoOpening creator evidence: runtime-created bare separator widgets omit layer assignment and are corrected by NGUI. No new shared-layer fix is warranted. .57 deletes PickerLayerObservation.cs and increments identity only, preserving accepted tint/mechanics. SDK 6.0.406 compile and all existing suites pass. No new user matrix is required for deletion of a read-only diagnostic; ordinary future load is still distinct from exact candidate runtime acceptance. Frozen .57 artifact/install identity follows after clean build. .56 observations and all earlier numbered artifacts remain immutable.
+
+
 ## Study Table Work Probe 0.1.56 — identify picker layer warning
 Frozen source 3e464cd7fca5b2a5d1e06ed9db6d14dd1fb45f2a; immutable StudyTableWorkProbe-0.1.56.dll SHA-256 d3045fdf20d5411bed3443b39b42d4cf7905cc6cc79ff025831c012347c1883d. SDK 6.0.406 deterministic clean-source build; plugin/assembly/file 0.1.56/0.1.56.0. Installed with host closed, previous .55 backed up outside plugins, exact old/new digests and installed version verified. Installation was initially not executed because automatic approval review could not complete at account limit; authorized continuation later succeeded. One canonical payload remains; no saves/unrelated mods changed. Installed warning identities/tint remain pending; no runtime acceptance or repair is claimed.
 

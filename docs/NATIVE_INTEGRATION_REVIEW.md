@@ -10,6 +10,8 @@ Adjacent composition audit: only the five captured Study chrome objects are hidd
 
 ## Findings
 
+2026-10-15 picker follow-up: exact .56 identities and native InventoryPanelGUI.DoOpening construction attribute the five observed layer warnings to runtime-created bare inventory separators, not the science icon/counter widgets. Native CheckLayer corrects layer0 to assigned panel13. VERIFIED_RUNTIME_DATA.md owns evidence/limits; do not silence this through a new shared renderer patch. .57 removes the completed read-only observer. This closes this warning attribution, not every compatibility/foreign-window gate.
+
 .51 return explicitly accepts immediate header gain, cross-tab total, close/reopen and fixed price/header appearance. This closes that defect's bounded gate. Performance scope: ResearchCostDisplay.Refresh runs on the owned research-tab switch, HeaderDraw on native header redraw events; neither adds a frame loop. Existing RecipeGuidance.Refresh checks the active selected known alchemy card from plugin Update; its owned bubble uses native render geometry seams. AvailabilityNotifications.Tick returns immediately without loaded pending work; while pending it checks delivery blockers and evaluates eligibility after a safe transition, rather than rescanning the world unconditionally every frame. These are bounded source observations, not measured CPU/GC/frame-time figures. Do not claim the entire probe has no frame callbacks or zero overhead. Production removal of diagnostic controls/censuses and remaining compatibility gates still applies.
 
 | Surface | Native owner retained / project addition | Evidence and limits |
