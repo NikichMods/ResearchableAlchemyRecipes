@@ -1,5 +1,13 @@
 # Diagnostic runtime tests
 
+## Production source extraction — local checks, 2026-10-15
+
+User explicitly waives unpublished research-build/test-save compatibility and authorizes necessary renaming/cleanup. Production development source is extracted on codex/feature/production-extraction into src/ with Plugin identity nikichmods.researchablealchemyrecipes, numeric development version 0.1.0 / assembly/file 0.1.0.0. Real jobs use rar_research_<product>; no synthetic FormulaKnowledge, old-ID aliases, preparation/restoration, hotkeys, preview modes, source/card/save census or tooltip motion observer is compiled. Original settled-alpha/final geometry and accepted gameplay/UI mechanisms remain. Research source/artifacts and installed .57 are unchanged; no saves are touched.
+
+Local root build.ps1/test.ps1 use the existing SDK 6.0.406 Roslyn explicit-reference recipe. Development compile/version checks and all three adapted suites pass: actual MaxButtonsRedux native-focus/cache/isolation/unpatch; source registry/economics/remaining reward/quest/tier/refund/formatter plus actual QueueEverything price ordering; native Item notice-state/page/cause/blocker and eight-hook metadata checks. Retained localization is 22 keys x 11 locales, with language/fallback/atomic marker/knowledge-isolation checks passing. Static scan finds 20 C# files, 29 HarmonyPatch declarations plus eight separate notice hooks; no research JobId/FormulaKnowledge/hotkeys/census/cleanup-field references. Original tab-asset hashes match. The checks run on development files, not an exact frozen numbered handoff; no production runtime acceptance or support-log acceptance is implied.
+
+PRODUCTION_PREPARATION.md owns the map/result; DESIGN.md points to mandatory activation/failure/settlement review before a distributable candidate. Existing global enable/tab-restore failure mechanism is retained for this extraction, without claiming all residual patches inert or paid-work correctness after every failure. No CI workflow, immutable production DLL, installation, stable promotion or release is produced by this local milestone.
+
 ## Documentation handoff — 2026-10-15
 
 User requests to preserve current decisions/evidence and continue in a new chat. Installed .57 and retained immutable artifact digests rechecked against the source manifest: 8b3faebe9f65e095aa8a6217fe8d6b23390ec4f2 / 3dd6ba5081eab69502652f865174c046334b6bc75da6b5bfbe881044b181954e. No runtime source, build, installed payload or save changed for this handoff. .57 separate runtime acceptance remains unclaimed.

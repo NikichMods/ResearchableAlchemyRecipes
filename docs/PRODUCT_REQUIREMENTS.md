@@ -1,6 +1,6 @@
 # Product requirements
 
-Status: adopted working concept. Project name and public repository approved on 2026-10-11. Research-only mechanism candidates exist; production implementation is not yet started.
+Status: adopted working concept. Project name and public repository approved on 2026-10-11. Bounded research evidence is preserved; production source extraction started on 2026-10-15. Production candidate/runtime acceptance remains open.
 
 ## Outcome
 
@@ -73,6 +73,8 @@ The user explicitly chooses not to implement a separate research-cancel button (
 - Minimum source-coverage acceptance: every ingredient of every ordinary/native quest formula shown at either manual alchemy table must have at least one confirmed useful acquisition route that does not rely on slime. Retain slime alternatives in the tooltip, but they do not satisfy this coverage criterion. Check the complete native corpus, not only formulas currently known on the user's save. Preserve quest/technology/DLC availability annotations; a confirmed route is not necessarily usable at the current progress stage. Honest unknown-source fallback is a diagnostic for uncovered/new content, not an acceptable completed ordinary-corpus entry. This criterion does not demand an exhaustive catalogue of every possible acquisition method or change paid-research eligibility.
 
 ## Existing saves and invariants
+
+Production transition decision (2026-10-15): the user explicitly waives compatibility with all unpublished research builds and their test saves. No research-ID aliases, synthetic snapshot migration, legacy refund policy or preservation of research-only metadata is required in production. Rename internal identifiers and remove legacy scaffolding where useful. This does not waive ordinary vanilla existing-save support, native earned knowledge preservation, production save correctness, immutable research evidence or final runtime acceptance.
 
 - Installing the mod after progression must not require restarting or replaying technology unlocks merely to register research topics. Reconstruct current eligibility and knowledge from verified save-backed/native state on load.
 - Read the existing technology unlock state on old saves; opening access must not depend solely on observing a new Clotho conversation or a future unlock event.

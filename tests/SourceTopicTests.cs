@@ -1,0 +1,756 @@
+// SPDX-License-Identifier: MPL-2.0
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.Serialization;
+using HarmonyLib;
+
+public static class SourceTopicTests
+{
+    private static bool ScienceCapacity(string item_id, ref int __result)
+    {
+        if (item_id != "science") return true;
+        __result = 1000; return false;
+    }
+    private static bool LedgerDefinition(Item __instance, ref ItemDefinition __result)
+    {
+        if (__instance.id != "science" && !__instance.id.StartsWith("fixture_table") && __instance.id != "fixture_table_fallback") return true;
+        __result = new ItemDefinition { id = __instance.id, stack_count = 1000 }; return false;
+    }
+    private const BindingFlags Private = BindingFlags.NonPublic | BindingFlags.Static;
+    private static Type source;
+    private static string queueDirectory;
+    private static bool EmptyNativeSpend(ref string __result) { __result = ""; return false; }
+    private static CraftComponent refundComponent;
+    private static WorldGameObject refundTable;
+    private static bool RefundTable(object __instance, ref WorldGameObject __result)
+    {
+        if (!ReferenceEquals(__instance, refundComponent)) return true;
+        __result = refundTable; return false;
+    }
+    // The standalone CLR has no Unity Resources ECalls. Bag-item initialization is unrelated
+    // to source visibility/reward; only this engine-dependent constructor helper is skipped.
+    private static bool SkipBagInitialization() { return false; }
+    private static object Call(string name, params object[] args) { return source.GetMethod(name, Private).Invoke(null, args); }
+    private static void Assert(bool value, string message) { if (!value) throw new Exception(message); }
+    private static GameSave Save()
+    {
+        var save = (GameSave)FormatterServices.GetUninitializedObject(typeof(GameSave));
+        save.completed_one_time_crafts = new List<string> { "unrelated_knowledge" };
+        save.unlocked_techs = new List<string> { "The Beginning Of Alchemy" };
+        save.unlocked_crafts = new List<string>(); save.locked_crafts = new List<string>();
+        save.unlocked_phrases = new List<string>(); save.black_list_of_phrases = new List<string>();
+        save.known_npcs = new KnownNPCList();
+        return save;
+    }
+    public static int Main(string[] args)
+    {
+        AppDomain.CurrentDomain.AssemblyResolve += delegate(object sender, ResolveEventArgs e) {
+            foreach (string dir in args) { string path = Path.Combine(dir, new AssemblyName(e.Name).Name + ".dll"); if (File.Exists(path)) return Assembly.LoadFrom(path); }
+            return null;
+        };
+        try { queueDirectory = args[4]; RunWithFixture(args[0]); Console.WriteLine("PASS source topics: native visibility, independent gates, remaining reward, save isolation and registration identity"); return 0; }
+        catch (Exception ex) { Console.WriteLine(ex); return 1; }
+    }
+    private static void RunWithFixture(string dir)
+    {
+        var fixture = new Harmony("rar.offline.item-fixture");
+        try
+        {
+            fixture.Patch(AccessTools.Method(typeof(Item), "CheckAndInitBagItem"), prefix: new HarmonyMethod(typeof(SourceTopicTests), "SkipBagInitialization"));
+            // The offline fixture supplies station capacity; native AddItem refund and serialization still run.
+            fixture.Patch(AccessTools.Method(typeof(Item), "CanAddCount", new[] { typeof(string), typeof(bool), typeof(bool) }), prefix: new HarmonyMethod(typeof(SourceTopicTests), "ScienceCapacity"));
+            fixture.Patch(AccessTools.PropertyGetter(typeof(Item), "definition"), prefix: new HarmonyMethod(typeof(SourceTopicTests), "LedgerDefinition"));
+            fixture.Patch(AccessTools.PropertyGetter(typeof(CraftComponent), "wgo"), prefix: new HarmonyMethod(typeof(SourceTopicTests), "RefundTable"));
+            Run(dir);
+        }
+        finally { fixture.UnpatchSelf(); }
+    }
+    private static void CheckQueuePrice(Assembly asm, GameBalance balance)
+    {
+        var native = AccessTools.Method(typeof(CraftDefinition), "GetSpendTxt");
+        var foreignAssembly = Assembly.Load(File.ReadAllBytes(Path.Combine(queueDirectory, "QueueEverything.dll")));
+        var foreign = foreignAssembly.GetType("QueueEverything.CraftDefinitionPatches", true)
+            .GetMethod("CraftDefinition_GetSpendTxt", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+        var ours = asm.GetType("NikichMods.ResearchableAlchemyRecipes.ResearchCostDisplay", true)
+            .GetNestedType("SpendText", BindingFlags.NonPublic).GetMethod("Postfix", Private);
+        var enabled = asm.GetType("NikichMods.ResearchableAlchemyRecipes.Plugin", true).GetField("Enabled", Private);
+        bool previous = (bool)enabled.GetValue(null);
+        var nativeFixture = new Harmony("rar.offline.price.native-fixture");
+        var ourPatch = new Harmony("rar.offline.price.ours");
+        var queuePatch = new Harmony("p1xel8ted.gyk.queueeverything");
+        try
+        {
+            // Supply the known empty vanilla spend result without Unity engine calculations;
+            // both competing postfixes and Harmony ordering are real installed code.
+            nativeFixture.Patch(native, prefix: new HarmonyMethod(typeof(SourceTopicTests), "EmptyNativeSpend"));
+            ourPatch.Patch(native, postfix: new HarmonyMethod(ours));
+            queuePatch.Patch(native, postfix: new HarmonyMethod(foreign)); // Deliberately register foreign last.
+            enabled.SetValue(null, true);
+            var table = (WorldGameObject)FormatterServices.GetUninitializedObject(typeof(WorldGameObject));
+            table.obj_id = "mf_alchemy_survey";
+            var inventory = new Item("fixture_table_price", 1);
+            inventory.inventory.Add(new Item("science", 5));
+            table.RestoreSavedInventory(inventory);
+            var healing = balance.craft_data.Find(c => c.id == "rar_research_pot_heal");
+            Assert(healing.GetSpendTxt(table, 1) == "[c](sci)[/c]2", "Installed QueueEverything overwrites research science price");
+            inventory.inventory.Clear();
+            Assert(healing.GetSpendTxt(table, 1) == "[ff1111][c](sci)[/c]2[-]", "Queue coexistence loses science shortage color");
+            table.obj_id = "fixture_other_station";
+            Assert(healing.GetSpendTxt(table, 1) == "", "Science display changes another station");
+            table.obj_id = "mf_alchemy_survey";
+            Assert(new CraftDefinition { id = "fixture_unrelated" }.GetSpendTxt(table, 1) == "", "Science display changes unrelated craft");
+            ourPatch.UnpatchSelf();
+            Assert(healing.GetSpendTxt(table, 1) == "", "Foreign price baseline was not reproduced after removing our patch");
+            Console.WriteLine("PASS actual QueueEverything spend postfix: later registration, science price/shortage, foreign-station/craft isolation and unpatch baseline");
+        }
+        finally { enabled.SetValue(null, previous); queuePatch.UnpatchSelf(); ourPatch.UnpatchSelf(); nativeFixture.UnpatchSelf(); }
+    }
+    private static void Run(string dir)
+    {
+        var nativeLanguage = (GJL)FormatterServices.GetUninitializedObject(typeof(GJL));
+        nativeLanguage.id = "ru"; nativeLanguage.dict = new Dictionary<string, string>();
+        AccessTools.Field(typeof(GJL), "cur_lng").SetValue(null, nativeLanguage);
+        var asm = Assembly.LoadFrom(Path.Combine(dir, "compile-check.dll"));
+        source = asm.GetType("NikichMods.ResearchableAlchemyRecipes.SourceResearch", true);
+        var host = (MainGame)FormatterServices.GetUninitializedObject(typeof(MainGame));
+        MainGame.me = host; host.save = Save();
+        var balance = (GameBalance)FormatterServices.GetUninitializedObject(typeof(GameBalance));
+        balance.craft_data = new List<CraftDefinition>(); balance.craft_obj_data = new List<ObjectCraftDefinition>();
+        balance.items_data = new List<ItemDefinition>();
+        var products = new[] { "yellow_paint", "green_paint", "brown_paint", "red_paint", "d_green_paint", "d_violet_paint", "violet_paint", "black_paint", "blue_paint", "white_paint", "glue", "acid", "alkali", "aromatizer", "dark_elixir", "energy_elixir", "flask_green_l_plus", "flavor_enhancer", "freshener", "golden_elixir", "growth_enhancer", "preservative", "silver_elixir", "tanning_agent" };
+        for (int productIndex = 0; productIndex < products.Length; productIndex++)
+        {
+            string product = products[productIndex];
+            balance.items_data.Add(new ItemDefinition { id = product, icon = "fixture_native_icon_" + product });
+            int variants = product == "black_paint" || product == "white_paint" ? 3 :
+                product == "energy_elixir" || product == "golden_elixir" || product == "preservative" || product == "silver_elixir" ? 2 : 1;
+            for (int variant = 0; variant < variants; variant++)
+                balance.craft_data.Add(new CraftDefinition { id = "fixture_" + product + "_" + variant, craft_type = CraftDefinition.CraftType.MixedCraft, output = new List<Item> { new Item(product, 1) } });
+            if (productIndex < 11)
+                balance.craft_obj_data.Add(new ObjectCraftDefinition { id = "source_" + product, builder_ids = new List<string> { "keeper_room_builddesk" }, needs = new List<Item> { new Item(product, 1) } });
+            if (productIndex >= 11 || product == "black_paint" || product == "white_paint" || product == "glue")
+                balance.craft_data.Add(new CraftDefinition { id = "church_" + product, craft_in = new List<string> { "table_book_constr" },
+                    needs_unlock = true, needs = new List<Item> { new Item(product, 1) } });
+        }
+        balance.items_data.Add(new ItemDefinition { id = "zombie_juise", icon = "fixture_resurrection_icon" });
+        balance.craft_data.Add(new CraftDefinition { id = "fixture_resurrection_formula", craft_type = CraftDefinition.CraftType.MixedCraft, output = new List<Item> { new Item("zombie_juise", 1) } });
+        var witch = new VendorDefinition { id = "npc_witch", start_tire = 1 };
+        AccessTools.Field(typeof(VendorDefinition), "product_types").SetValue(witch, new List<string> { "pot_base", "pot_cool" });
+        balance.vendors_data = new List<VendorDefinition> { witch };
+        foreach (string product in new[] { "pot_appetite", "pot_armor", "pot_berserk", "pot_damage", "pot_heal", "pot_heal_long", "pot_mana", "pot_speed" })
+        {
+            int tier = product == "pot_heal" || product == "pot_mana" ? 1 : product == "pot_appetite" || product == "pot_damage" || product == "pot_speed" ? 2 : 3;
+            balance.items_data.Add(new ItemDefinition { id = product, icon = "fixture_potion_icon", base_count = tier == 1 ? 10 : 5,
+                product_tier = tier, product_types = new List<string> { tier == 1 ? "pot_base" : "pot_cool" } });
+            for (int n = 0; n < (product == "pot_heal" ? 2 : 1); n++)
+                balance.craft_data.Add(new CraftDefinition { id = "fixture_" + product + "_" + n, craft_type = CraftDefinition.CraftType.MixedCraft, output = new List<Item> { new Item(product, 1) } });
+        }
+        Call("Register", balance); Call("Register", balance);
+        var questSource = asm.GetType("NikichMods.ResearchableAlchemyRecipes.QuestResearchSources", true);
+        Func<GameSave, string, bool> questKnown = (s, p) => (bool)questSource.GetMethod("Known", Private).Invoke(null, new object[] { s, p });
+        var questSave = Save();
+        Assert(!questKnown(questSave, "pot_heal") && questSave.known_npcs.npcs.Count == 0, "Quest read invents an NPC or healing awareness");
+        var witchQuest = new KnownNPC { npc_id = "npc_witch" };
+        witchQuest.tasks.Add(new KnownNPC.TaskState { id = "npc_clotho_task_1", state = KnownNPC.TaskState.State.Visible });
+        questSave.known_npcs.npcs.Add(witchQuest);
+        Assert(questKnown(questSave, "pot_heal") && !questKnown(questSave, "pot_mana") && !questKnown(questSave, "acid"), "Healing quest expands unrelated topics");
+        witchQuest.tasks[0].state = KnownNPC.TaskState.State.Complete;
+        Assert(questKnown(questSave, "pot_heal"), "Fulfilled request loses product awareness");
+        var restoredQuests = SmartSerializer.Deserialize<KnownNPCList>(SmartSerializer.Serialize<KnownNPCList>(questSave.known_npcs));
+        var restoredQuestSave = Save(); restoredQuestSave.known_npcs = restoredQuests;
+        Assert(questKnown(restoredQuestSave, "pot_heal") && !questKnown(Save(), "pot_heal"), "Native task roundtrip loses knowledge or crosses saves");
+        var astrologer = new KnownNPC { npc_id = "npc_astrologer" };
+        astrologer.tasks.Add(new KnownNPC.TaskState { id = "astrologer_diary", state = KnownNPC.TaskState.State.Visible });
+        questSave.known_npcs.npcs.Add(astrologer);
+        Assert(!questKnown(questSave, "acid"), "Earlier diary quest introduces an unmentioned acid demand");
+        astrologer.tasks.Add(new KnownNPC.TaskState { id = "astrologer_acid", state = KnownNPC.TaskState.State.Visible });
+        Assert(questKnown(questSave, "acid"), "Assigned acid task does not introduce its topic");
+        astrologer.tasks[1].state = KnownNPC.TaskState.State.Complete;
+        Assert(questKnown(questSave, "acid"), "Fulfilled acid demand loses awareness");
+        host.player = (WorldGameObject)FormatterServices.GetUninitializedObject(typeof(WorldGameObject));
+        var playerData = new Item("fixture_player", 1);
+        host.player.RestoreSavedInventory(playerData);
+        var shopStock = new List<Item>();
+        foreach (string product in new[] { "pot_appetite", "pot_armor", "pot_berserk", "pot_damage", "pot_heal", "pot_heal_long", "pot_mana", "pot_speed" }) shopStock.Add(new Item(product, 1));
+        Assert((int)Call("RecordTrade", playerData, 1, shopStock) == 2 && (bool)Call("HasDiscovery", playerData, "pot_heal") &&
+            !(bool)Call("HasDiscovery", playerData, "pot_appetite"), "First trade records locked-tier goods or misses unlocked stock");
+        Assert((int)Call("RecordTrade", playerData, 1, shopStock) == 0, "Repeated trade duplicates discovery");
+        Assert(!(bool)Call("HasDiscovery", playerData, "pot_speed"), "Tier upgrade without opening trade records discovery");
+        Assert((int)Call("RecordTrade", playerData, 2, shopStock) == 3, "Second-tier opening misses its goods");
+        shopStock.RemoveAll(item => item.id == "pot_armor");
+        Assert((int)Call("RecordTrade", playerData, 3, shopStock) == 2 && !(bool)Call("HasDiscovery", playerData, "pot_armor"), "Missing stock becomes a discovery");
+        var restoredPlayer = SmartSerializer.Deserialize<Item>(SmartSerializer.Serialize<Item>(playerData));
+        Assert((bool)Call("HasDiscovery", restoredPlayer, "pot_heal") && (bool)Call("HasDiscovery", restoredPlayer, "pot_heal_long") &&
+            !(bool)Call("HasDiscovery", restoredPlayer, "pot_armor"), "Native Item binary serialization loses discovery flags");
+        var freshPlayer = new Item("fixture_other_player", 1);
+        Assert(!(bool)Call("HasDiscovery", freshPlayer, "pot_heal"), "Discovery crosses saves");
+        var tierStock = new Item("fixture_clotho_stock", 1);
+        tierStock.inventory.AddRange(shopStock); // All fixture potions except depleted tier-III armor.
+        var stranger = new Item("fixture_clotho_stranger", 1);
+        Assert((int)Call("RecordExpansion", stranger, 3, tierStock) == 0 && (int)Call("AcquaintanceTier", stranger) == 0,
+            "Native tier alone manufactures first acquaintance");
+        var acquainted = new Item("fixture_clotho_visitor", 1);
+        Assert((int)Call("RecordTrade", acquainted, 1, new List<Item>()) == 0 &&
+            (int)Call("AcquaintanceTier", acquainted) == 1, "Empty actual trade loses acquaintance");
+        Assert((int)Call("RecordExpansion", acquainted, 1, tierStock) == 0,
+            "Same-tier refresh introduces goods that required an actual visit");
+        tierStock.inventory.RemoveAll(item => item.id == "pot_speed");
+        Assert((int)Call("RecordExpansion", acquainted, 2, tierStock) == 2 &&
+            !(bool)Call("HasDiscovery", acquainted, "pot_speed") && !(bool)Call("HasDiscovery", acquainted, "pot_heal_long"),
+            "Upgrade introduces depleted or still-locked goods");
+        acquainted = SmartSerializer.Deserialize<Item>(SmartSerializer.Serialize<Item>(acquainted));
+        Assert((int)Call("AcquaintanceTier", acquainted) == 1 &&
+            (bool)Call("IsClothoExpansion", acquainted, "pot_appetite"), "Reload loses acquisition tier/cause");
+        tierStock.inventory.Add(new Item("pot_speed", 1));
+        Assert((int)Call("RecordExpansion", acquainted, 2, tierStock) == 1 &&
+            (int)Call("RecordExpansion", acquainted, 2, tierStock) == 0, "Higher-tier refill requires revisit or duplicates discovery");
+        Assert((int)Call("RecordExpansion", acquainted, 3, tierStock) == 2 &&
+            !(bool)Call("HasDiscovery", acquainted, "pot_armor"), "Third-tier discovery ignores stock");
+        var lateVisitor = new Item("fixture_clotho_late_visitor", 1);
+        Call("RecordTrade", lateVisitor, 2, shopStock);
+        Assert((int)Call("AcquaintanceTier", lateVisitor) == 2 &&
+            !(bool)Call("IsClothoExpansion", lateVisitor, "pot_appetite") &&
+            (int)Call("RecordExpansion", lateVisitor, 2, tierStock) == 0,
+            "First visit at tier II is mislabeled as a later expansion");
+        var tierMethod = AccessTools.DeclaredMethod(typeof(Vendor), "TryLevelUpVendor");
+        Assert(tierMethod != null && tierMethod.ReturnType == typeof(bool) && tierMethod.GetParameters().Length == 0,
+            "Verified committed tier-up method changed");
+        Console.WriteLine("PASS Clotho expansion: first/empty visits, tier II/III, locked/depleted/refilled stock, native Item cause roundtrip and late acquaintance");
+        host.player.RestoreSavedInventory(freshPlayer);
+        Assert(balance.craft_data.Count == 91, "Registration duplicated native jobs");
+        var topics = (IDictionary)source.GetField("topics", Private).GetValue(null);
+        Assert(topics.Count == 33, "Bounded registration count");
+        int totalScience = 0, totalWork = 0, totalEnergy = 0;
+        var displayPrice = asm.GetType("NikichMods.ResearchableAlchemyRecipes.ResearchCostDisplay", true).GetMethod("Format", Private);
+        Assert(!typeof(UnityEngine.MonoBehaviour).IsAssignableFrom(asm.GetType("NikichMods.ResearchableAlchemyRecipes.ResearchSciencePriceCell", true)),
+            "Science price view must not add a custom Unity component to the load lifecycle");
+        Assert(asm.GetType("NikichMods.ResearchableAlchemyRecipes.ResearchCostDisplay", true).GetNestedType("PriceCell", BindingFlags.NonPublic) == null,
+            "Science appearance must not reintroduce the global native card redraw hook");
+        var feeGroups = new Dictionary<int, int>();
+        foreach (DictionaryEntry entry in topics)
+        {
+            var definition = (CraftDefinition)entry.Value.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(entry.Value);
+            Assert(definition.needs.Count == 0 && definition.needs_from_wgo.Count == 1 && definition.needs_from_wgo[0].id == "science", "Research unexpectedly charges faith or another item");
+            int fee = definition.needs_from_wgo[0].value;
+            string expectedPrice = "[c](sci)[/c]" + fee;
+            Assert((string)displayPrice.Invoke(null, new object[] { fee, fee, "" }) == expectedPrice,
+                "Displayed science differs from the registered upfront fee");
+            Assert((string)displayPrice.Invoke(null, new object[] { fee, fee - 1, "native spend" }) ==
+                "[ff1111]" + expectedPrice + "[-]\nnative spend", "Shortage color or existing spend text lost");
+            totalScience += fee; totalWork += (int)definition.craft_time.default_value; totalEnergy += (int)definition.energy.default_value;
+            feeGroups[fee] = feeGroups.ContainsKey(fee) ? feeGroups[fee] + 1 : 1;
+        }
+        Assert(totalScience == 132 && totalWork == 107 && totalEnergy == 202 && feeGroups.Count == 5 &&
+            feeGroups[1] == 8 && feeGroups[2] == 4 && feeGroups[4] == 14 && feeGroups[8] == 5 && feeGroups[10] == 2,
+            "Registered native jobs differ from the adopted catalog tariff");
+        Assert((string)displayPrice.Invoke(null, new object[] { 0, 0, "native spend" }) == "native spend",
+            "Absent fee changes native spend text");
+        CheckQueuePrice(asm, balance);
+        var reserve = asm.GetType("NikichMods.ResearchableAlchemyRecipes.ResearchScienceReserve", true);
+        var tableLedger = new Item("fixture_table", 1);
+        tableLedger.inventory.Add(new Item("science", 12));
+
+        reserve.GetMethod("Record", Private).Invoke(null, new object[] { tableLedger, 8 });
+        var restoredLedger = SmartSerializer.Deserialize<Item>(SmartSerializer.Serialize<Item>(tableLedger));
+        Assert(restoredLedger.GetItemsCount("science", true) == 12 && (int)reserve.GetMethod("Read", Private).Invoke(null, new object[] { restoredLedger }) == 8,
+            "Native Item roundtrip loses the outstanding paid fee");
+        Assert((int)reserve.GetMethod("Refund", Private).Invoke(null, new object[] { restoredLedger, 1 }) == 8 &&
+            restoredLedger.GetItemsCount("science", true) == 20 && (int)reserve.GetMethod("Read", Private).Invoke(null, new object[] { restoredLedger }) == 0,
+            "Cancellation fails to restore exact prepaid science");
+        Assert(tableLedger.GetItemsCount("science", true) == 12, "Refund leaks to another save/table instance");
+        var fallbackLedger = new Item("fixture_table_fallback", 1);
+        Assert((int)reserve.GetMethod("Refund", Private).Invoke(null, new object[] { fallbackLedger, 8 }) == 8 && fallbackLedger.GetItemsCount("science", true) == 8,
+            "Captured paid fee fallback was lost");
+        var removalLedger = new Item("fixture_table_removal", 1);
+        removalLedger.inventory.Add(new Item("science", 12));
+        reserve.GetMethod("Record", Private).Invoke(null, new object[] { removalLedger, 8 });
+        refundTable = (WorldGameObject)FormatterServices.GetUninitializedObject(typeof(WorldGameObject));
+        refundTable.RestoreSavedInventory(removalLedger);
+        refundComponent = (CraftComponent)FormatterServices.GetUninitializedObject(typeof(CraftComponent));
+        refundComponent.is_crafting = true;
+        refundComponent.current_craft = balance.craft_data.Find(c => c.id == "rar_research_aromatizer");
+        var removalAdvice = reserve.GetNestedType("Removal", BindingFlags.NonPublic);
+        object[] beforeRemoval = { refundComponent, null };
+        removalAdvice.GetMethod("Prefix", Private).Invoke(null, beforeRemoval);
+        var removalCraft = new CraftDefinition { id = "fixture_removal" };
+        // No actual native transition: failed replacement must retain both science and reserve.
+        removalAdvice.GetMethod("Postfix", Private).Invoke(null, new object[] { refundComponent, removalCraft, beforeRemoval[1] });
+        Assert(removalLedger.GetItemsCount("science", true) == 12, "Unsuccessful removal start refunds active research");
+        // Native field assignment is established by IL; the fixture exercises the actual advice and native refund.
+        refundComponent.current_craft = removalCraft;
+        removalAdvice.GetMethod("Postfix", Private).Invoke(null, new object[] { refundComponent, removalCraft, beforeRemoval[1] });
+        Assert(removalLedger.GetItemsCount("science", true) == 20 && (int)reserve.GetMethod("Read", Private).Invoke(null, new object[] { removalLedger }) == 0,
+            "Successful removal replacement loses the research reserve");
+        object[] repeatedRemoval = { refundComponent, null };
+        removalAdvice.GetMethod("Prefix", Private).Invoke(null, repeatedRemoval);
+        removalAdvice.GetMethod("Postfix", Private).Invoke(null, new object[] { refundComponent, removalCraft, repeatedRemoval[1] });
+        Assert(repeatedRemoval[1] == null && removalLedger.GetItemsCount("science", true) == 20, "Removal repeats duplicate the refund");
+        refundComponent = null; refundTable = null;
+        var vendorData = new Item("fixture_vendor", 1);
+        var healingItem = balance.items_data.Find(i => i.id == "pot_heal");
+        Assert((int)Call("VendorStock", vendorData, false, healingItem, 1) == 10 && vendorData.inventory.Count == 0, "Cold stock projection mutates a vendor or misses first-tier stock");
+        var armorItem = balance.items_data.Find(i => i.id == "pot_armor");
+        Assert((int)Call("VendorStock", vendorData, false, armorItem, 1) == 1 && !(bool)Call("VendorVisible", true, true, 1, 3, 1), "Native cold higher-tier placeholder reveals a locked product");
+        vendorData.inventory.Add(new Item("pot_heal", 3)); vendorData.inventory.Add(new Item("pot_mana", 2));
+        Assert((int)Call("VendorStock", vendorData, true, healingItem, 1) == 3, "Initialized stock is replaced by theoretical replenishment");
+        Assert((int)Call("VendorStock", vendorData, true, armorItem, 3) == 0, "Depleted initialized stock incorrectly gets cold placeholder");
+        foreach (int tier in new[] { 1, 2, 3 })
+            foreach (int required in new[] { 1, 2, 3 })
+                Assert((bool)Call("VendorVisible", true, true, tier, required, 1) == (required <= tier), "Unlocked tier boundary changed");
+        Assert(!(bool)Call("VendorVisible", false, true, 3, 1, 1) && !(bool)Call("VendorVisible", true, false, 3, 1, 1) &&
+            !(bool)Call("VendorVisible", true, true, 3, 1, 0), "Trade/physical/current stock gates ignored");
+        var churchOnly = topics["rar_research_energy_elixir"];
+        var churchSourceList = (List<CraftDefinition>)churchOnly.GetType().GetField("churchSources", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(churchOnly);
+        Assert(churchSourceList.Count == 1 && ((IList)churchOnly.GetType().GetField("sources", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(churchOnly)).Count == 0, "Church-only topic incorrectly acquires room sources");
+        Assert(!host.save.IsCraftVisible(churchSourceList[0]), "Locked church source visible");
+        host.save.unlocked_crafts.Add(churchSourceList[0].id);
+        Assert(host.save.IsCraftVisible(churchSourceList[0]), "Native unlocked church source hidden");
+        host.save.locked_crafts.Add(churchSourceList[0].id);
+        Assert(!host.save.IsCraftVisible(churchSourceList[0]), "Native locked override ignored");
+        host.save.locked_crafts.Clear();
+        var overlapping = topics["rar_research_glue"];
+        Assert(((IList)overlapping.GetType().GetField("sources", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(overlapping)).Count == 1 &&
+            ((IList)overlapping.GetType().GetField("churchSources", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(overlapping)).Count == 1, "Overlapping source families were lost or made duplicate jobs");
+        Assert((int)Call("VisibleSources", true, 2, false, 3) == 2 && (int)Call("VisibleSources", false, 2, true, 3) == 3 &&
+            (int)Call("VisibleSources", true, 2, true, 3) == 5 && (int)Call("VisibleSources", false, 2, false, 3) == 0, "Unavailable family leaks visible recipes through another source");
+        Assert((bool)Call("ChurchPhysical", false, false, false, false, false, true, true), "Enabled native church source unavailable");
+        foreach (var blocked in new[] {
+            new object[] { true, false, false, false, false, true, true },
+            new object[] { false, true, false, false, false, true, true },
+            new object[] { false, false, true, false, false, true, true },
+            new object[] { false, false, false, true, false, true, true },
+            new object[] { false, false, false, false, true, true, true },
+            new object[] { false, false, false, false, false, false, true },
+            new object[] { false, false, false, false, false, true, false } })
+            Assert(!(bool)Call("ChurchPhysical", blocked), "Unavailable church source contributes topics");
+        var busyFixture = (CraftComponent)FormatterServices.GetUninitializedObject(typeof(CraftComponent));
+        busyFixture.crafts = new List<CraftDefinition> { churchSourceList[0] };
+        foreach (bool busy in new[] { false, true })
+        {
+            busyFixture.is_crafting = busy;
+            Assert((bool)Call("ChurchPhysical", false, false, false, false, false, busyFixture.has_visible_crafts, true), "Temporary native work hides the source");
+        }
+        var black = topics["rar_research_black_paint"];
+        var blackFormulas = (List<CraftDefinition>)black.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(black);
+        string blackId = "rar_research_black_paint";
+        var descriptionSave = Save();
+        Assert((string)Call("Describe", blackId, descriptionSave, "native description") == "native description", "Unknown topic marked as alternative research");
+        descriptionSave.completed_one_time_crafts.Add(blackFormulas[0].id);
+        var descriptionBefore = new HashSet<string>(descriptionSave.completed_one_time_crafts);
+        Assert((string)Call("Describe", blackId, descriptionSave, "native description") == "native description\nЧасть рецептов известна. Открыть все варианты.", "Partial topic loses native description or explanation");
+        var descriptionLanguage = (GJL)AccessTools.Field(typeof(GJL), "cur_lng").GetValue(null);
+        foreach (string locale in GJL.LANGUAGES)
+        {
+            descriptionLanguage.id = locale;
+            string description = (string)Call("Describe", blackId, descriptionSave, "");
+            Assert(!string.IsNullOrWhiteSpace(description) && !description.Contains(blackFormulas[0].id), "Partial explanation absent or leaks formula identity: " + locale);
+        }
+        descriptionLanguage.id = "en";
+        Assert((string)Call("Describe", blackId, descriptionSave, "") == "Some recipes are known. Unlock all variants.", "Partial description retained its old language");
+        descriptionLanguage.id = "ru";
+        Assert((string)Call("Describe", "ordinary_craft", descriptionSave, "unchanged") == "unchanged", "Partial label affects ordinary crafts");
+        Assert((string)Call("Describe", blackId, null, "unchanged") == "unchanged", "Description requires loaded save");
+        Assert(descriptionBefore.SetEquals(descriptionSave.completed_one_time_crafts), "Description changed knowledge");
+        Call("GrantRemaining", descriptionSave, blackFormulas);
+        Assert((string)Call("Describe", blackId, descriptionSave, "native description") == "native description", "Fully known group remains marked partial");
+        var partiallyKnownBlack = Save(); partiallyKnownBlack.completed_one_time_crafts.Add(blackFormulas[0].id);
+        Assert(((List<string>)Call("GrantRemaining", partiallyKnownBlack, blackFormulas)).Count == 2, "Registered three-variant group did not grant only its missing formulas");
+        Assert(((List<string>)Call("GrantRemaining", partiallyKnownBlack, blackFormulas)).Count == 0, "Registered multi-variant reward repeated");
+        var topic = topics["rar_research_yellow_paint"];
+        var job = (CraftDefinition)topic.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(topic);
+        var visible = topic.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance);
+        var formulas = (List<CraftDefinition>)topic.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(topic);
+        Assert(job.needs.Count == 0 && job.needs_from_wgo.Count == 1 && job.needs_from_wgo[0].id == "science" && job.output.Count == 0 && job.one_time_craft && !job.CanCraftMultiple(), "Sample-free zero-faith single job contract");
+        Assert(job.icon == "fixture_native_icon_yellow_paint", "Native item icon metadata ignored");
+        var enabled = asm.GetType("NikichMods.ResearchableAlchemyRecipes.Plugin").GetField("Enabled", Private);
+        enabled.SetValue(null, true);
+        var harmony = new Harmony("rar.offline.source-topics");
+        var postfix = source.GetNestedType("Visibility", BindingFlags.NonPublic).GetMethod("Postfix", Private);
+        harmony.Patch(typeof(GameSave).GetMethod("IsCraftVisible"), postfix: new HarmonyMethod(postfix));
+        try
+        {
+            var save = host.save;
+            Assert(!save.IsCraftVisible(job), "Uncaptured sources offered");
+            var heal = topics["rar_research_pot_heal"];
+            var healJob = (CraftDefinition)heal.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(heal);
+            var healFormulaList = (List<CraftDefinition>)heal.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(heal);
+            var acidTopic = topics["rar_research_acid"];
+            var acidJob = (CraftDefinition)acidTopic.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(acidTopic);
+            source.GetField("snapshotSave", Private).SetValue(null, questSave);
+            source.GetField("sourceAvailable", Private).SetValue(null, false);
+            heal.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(heal, 1);
+            acidTopic.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(acidTopic, 1);
+            Assert(questSave.IsCraftVisible(healJob) && questSave.IsCraftVisible(acidJob), "Assigned requests depend on trade, stock, sample or physical source station");
+            Assert(questSave.unlocked_phrases.Count == 0, "Quest fixtures accidentally open trade");
+            questSave.unlocked_techs.Clear();
+            Assert(!questSave.IsCraftVisible(healJob) && !questSave.IsCraftVisible(acidJob), "Quest request bypasses foundational alchemy gate");
+            questSave.unlocked_techs.Add("The Beginning Of Alchemy");
+            questSave.completed_one_time_crafts.Add(healFormulaList[0].id);
+            Assert(questSave.IsCraftVisible(healJob), "Partial healing knowledge removes the quest topic");
+            questSave.completed_one_time_crafts.Add(healFormulaList[1].id);
+            Assert(!questSave.IsCraftVisible(healJob), "Fully learned quest topic remains paid");
+            var acidFormulaList = (List<CraftDefinition>)acidTopic.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(acidTopic);
+            questSave.completed_one_time_crafts.Add(acidFormulaList[0].id);
+            Assert(!questSave.IsCraftVisible(acidJob), "Known acid remains a paid quest topic");
+            source.GetField("snapshotSave", Private).SetValue(null, save);
+            source.GetField("sourceAvailable", Private).SetValue(null, true); visible.SetValue(topic, 1);
+            Assert(save.IsCraftVisible(job), "Positive native topic hidden");
+            var potionTopic = topics["rar_research_pot_heal"];
+            var potionJob = (CraftDefinition)potionTopic.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(potionTopic);
+            potionTopic.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(potionTopic, 1);
+            Assert(!save.IsCraftVisible(potionJob), "Other source opens trade without Clotho explanation");
+            save.unlocked_phrases.Add("@clotho_trade");
+            source.GetField("sourceAvailable", Private).SetValue(null, false);
+            Assert(!save.IsCraftVisible(potionJob), "Trade explanation alone reveals unviewed potion");
+            Call("RecordTrade", host.player.data, 1, new[] { new Item("pot_heal", 1), new Item("pot_mana", 1) });
+            Assert(save.IsCraftVisible(potionJob) && !save.IsCraftVisible(job), "Clotho source requires an unrelated station or enables room topics");
+            save.black_list_of_phrases.Add("@clotho_trade");
+            Assert(!save.IsCraftVisible(potionJob), "Blacklisted trade remains a source"); save.black_list_of_phrases.Clear();
+            save.unlocked_techs.Remove("The Beginning Of Alchemy");
+            Assert(!save.IsCraftVisible(potionJob), "Potion ignores alchemy gate"); save.unlocked_techs.Add("The Beginning Of Alchemy");
+            var potionFormulas = (List<CraftDefinition>)potionTopic.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(potionTopic);
+            save.completed_one_time_crafts.Add(potionFormulas[0].id);
+            Assert(save.IsCraftVisible(potionJob) && ((List<string>)Call("GrantRemaining", save, potionFormulas)).Count == 1 && !save.IsCraftVisible(potionJob), "Partial potion knowledge is duplicated or full knowledge remains offered");
+            source.GetField("sourceAvailable", Private).SetValue(null, true);
+            var resurrection = topics["rar_research_zombie_juise"];
+            var resurrectionJob = (CraftDefinition)resurrection.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(resurrection);
+            resurrection.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(resurrection, 1);
+            Assert(!save.IsCraftVisible(resurrectionJob), "Physical source bypasses resurrection technology");
+            save.unlocked_techs.Add("Second chance");
+            source.GetField("sourceAvailable", Private).SetValue(null, false);
+            Assert(save.IsCraftVisible(resurrectionJob) && !save.IsCraftVisible(job), "Resurrection technology requires a station or enables unrelated physical sources");
+            save.unlocked_techs.Remove("The Beginning Of Alchemy");
+            Assert(!save.IsCraftVisible(resurrectionJob), "Resurrection topic bypasses alchemy access");
+            save.unlocked_techs.Add("The Beginning Of Alchemy");
+            var resurrectionFormulas = (List<CraftDefinition>)resurrection.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(resurrection);
+            Assert(((List<string>)Call("GrantRemaining", save, resurrectionFormulas)).Count == 1 && !save.IsCraftVisible(resurrectionJob), "Known resurrection formula remains offered");
+            save.unlocked_techs.Remove("Second chance");
+            source.GetField("sourceAvailable", Private).SetValue(null, true);
+            var churchJob = (CraftDefinition)churchOnly.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(churchOnly);
+            var churchVisibleField = churchOnly.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance);
+            churchVisibleField.SetValue(churchOnly, Call("VisibleSources", true, 0, false, 1));
+            Assert(!save.IsCraftVisible(churchJob), "Room availability enables a church-only topic");
+            churchVisibleField.SetValue(churchOnly, Call("VisibleSources", false, 0, true, 1));
+            Assert(save.IsCraftVisible(churchJob), "Available church-only topic hidden");
+            var churchFormulas = (List<CraftDefinition>)churchOnly.GetType().GetField("formulas", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(churchOnly);
+            save.completed_one_time_crafts.Add(churchFormulas[0].id);
+            Assert(save.IsCraftVisible(churchJob), "Partially known church-only group hidden");
+            Assert(((List<string>)Call("GrantRemaining", save, churchFormulas)).Count == 1 && !save.IsCraftVisible(churchJob), "Church reward repeats known variant or leaves a fully known topic");
+            var blackJob = (CraftDefinition)black.GetType().GetField("job", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(black);
+            black.GetType().GetField("visible", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(black, 1);
+            save.completed_one_time_crafts.Add(blackFormulas[0].id);
+            Assert(save.IsCraftVisible(blackJob), "Partially known multi-variant topic hidden");
+            Assert(((List<string>)Call("GrantRemaining", save, blackFormulas)).Count == 2 && !save.IsCraftVisible(blackJob), "Fully known multi-variant topic still offered");
+            save.unlocked_techs.Clear(); Assert(!save.IsCraftVisible(job), "Alchemy gate ignored"); save.unlocked_techs.Add("The Beginning Of Alchemy");
+            source.GetField("sourceAvailable", Private).SetValue(null, false); Assert(!save.IsCraftVisible(job), "Absent/disabled source offered"); source.GetField("sourceAvailable", Private).SetValue(null, true);
+            visible.SetValue(topic, 0); Assert(!save.IsCraftVisible(job), "Locked blueprints offered"); visible.SetValue(topic, 1);
+            job.hidden = true; Assert(!save.IsCraftVisible(job), "Native hidden result overwritten"); job.hidden = false;
+            save.locked_crafts.Add(job.id); Assert(!save.IsCraftVisible(job), "Native locked result overwritten"); save.locked_crafts.Clear();
+            var otherSave = Save(); Assert(!otherSave.IsCraftVisible(job), "Source snapshot crossed saves");
+            var learned = (List<string>)Call("GrantRemaining", save, formulas);
+            Assert(learned.Count == 1 && !save.IsCraftVisible(job), "Known formula still offered");
+            Assert(((List<string>)Call("GrantRemaining", save, formulas)).Count == 0, "Repeated formula reward");
+            save.completed_one_time_crafts.Add(job.id);
+            // Model list-backed restart, not a claim of native serializer execution.
+            var reloaded = Save(); reloaded.completed_one_time_crafts = new List<string>(save.completed_one_time_crafts);
+            // Test shared remaining-only grant with partial knowledge and repeated/duplicate definitions.
+            var partial = Save(); partial.completed_one_time_crafts.Add("a");
+            var variants = new[] { new CraftDefinition { id = "a" }, new CraftDefinition { id = "b" }, new CraftDefinition { id = "b" } };
+            Assert(((List<string>)Call("GrantRemaining", partial, variants)).Count == 1, "Partial reward duplicated known variant");
+        }
+        finally { harmony.UnpatchSelf(); enabled.SetValue(null, false); }
+        for (int mask = 0; mask < 16; mask++)
+            Assert((bool)Call("Eligible", (mask & 1) != 0, (mask & 2) != 0, (mask & 4) != 0 ? 1 : 0, (mask & 8) != 0 ? 1 : 0) == (mask == 15), "Independent eligibility gate");
+        var guidance = asm.GetType("NikichMods.ResearchableAlchemyRecipes.RecipeGuidance", true);
+        var palette = asm.GetType("NikichMods.ResearchableAlchemyRecipes.ReagentHeadingPalette", true).GetMethod("Heading", Private);
+        var heading = (string)palette.Invoke(null, new object[] { "alchemy_1_yellow", "localized example" });
+        Assert(heading.StartsWith("[c][") && heading.Contains("localized example:") && heading.EndsWith("[-][/c]"), "Palette must preserve localized heading and close colour scope");
+        Assert((string)palette.Invoke(null, new object[] { "unverified_future_reagent", "plain example" }) == "plain example:", "Unverified reagent assigned a guessed colour");
+        var producer = new CraftDefinition { id = "manual", craft_type = CraftDefinition.CraftType.AlchemyDecompose,
+            craft_in = new List<string> { "mill" }, needs = new List<Item> { new Item("source", 1) }, output = new List<Item> { new Item("reagent", 1) } };
+        var automatic = new CraftDefinition { id = "automatic", craft_in = new List<string> { "alchemy_table_zombie" },
+            needs = producer.needs, output = producer.output };
+        var mixed = new CraftDefinition { id = "mixed", craft_type = CraftDefinition.CraftType.MixedCraft,
+            craft_in = producer.craft_in, needs = producer.needs, output = producer.output };
+        var hidden = new CraftDefinition { id = "hidden", hidden = true, craft_in = producer.craft_in, needs = producer.needs, output = producer.output };
+        var found = (List<CraftDefinition>)guidance.GetMethod("FindRoutes", Private).Invoke(null, new object[] { new[] { automatic, producer, mixed, hidden }, "reagent" });
+        Assert(found.Count == 1 && ReferenceEquals(found[0], producer), "Guidance includes hidden/mixed/automated routes");
+        var render = guidance.GetMethod("BuildText", Private);
+        var formula = new CraftDefinition { needs = new List<Item> { new Item("reagent", 1) } };
+        var catalogue = new Dictionary<string, List<CraftDefinition>> { { "reagent", new List<CraftDefinition> { producer } } };
+        host.save = Save();
+        Func<string, string> names = id => id;
+        var pending = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names });
+        Assert(pending.Contains("[не изучено]") && pending.Contains("исследовательском столе"), "Unstudied native source lacks marker/instruction");
+        catalogue["reagent"].Add(producer);
+        var multiplePending = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names });
+        const string footer = "Отмеченные материалы нужно сначала изучить на исследовательском столе.";
+        Assert(multiplePending.IndexOf(footer, StringComparison.Ordinal) >= 0 && multiplePending.IndexOf(footer, StringComparison.Ordinal) == multiplePending.LastIndexOf(footer, StringComparison.Ordinal), "Shared explanation absent or duplicated per alternative");
+        catalogue["reagent"].RemoveAt(1);
+        var gooSource = new CraftDefinition { id = "first_goo", craft_type = producer.craft_type,
+            craft_in = producer.craft_in, needs = new List<Item> { new Item("goo_yellow", 4) }, output = producer.output };
+        var jellySource = new CraftDefinition { id = "jelly", craft_type = producer.craft_type,
+            craft_in = producer.craft_in, needs = new List<Item> { new Item("jelly_green", 1) }, output = producer.output };
+        catalogue["reagent"].Insert(0, gooSource);
+        catalogue["reagent"].Add(jellySource);
+        string gooText = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names });
+        Assert(gooText.IndexOf("goo_yellow", StringComparison.Ordinal) > gooText.IndexOf("jelly_green", StringComparison.Ordinal), "Goo must follow ordinary sources even when catalogue order puts it first");
+        Assert(gooText.Contains("[59]goo_yellow [693606][не изучено][-][FF]") && !gooText.Contains("[59]jelly_green"), "Goo row must dim its Study mark, preserve alpha scope and leave monster jelly ordinary");
+        Assert(ReferenceEquals(catalogue["reagent"][0], gooSource), "Presentation reorders the native/source catalogue");
+        Assert(!gooText.Contains("[59]mill:"), "Mixed equipment block heading was dimmed");
+        gooSource.craft_in = new List<string> { "goo_station" };
+        string gooOnly = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names });
+        Assert(gooOnly.Contains("\n  [59]goo_station:[FF]") &&
+            gooOnly.IndexOf("goo_station", StringComparison.Ordinal) > gooOnly.IndexOf("jelly_green", StringComparison.Ordinal),
+            "Goo-only equipment block must have a dim heading and follow all ordinary sources");
+        catalogue["reagent"].Remove(gooSource); catalogue["reagent"].Remove(jellySource);
+        host.save.completed_one_time_crafts.Add("surv:source");
+        var studied = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names });
+        Assert(!studied.Contains("[не изучено]") && !studied.Contains("исследовательском столе"), "Studied native source still marked");
+        producer.needs = new List<Item> { new Item("sulfur", 1) };
+        host.save.completed_one_time_crafts.Add("surv:sulfur");
+        var baselineKnowledge = new HashSet<string>(host.save.completed_one_time_crafts);
+        var currentView = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names });
+        Assert(!currentView.Contains("[не изучено]") && baselineKnowledge.SetEquals(host.save.completed_one_time_crafts), "Native studied source or knowledge changed");
+        producer.craft_type = CraftDefinition.CraftType.None;
+        host.save.completed_one_time_crafts.Remove("surv:sulfur");
+        var ordinary = (string)render.Invoke(null, new object[] { formula, catalogue, host.save, names });
+        Assert(!ordinary.Contains("[не изучено]"), "Ordinary production incorrectly requires material Study");
+        CheckBroadGuidance(asm, host.save);
+        // UI method detours cannot be compiled by the standalone CLR: Unity ECalls require
+        // the real engine. Resolve exact contracts here; installed patching remains a live gate.
+        foreach (string name in new[] { "Redraw", "OnOver", "OnMouseOvered" })
+            Assert(AccessTools.Method(typeof(CraftItemGUI), name, Type.EmptyTypes) != null, "Missing exact UI method: " + name);
+        Assert(AccessTools.Method(typeof(CraftGUI), "OpenAsAlchemy", new[] { typeof(WorldGameObject) }) != null, "Missing alchemy UI entry");
+        Assert(AccessTools.Method(typeof(CraftGUI), "Hide", new[] { typeof(bool) }) != null, "Missing UI close contract");
+    }
+    private static void CheckBroadGuidance(Assembly asm, GameSave save)
+    {
+        var guidance = asm.GetType("NikichMods.ResearchableAlchemyRecipes.RecipeGuidance", true);
+        var classify = guidance.GetMethod("IsListCandidate", Private);
+        var definitions = new Dictionary<string, ItemDefinition> {
+            { "fixture_powder", new ItemDefinition { alch_type = ItemDefinition.AlchemyType.Powder } },
+            { "fixture_fluid", new ItemDefinition { alch_type = ItemDefinition.AlchemyType.Fluid } },
+            { "fixture_essence", new ItemDefinition { alch_type = ItemDefinition.AlchemyType.Essence } },
+            { "fixture_universal", new ItemDefinition { alch_type = ItemDefinition.AlchemyType.Universal } }
+        };
+        var a = new CraftDefinition { id = "fixture_known_variant", craft_type = CraftDefinition.CraftType.MixedCraft,
+            craft_in = new List<string> { "mf_alchemy_craft_02" }, needs = new List<Item> { new Item("fixture_powder", 1), new Item("fixture_fluid", 1) },
+            output = new List<Item> { new Item("fixture_product", 1) } };
+        Assert((bool)classify.Invoke(null, new object[] { a }), "Ordinary two-slot formula rejected");
+        a.needs[0].id = "fixture_fluid";
+        Assert((bool)classify.Invoke(null, new object[] { a }), "Visible nonstandard formula incorrectly rejected");
+        a.needs[0].id = "fixture_universal";
+        Assert((bool)classify.Invoke(null, new object[] { a }), "Native universal reagent rejected");
+        a.needs.Add(new Item("fixture_essence", 1)); a.craft_in[0] = "mf_alchemy_craft_03";
+        Assert((bool)classify.Invoke(null, new object[] { a }), "Three-slot table unsupported");
+        a.craft_in[0] = "alchemy_table_zombie";
+        Assert(!(bool)classify.Invoke(null, new object[] { a }), "Automated station included");
+        a.craft_in[0] = "mf_alchemy_craft_03"; a.output[0].id = "goo";
+        Assert((bool)classify.Invoke(null, new object[] { a }), "Known visible failure product incorrectly rejected by display catalogue");
+        a.output[0].id = "fixture_product";
+        definitions.Add("fixture_crop:1", new ItemDefinition());
+        definitions.Add("fixture_crop:2", new ItemDefinition());
+        var family = guidance.GetMethod("ResolveFamilyMember", Private);
+        Assert((string)family.Invoke(null, new object[] { "fixture_crop", definitions }) == "fixture_crop:1", "Native family member not resolved deterministically");
+        Assert(family.Invoke(null, new object[] { "fixture_crop:2", definitions }) == null, "Concrete variant replaced by family");
+        Assert(family.Invoke(null, new object[] { "fixture_missing", definitions }) == null, "Missing material invented");
+        a.hidden = true;
+        Assert(!(bool)classify.Invoke(null, new object[] { a }), "Hidden catalogue entry included");
+        a.hidden = false;
+        var b = new CraftDefinition { id = "fixture_unknown_variant", craft_in = a.craft_in, needs = a.needs, output = a.output };
+        save.completed_one_time_crafts.Add(a.id);
+        var eligible = guidance.GetMethod("KnownForTable", Private);
+        Assert((bool)eligible.Invoke(null, new object[] { a, "mf_alchemy_craft_03", save }), "Known exact formula unavailable");
+        Assert(!(bool)eligible.Invoke(null, new object[] { b, "mf_alchemy_craft_03", save }), "Partial knowledge leaks another formula for the same product");
+        Assert(!(bool)eligible.Invoke(null, new object[] { a, "mf_alchemy_craft_02", save }), "Wrong manufacturing station accepted");
+        save.unlocked_techs.Clear();
+        Assert(!(bool)eligible.Invoke(null, new object[] { a, "mf_alchemy_craft_03", save }), "Pre-alchemy guidance disclosed");
+        save.unlocked_techs.Add("The Beginning Of Alchemy");
+        var first = new CraftDefinition { id = "fixture_source_I", craft_type = CraftDefinition.CraftType.AlchemyDecompose,
+            craft_in = new List<string> { "mf_distcube_2_clay" }, needs = new List<Item> { new Item("fixture_source", 1) }, output = new List<Item> { new Item("fixture_reagent", 1) } };
+        var second = new CraftDefinition { id = "fixture_source_II", craft_type = first.craft_type,
+            craft_in = new List<string> { "mf_distcube_2_cuprum" }, needs = first.needs, output = first.output };
+        var grouping = guidance.GetMethod("GroupRoutes", Private);
+        var sources = new List<CraftDefinition> { first, second };
+        Assert(((List<List<CraftDefinition>>)grouping.Invoke(null, new object[] { sources, save })).Count == 1, "Equivalent tiers repeat the source");
+        save.locked_crafts.Add(second.id);
+        Assert(((List<List<CraftDefinition>>)grouping.Invoke(null, new object[] { sources, save })).Count == 2, "Different source visibility lost in grouping");
+        save.locked_crafts.Remove(second.id); second.output = new List<Item> { new Item("fixture_reagent", 2) };
+        Assert(((List<List<CraftDefinition>>)grouping.Invoke(null, new object[] { sources, save })).Count == 1, "Distinct tiers cannot share their common material");
+        var tierFormula = new CraftDefinition { needs = new List<Item> { new Item("fixture_reagent", 1) } };
+        var tierCatalogue = new Dictionary<string, List<CraftDefinition>> { { "fixture_reagent", sources } };
+        Func<string, string> tierNames = id => id;
+        string tiers = (string)guidance.GetMethod("BuildText", Private).Invoke(null, new object[] { tierFormula, tierCatalogue, save, tierNames });
+        Assert(tiers.Contains("mf_distcube_2_clay") && tiers.Contains("mf_distcube_2_cuprum") && !tiers.Contains("ед."), "Equipment/yield alternative lost in common-material grouping");
+        second.craft_in[0] = first.craft_in[0];
+        Assert(((List<List<CraftDefinition>>)grouping.Invoke(null, new object[] { sources, save })).Count == 2, "Different recipes at the same station collapsed");
+        var bonusYield = new Item("fixture_reagent", 1) { min_value = new SmartExpression(), max_value = new SmartExpression() };
+        bonusYield.min_value.FromString("2+Ppar(\"p_scientist\")");
+        var fixedYield = asm.GetType("NikichMods.ResearchableAlchemyRecipes.AdditionalSources").GetMethod("FixedYield", Private);
+        Assert((int)fixedYield.Invoke(null, new object[] { bonusYield }) == 0, "Dynamic yield presented as a fixed quantity");
+        bonusYield.min_value.FromString("1"); bonusYield.max_value.default_value = 3;
+        Assert((int)fixedYield.Invoke(null, new object[] { bonusYield }) == 0, "Random yield range presented as fixed");
+        var balance = (GameBalance)FormatterServices.GetUninitializedObject(typeof(GameBalance));
+        balance.items_data = new List<ItemDefinition> {
+            new ItemDefinition { id = "fixture_water_container", can_be_used = true, drop_on_use = new List<Item> { new Item("water", 20) } },
+            new ItemDefinition { id = "fixture_not_usable", drop_on_use = new List<Item> { new Item("water", 20) } }
+        };
+        balance.craft_data = new List<CraftDefinition> {
+            new CraftDefinition { id = "ex:fixture:blood", needs_unlock = true, craft_in = new List<string> { "fixture_autopsy" }, output = new List<Item> { new Item("blood", 1) } },
+            new CraftDefinition { id = "corp_burning", hidden = true, is_auto = true, output = new List<Item> { new Item("ash", 5) } },
+            new CraftDefinition { id = "crematorium_corp_burning", hidden = true, is_auto = true, output = new List<Item> { new Item("ash", 5) } }
+        };
+        balance.craft_obj_data = new List<ObjectCraftDefinition> {
+            new ObjectCraftDefinition { id = "cremation_builddesk:p:mf_pyre_placed", out_obj = "mf_pyre_placed", enabled = true },
+            new ObjectCraftDefinition { id = "souls_builddesk:p:mf_crematorium", out_obj = "mf_crematorium", enabled = true }
+        };
+        balance.techs_data = new List<TechDefinition> { new TechDefinition { id = "fixture_required_skill", crafts = new List<string> { "ex:fixture:blood" } } };
+        var extras = asm.GetType("NikichMods.ResearchableAlchemyRecipes.AdditionalSources", true);
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "water", "blood", "ash" }, true, true });
+        var core = guidance.GetMethod("BuildTextCore", Private);
+        var empty = new Dictionary<string, List<CraftDefinition>>();
+        Func<string, string> names = id => id;
+        foreach (string ingredient in new[] { "water", "blood", "ash" })
+        {
+            var formula = new CraftDefinition { needs = new List<Item> { new Item(ingredient, 1) } };
+            string text = (string)core.Invoke(null, new object[] { formula, empty, save, names, true });
+            Assert(!text.Contains("Источник пока") && !text.Contains("[не изучено]"), "Procedural source absent or incorrectly needs material Study");
+            if (ingredient == "water") Assert(text.Contains("\n  Использование предмета:\n    fixture_water_container") && !text.Contains("fixture_not_usable"), "Item-use equipment/source grouping or yield wrong");
+            if (ingredient == "blood") Assert(text.Contains("Извлечение из тела") && !text.Contains("body (извлечение") && text.Contains("fixture_required_skill"), "Body-part or declared technology condition absent");
+            if (ingredient == "ash") Assert(text.Contains("Сожжение тела") && text.Contains("mf_pyre_placed") && text.Contains("mf_crematorium"), "Hidden native automatic channels missing or incorrectly shown as menu recipes");
+        }
+        // Equipment is stated once without losing independent source-study requirements.
+        var another = new CraftDefinition { id = "fixture_other_material", craft_type = first.craft_type,
+            craft_in = first.craft_in, needs = new List<Item> { new Item("fixture_other_source", 1) }, output = first.output };
+        var sameEquipment = new Dictionary<string, List<CraftDefinition>> { { "fixture_reagent", new List<CraftDefinition> { first, another } } };
+        string grouped = (string)guidance.GetMethod("BuildText", Private).Invoke(null, new object[] { tierFormula, sameEquipment, save, tierNames });
+        Assert(grouped.Split(new[] { "mf_distcube_2_clay" }, StringSplitOptions.None).Length == 2 && grouped.Contains("fixture_source") && grouped.Contains("fixture_other_source"), "Repeated equipment or missing source in equipment section");
+        first.needs[0].value = 4;
+        string quantityFree = (string)guidance.GetMethod("BuildText", Private).Invoke(null, new object[] { tierFormula, sameEquipment, save, tierNames });
+        Assert(!quantityFree.Contains("×") && !quantityFree.Contains("ед.") && first.needs[0].value == 4, "Guide retains quantities or mutates native source input");
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "ash" }, false, true });
+        var ashFormula = new CraftDefinition { needs = new List<Item> { new Item("ash", 1) } };
+        string noDlc = (string)core.Invoke(null, new object[] { ashFormula, empty, save, names, true });
+        Assert(noDlc.Contains("mf_pyre_placed") && !noDlc.Contains("mf_crematorium"), "Absent DLC source displayed or ordinary cremation lost");
+        var extraction1 = new CraftDefinition { id = "ex:fixture_I:blood", craft_in = new List<string> { "mf_preparation_1" }, output = new List<Item> { new Item("blood", 1) } };
+        var extraction2 = new CraftDefinition { id = "ex:fixture_II:blood", craft_in = new List<string> { "mf_preparation_2" }, output = extraction1.output };
+        balance.craft_data.Add(extraction1); balance.craft_data.Add(extraction2);
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "blood" }, true, true });
+        Func<string, string> preparationNames = id => id == "mf_preparation_1" ? "fixture table" : id == "mf_preparation_2" ? "fixture table II" : id;
+        var bloodFormula = new CraftDefinition { needs = new List<Item> { new Item("blood", 1) } };
+        string combined = (string)core.Invoke(null, new object[] { bloodFormula, empty, save, preparationNames, true });
+        Assert(combined.Contains("\n  fixture table I, II:\n    Извлечение из тела") && !combined.Contains("I–II"), "Available preparation tiers/source format or readable numbering wrong");
+        save.locked_crafts.Add(extraction2.id);
+        string separate = (string)core.Invoke(null, new object[] { bloodFormula, empty, save, preparationNames, true });
+        Assert(!separate.Contains("fixture table I, II") && separate.Contains("рецепт закрыт"), "Closed extraction tier hidden in combined label");
+        save.locked_crafts.Remove(extraction2.id);
+        var layout = asm.GetType("NikichMods.ResearchableAlchemyRecipes.GuidanceTextLayout").GetMethod("Format", Private);
+        string marker = "[693606][не изучено][-]";
+        Func<string, float> measure = value => System.Text.RegularExpressions.Regex.Replace(value, @"\[(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{2})\]|\[-\]", "").Length;
+        Func<string, float, string> wrap = (value, capacity) =>
+        {
+            var lines = new List<string>(); string line = "";
+            foreach (string word in value.Split(' '))
+            {
+                string next = line.Length == 0 ? word : line + " " + word;
+                if (line.Length > 0 && measure(next) > capacity) { lines.Add(line); line = word; }
+                else line = next;
+            }
+            lines.Add(line); return string.Join("\n", lines.ToArray());
+        };
+        string narrow = (string)layout.Invoke(null, new object[] { "Heading:\n  Station:\n    long source name " + marker + " (closed route)", 18f, marker, measure, wrap });
+        Assert(narrow.Contains("\n    long source\n    name\n    " + marker), "Material continuation lost indentation or atomic Study marker");
+        Assert(narrow.Contains("\n    (closed route)"), "Source condition discarded or left-aligned by wrapping");
+        string wide = (string)layout.Invoke(null, new object[] { "    石灰石 " + marker, 40f, marker, measure, wrap });
+        Assert(wide == "    石灰石 " + marker, "Localized source name or fitting marker modified");
+        string dimmed = (string)layout.Invoke(null, new object[] { "    [59]long goo source " + marker + "[FF]\n  Next equipment", 18f, marker, measure, wrap });
+        Assert(dimmed.Contains(marker) && dimmed.IndexOf("[59]", StringComparison.Ordinal) < dimmed.IndexOf(marker, StringComparison.Ordinal) &&
+            dimmed.IndexOf("[FF]", StringComparison.Ordinal) > dimmed.IndexOf(marker, StringComparison.Ordinal) && dimmed.EndsWith("\n  Next equipment", StringComparison.Ordinal),
+            "Wrapping loses atomic Study marker or dimming/reset boundary");
+        balance.items_data.Add(new ItemDefinition { id = "memory_powder" });
+        var memoryFormula = new CraftDefinition { needs = new List<Item> { new Item("memory_powder", 1) } };
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "memory_powder" }, false, true });
+        string memory = (string)core.Invoke(null, new object[] { memoryFormula, empty, save, names, true });
+        Assert(memory.Contains("Покупка") && memory.Contains("npc_witch") && memory.Contains("покупка пока недоступна") && !memory.Contains("Источник пока") && !memory.Contains("[не изучено]"), "Dialogue source/closed state missing or incorrectly needs Study");
+        save.unlocked_phrases.Add("@buy_memory_powder");
+        memory = (string)core.Invoke(null, new object[] { memoryFormula, empty, save, names, true });
+        Assert(memory.Contains("npc_witch") && !memory.Contains("покупка пока недоступна"), "Unlocked purchase remains marked closed");
+        save.black_list_of_phrases.Add("@buy_memory_powder");
+        memory = (string)core.Invoke(null, new object[] { memoryFormula, empty, save, names, true });
+        Assert(memory.Contains("покупка пока недоступна"), "Blacklisted dialogue purchase appears available");
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "memory_powder" }, false, false });
+        memory = (string)core.Invoke(null, new object[] { memoryFormula, empty, save, names, true });
+        Assert(!memory.Contains("npc_witch"), "Absent Game of Crone still shows DLC dialogue source");
+        CheckLocalization(asm, balance, save);
+    }
+    private static void CheckLocalization(Assembly asm, GameBalance balance, GameSave save)
+    {
+        var localization = asm.GetType("NikichMods.ResearchableAlchemyRecipes.Localization", true);
+        var keyType = localization.GetNestedType("Key", BindingFlags.NonPublic);
+        var get = localization.GetMethod("Get", Private, null, new[] { keyType, typeof(string) }, null);
+        Func<string, string, string> text = (key, locale) => (string)get.Invoke(null, new[] { Enum.Parse(keyType, key), (object)locale });
+        var current = (GJL)AccessTools.Field(typeof(GJL), "cur_lng").GetValue(null);
+        current.dict["native_fixture"] = "preserved";
+        var guidance = asm.GetType("NikichMods.ResearchableAlchemyRecipes.RecipeGuidance", true);
+        var core = guidance.GetMethod("BuildTextCore", Private);
+        var empty = new Dictionary<string, List<CraftDefinition>>();
+        var extras = asm.GetType("NikichMods.ResearchableAlchemyRecipes.AdditionalSources", true);
+        current.id = "ru";
+        extras.GetMethod("Register", Private).Invoke(null, new object[] { balance, new HashSet<string> { "water", "blood", "ash", "memory_powder" }, false, true });
+        var beforeKnowledge = new HashSet<string>(save.completed_one_time_crafts);
+        var layout = asm.GetType("NikichMods.ResearchableAlchemyRecipes.GuidanceTextLayout", true).GetMethod("Format", Private);
+        Func<string, float> measure = value => System.Text.RegularExpressions.Regex.Replace(value, @"\[(?:[A-Fa-f0-9]{6}|[A-Fa-f0-9]{2})\]|\[-\]", "").Length;
+        Func<string, float, string> wrap = (value, width) =>
+        {
+            var lines = new List<string>(); string line = "";
+            foreach (string word in value.Split(' '))
+            {
+                string next = line.Length == 0 ? word : line + " " + word;
+                if (line.Length > 0 && measure(next) > width) { lines.Add(line); line = word; }
+                else line = next;
+            }
+            lines.Add(line); return string.Join("\n", lines.ToArray());
+        };
+        foreach (string locale in GJL.LANGUAGES)
+        {
+            current.id = locale;
+            current.dict["pot_heal"] = "native_item_name_" + locale;
+            foreach (object key in Enum.GetValues(keyType))
+            {
+                string value = (string)get.Invoke(null, new[] { key, (object)locale });
+                Assert(!string.IsNullOrWhiteSpace(value) && !value.Contains("nikichmods.rar.ui."), "Missing translation: " + locale + "/" + key);
+            }
+            Assert(current.dict["native_fixture"] == "preserved", "Localization overwrites native text");
+            foreach (var pair in new[] { new[] { "water", "ItemUse" }, new[] { "blood", "Extraction" }, new[] { "ash", "Cremation" }, new[] { "memory_powder", "Purchase" } })
+            {
+                var formula = new CraftDefinition { needs = new List<Item> { new Item(pair[0], 1) } };
+                Func<string, string> names = id => id;
+                string rendered = (string)core.Invoke(null, new object[] { formula, empty, save, names, true });
+                Assert(rendered.Contains(text("HowTo", locale)) && rendered.Contains(text(pair[1], locale)), "Cached source method retained its registration language: " + locale + "/" + pair[1]);
+                if (pair[0] == "memory_powder") Assert(rendered.Contains(text("PurchaseUnavailable", locale)), "Closed purchase lost localized availability");
+            }
+            var ordinary = new CraftDefinition { id = "locale_normal", craft_type = CraftDefinition.CraftType.AlchemyDecompose,
+                craft_in = new List<string> { "locale_mill" }, needs = new List<Item> { new Item("locale_material", 1) }, output = new List<Item> { new Item("alchemy_1_yellow", 1) } };
+            var goo = new CraftDefinition { id = "locale_goo", craft_type = ordinary.craft_type,
+                craft_in = ordinary.craft_in, needs = new List<Item> { new Item("goo_yellow", 1) }, output = ordinary.output };
+            var target = new CraftDefinition { needs = new List<Item> { new Item("alchemy_1_yellow", 1) } };
+            var catalogue = new Dictionary<string, List<CraftDefinition>> { { "alchemy_1_yellow", new List<CraftDefinition> { goo, ordinary } } };
+            Func<string, string> identity = id => id;
+            string guide = (string)guidance.GetMethod("BuildText", Private).Invoke(null, new object[] { target, catalogue, save, identity });
+            string marker = "[693606][" + text("Unstudied", locale) + "][-]";
+            Assert(guide.Contains(marker) && guide.Contains(text("StudyExplanation", locale)) && guide.IndexOf("locale_material", StringComparison.Ordinal) < guide.IndexOf("goo_yellow", StringComparison.Ordinal), "Localized study/source structure changed: " + locale);
+            string formatted = (string)layout.Invoke(null, new object[] { "    [59]long material name " + marker + "[FF]", measure(marker) + 4, marker, measure, wrap });
+            Assert(formatted.Contains(marker) && formatted.Contains("[59]") && formatted.Contains("[FF]"), "Localized marker/alpha split: " + locale);
+        }
+        Assert(beforeKnowledge.SetEquals(save.completed_one_time_crafts), "Localization changes save knowledge");
+        Assert(text("HowTo", "unknown_locale") == text("HowTo", "en"), "Unknown locale must fall back to English");
+        Assert(text("StudyExplanation", "ru") == "Отмеченные материалы нужно сначала изучить на исследовательском столе.", "Accepted Russian footer changed");
+        Assert(text("HowTo", "en") == "How to obtain ingredients", "English guidance header changed");
+        Assert(AccessTools.Method(typeof(GJL), "LoadLanguageResource", new[] { typeof(string) }) != null, "Native language-load boundary missing");
+        Console.WriteLine("PASS localization: " + Enum.GetValues(keyType).Length + " keys x 11 languages, registered-source language changes, English fallback, atomic markers and save isolation");
+    }
+}

@@ -1,0 +1,78 @@
+// SPDX-License-Identifier: MPL-2.0
+using HarmonyLib;
+
+namespace NikichMods.ResearchableAlchemyRecipes
+{
+    // One native work per table; this records the actual prepaid fee, not a second science balance.
+    internal static class ResearchScienceReserve
+    {
+        private const string Key = "rar_research_reserved_science";
+        internal static int Read(Item table) { return table.GetParamInt(Key); }
+        internal static void Record(Item table, int science) { table.SetParam(Key, science); }
+        internal static int Refund(Item table, int paidFee)
+        {
+            int fee = Read(table);
+            if (fee <= 0) fee = paidFee;
+            if (fee > 0) table.AddItem("science", fee);
+            Record(table, 0);
+            return fee;
+        }
+        [HarmonyPatch(typeof(CraftComponent), "CraftReally")]
+        private static class Start
+        {
+            private static void Postfix(CraftComponent __instance, CraftDefinition craft, bool __result)
+            {
+                if (!__result || !__instance.is_crafting || !SourceResearch.IsJob(craft.id)) return;
+                Record(__instance.wgo.data, craft.needs_from_wgo[0].value);
+            }
+        }
+        private sealed class CancelState
+        {
+            internal Item table;
+            internal int fee;
+        }
+        [HarmonyPatch(typeof(CraftComponent), "StartRemovalCraft")]
+        private static class Removal
+        {
+            private static void Prefix(CraftComponent __instance, out CancelState __state)
+            {
+                __state = __instance.is_crafting && __instance.current_craft != null && SourceResearch.IsJob(__instance.current_craft.id)
+                    ? new CancelState { table = __instance.wgo.data, fee = Read(__instance.wgo.data) > 0 ? Read(__instance.wgo.data) : __instance.current_craft.needs_from_wgo[0].value } : null;
+            }
+            private static void Postfix(CraftComponent __instance, CraftDefinition craft, CancelState __state)
+            {
+                // The native owner has replaced the research by removal work and reset progress.
+                if (__state == null || !ReferenceEquals(__instance.current_craft, craft)) return;
+                int refunded = Refund(__state.table, __state.fee);
+            }
+        }
+        [HarmonyPatch(typeof(CraftComponent), "Cancel")]
+        private static class Cancel
+        {
+            private static void Prefix(CraftComponent __instance, out CancelState __state)
+            {
+                __state = __instance.is_crafting && __instance.current_craft != null && SourceResearch.IsJob(__instance.current_craft.id)
+                    ? new CancelState { table = __instance.wgo.data, fee = Read(__instance.wgo.data) > 0 ? Read(__instance.wgo.data) : __instance.current_craft.needs_from_wgo[0].value } : null;
+            }
+            private static void Postfix(CraftComponent __instance, CancelState __state)
+            {
+                if (__state == null || __instance.is_crafting) return;
+                // The captured fee belongs to this interrupted native work.
+                int refunded = Refund(__state.table, __state.fee);
+            }
+        }
+        [HarmonyPatch(typeof(CraftComponent), "ProcessFinishedCraft")]
+        private static class Complete
+        {
+            private static void Prefix(CraftComponent __instance, out Item __state)
+            {
+                __state = __instance.current_craft != null && SourceResearch.IsJob(__instance.current_craft.id) ? __instance.wgo.data : null;
+            }
+            private static void Postfix(CraftComponent __instance, Item __state)
+            {
+                if (__state == null || __instance.is_crafting) return;
+                Record(__state, 0);
+            }
+        }
+    }
+}

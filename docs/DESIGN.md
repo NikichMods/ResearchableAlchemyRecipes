@@ -2,16 +2,16 @@
 
 ## Current recovery entry point — 2026-10-15
 
-Continue here in a new chat. The user has started production preparation (2026-10-15). The source boundary map is complete in [PRODUCTION_PREPARATION.md](PRODUCTION_PREPARATION.md): retained gameplay/UI/persistence, research controls/fixtures/observers, mixed owners, existing build/tests and extraction gates. No production source/build/version/CI or candidate is selected yet. Do not begin by repeating accepted checks.
+Continue here in a new chat. Production source is extracted into `src/` on `codex/feature/production-extraction` (2026-10-15), with root build.ps1/test.ps1 and three adapted test programs. The user explicitly waives all unpublished research-build/test-save compatibility: no legacy aliases, synthetic definitions, snapshot migration or old-version refund policy. Development identity is Researchable Alchemy Recipes 0.1.0 / `nikichmods.researchablealchemyrecipes`; no distributable candidate or hosted CI selected yet. [PRODUCTION_PREPARATION.md](PRODUCTION_PREPARATION.md) owns the source boundary map and remaining activation/failure gate. Do not repeat accepted gameplay matrices.
 
 ### Exact working and installed state
 
-- Repository branch: research/study-table-work; main remains the stable/documentation baseline. Runtime source has not been promoted to main.
+- Repository branch: codex/feature/production-extraction; research/study-table-work preserves the .57 evidence baseline. main remains the stable/documentation baseline; production source is not runtime-accepted/promoted.
 - Installed research probe: StudyTableWorkProbe 0.1.57, assembly/file 0.1.57.0. Frozen compiled source: 8b3faebe9f65e095aa8a6217fe8d6b23390ec4f2.
 - Immutable DLL SHA-256: 3dd6ba5081eab69502652f865174c046334b6bc75da6b5bfbe881044b181954e. TEST_LOG.md owns exact build/install/return receipts; LOCAL_ENVIRONMENT.md is the ignored machine-local map to artifacts, backups, game and tools.
 - .57 only removes the completed read-only picker observer from .56; accepted counter tint/size/atom geometry and gameplay remain. Compile/existing suites pass; installed hash/version were rechecked for handoff. .57 has not received separate user runtime acceptance, and no new matrix is requested for observation deletion.
 - .56 light price digits are explicitly accepted. Its picker procedure completed and identified all five warnings as native inventory separator widgets. Native InventoryPanelGUI.DoOpening creates them without layer assignment; NGUI CheckLayer corrects layer0 to panel13. No shared layer patch is required. The observer is absent in .57; a clean-game A/B or universal compatibility claim is not implied.
-- F6/result preview and F2 calibration are already removed. F7 notice previews, F8 research/setup/cleanup menus and F9 diagnostic native cancellation remain research-only; inventory them before production extraction. Do not remove persistent earned knowledge/discovery/notice records as diagnostic cleanup.
+- Installed .57 retains F7/F8/F9 research controls. Production `src/` has none of them, no synthetic knowledge module/census or tooltip motion observer; native geometry settling remains. Production jobs use `rar_research_<product>`. Vanilla earned knowledge and new production state remain native; old research-state compatibility is waived.
 
 ### Adopted direction to preserve
 
@@ -27,20 +27,20 @@ Native result window shows one product and newly learned formula count, with nat
 
 TEST_LOG.md owns exact candidates/logs and limits. Accepted bounded slices include .40 Clotho discovery/save-reload/native recipe, .42/.43 economics/restart/refunds/short work, guidance appearance/language/motion/overlap, native-style tabs/input and scoped quantity-mod compatibility, continuous notices and readable buttons, completion sound, immediate science-header refresh after paper conversion, fixed atom geometry, native-sized light price digits, natural Russian partial-topic layout, and .54 actual first-trade/locked-tier-stock exclusion. F7 Clotho text/mixed continuation is presentation evidence, not real native tier-up evidence.
 
-Source accounting is 33 paid products/42 formulas plus native-disclosed Spices/one formula (34 ordinary products/43 formulas). Ingredient guidance separately covers the 44-formula/36-input audit; do not silently expand the paid registry. Current custom localization is 55 keys across 11 native locales; exact glyph/render/editorial bounds are in LOCALIZATION.md/TEST_LOG.md.
+Source accounting is 33 paid products/42 formulas plus native-disclosed Spices/one formula (34 ordinary products/43 formulas). Ingredient guidance separately covers the 44-formula/36-input audit; do not expand the paid registry. Research localization has 55 keys; extracted production has 22 retained keys across 11 native locales. Local tests pass; installed rendering/editorial bounds remain in LOCALIZATION.md/TEST_LOG.md.
 
 ### Remaining limits and next action
 
 | Work / observation | What remains and why |
 | --- | --- |
-| Production extraction | Source map and smallest structure/check proposal are complete in PRODUCTION_PREPARATION.md. Next resolve legacy synthetic-save definition requirements and mandatory activation/failure/settlement ownership; then select production source/build/version/CI. Retain accepted mechanics/data; no toolchain or release identity selected yet. |
+| Production extraction | Source/build/test extraction is complete and locally checked. Next audit mandatory activation/failure/settlement before a distributable candidate. No research-save compatibility work; hosted reference provisioning/CI remain unselected. |
 | Native higher Clotho tier event | Hook/policy and source fixtures exist, F7 wording accepted, but a genuine later trade-tier increase without revisiting is not installed-accepted. Observe naturally when possible; do not force tier/quest/knowledge resets. |
 | Acid quest-only isolation | Native task predicate is verified; no scanned suitable natural save combines assigned acid task, unknown formula and absent ordinary source. Keep pending; accepted healing quest-only offering is separate. |
 | Physical/source negatives | First-trade/locked-tier negative is accepted. General removal/disable/inaccessibility and exhaustive stock/source permutations are not; census presence does not prove physical access. |
 | Compatibility/performance | This picker warning attribution is closed. Broader foreign overlays, arbitrary mod stacks and CPU/GC/frame-time measurements are not proved. Source audit finds event/on-demand price/header refresh; existing active-card guidance and pending-notice callbacks still run from Update. Do not claim zero per-frame work/overhead. |
 | Final acceptance/distribution | Remove diagnostic controls, audit sparse support logs and licensing, choose concrete build gates and final player flow; explicit stable acceptance remains required before runtime promotion/release. |
 
-First useful action: use PRODUCTION_PREPARATION.md and existing native evidence to determine minimum safe handling of saved synthetic job/snapshot references and startup/failure/settlement ownership after cleanup-only dependencies disappear. Real SourceResearch job IDs contain `rar_probe_` but are persistent gameplay IDs; preserve them unless a separately verified transition is needed. These questions determine the remaining entry/registration boundary before extraction. Do not add a framework, new global hook, separate wallet/save system or routine full test replay just for cleanup.
+First useful action: audit Plugin.Fail/initialization and every retained patch consumer against already-paid work and UI restoration. The current extraction preserves the original Enabled=false/tab-restore failure mechanism; completion is Enabled-gated while reserve settlement is not uniformly gated. This is an independent readiness question, not proof of a runtime defect. Determine the smallest safe containment and verify any change with focused automated failure checks before a distributable candidate. Do not add legacy migrations, a framework, new global hook, separate wallet/save or a full gameplay replay.
 
 ### Recovery evidence and private tooling
 
@@ -48,4 +48,4 @@ Read DevRules/WORKING_RULES.md, this repository's AGENTS.md and relevant owning 
 
 Private reflection inspectors were repaired after the named inspect-static-font-private.exe unhandled TypeLoadException (wrong native assembly plus missing entry-point catch). Reuse the guarded cross-assembly template in LOCAL_ENVIRONMENT.md; normal errors return stderr/exit1. This explains the captured diagnostic failure, not every Windows dialog reported that day. Never copy private context/machine paths/raw game assets into tracked files.
 
-Historical design/recovery notes are preserved in [the archive](archive/DESIGN_HISTORY_2026-10-15.md); its old pending/current instructions are not the next plan. TEST_LOG.md retains immutable candidate history. The preparation map changes no runtime/build/install/save state and requires no new runtime matrix.
+Historical design/recovery notes are preserved in [the archive](archive/DESIGN_HISTORY_2026-10-15.md); its old pending/current instructions are not the next plan. TEST_LOG.md retains immutable candidates and the local extraction check. The game still has research .57 installed; no production candidate, install or save mutation occurred in extraction.
