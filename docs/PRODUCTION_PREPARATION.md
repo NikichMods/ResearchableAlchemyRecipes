@@ -83,7 +83,7 @@ Final candidate checks cover extraction: loader/identity/sparse normal log; ordi
 
 ## Next action
 
-Latest actual interaction defect takes precedence: installed 0.1.1 removes background-overlay waits only from already-open notice paging. RESEARCH_NOTIFICATIONS.md owns its gate; TEST_LOG.md owns exact installed identity and pending focused return. [Audit A1/A2](PRODUCTION_AUDIT.md) remain separate proportionate hardening, not demonstrated installed failures or automatic release blockers. After the focused return, reassess that work and publication/package/readme/licensing readiness before an explicit stable-promotion decision. Accepted 0.1.0 normal-flow evidence remains bounded and immutable; no synthetic-save transition or old matrix replay is required.
+Installed 0.1.2 corrects [audit A1/A2](PRODUCTION_AUDIT.md) under their READY gates and extended local fault checks, retaining 0.1.1 initial-only overlay waiting. TEST_LOG.md owns exact build/install identity and pending ordinary return; RESEARCH_NOTIFICATIONS.md owns the inherited focused later-thought/Next/Close check. Next collect the bounded normal-play return, then reassess publication/package/readme/licensing readiness before an explicit stable-promotion decision. Accepted 0.1.0 evidence and all handed artifacts remain immutable; no synthetic-save transition or old matrix replay is required. Rendered Unity fault cleanup retains its documented limits.
 
 ## Failure-path gate — 2026-10-15, before mutation
 

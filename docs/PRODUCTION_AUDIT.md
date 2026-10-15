@@ -1,6 +1,6 @@
 # Production reliability and simplicity audit — 2026-10-15
 
-Current correction status: A1/A2 are implemented in development 0.1.2, with local fault checks described below. Original findings refer to frozen 0.1.0 and remain historical evidence. Exact numbered candidate/install/ordinary return belongs to TEST_LOG.md; local tests do not establish rendered Unity failure cleanup. The 0.1.1 background-bubble fix is preserved and its focused installed return remains pending.
+Current correction status: A1/A2 are implemented in installed candidate 0.1.2, with local fault checks described below. Original findings refer to frozen 0.1.0 and remain historical evidence. Exact numbered candidate/install/ordinary return belongs to TEST_LOG.md; local tests do not establish rendered Unity failure cleanup. The 0.1.1 background-bubble fix is preserved and its focused installed return remains pending on 0.1.2.
 
 ## Scope and conclusion
 
@@ -97,6 +97,6 @@ The extended suite runs actual notice Fail/Dispose/Reset, with the engine-bound 
 
 Compile/version and four suites pass after correction. These checks close the source/control-flow findings within the stated limits; ordinary installed return and the inherited later-background-thought/Next check remain distinct pending evidence. Maintenance/watch items are not bundled into this candidate.
 
-Priority clarification after the audit: A1/A2 are worthwhile bounded hardening, not observed installed failures or proof that 0.1.0 is unsafe to release. The original must-fix/publication wording above is stronger than the demonstrated urgency; do not treat it as an automatic release blocker or permission for a large harness/rewrite. Address them at a proportionate nearby reliability boundary with per-property READY gates; keep accepted economics, knowledge, sources and normal layout invariant. The fixes may share one later candidate after sufficient local checks; do not rebuild 0.1.0. The audit itself requests no new gameplay check from the user.
+Priority clarification after the audit: A1/A2 are worthwhile bounded hardening, not observed installed failures or proof that 0.1.0 is unsafe to release. The original must-fix/publication wording above was stronger than the demonstrated urgency; it did not justify a large harness/rewrite. The authorized nearby correction is now implemented and locally checked in installed 0.1.2. Next collect the ordinary bounded return and inherited background-thought/Next check under TEST_LOG.md, then resume publication readiness. Do not rebuild handed candidates or replay accepted matrices; native rendered failure cleanup remains explicitly unproved.
 
-The user's later actual background-thought/Next delay is a different normal-operation defect, now owned by RESEARCH_NOTIFICATIONS.md. Its 0.1.1 continuation correction takes precedence; it neither demonstrates A2's exception-disable scenario nor closes A1/A2.
+The user's later actual background-thought/Next delay is a different normal-operation defect owned by RESEARCH_NOTIFICATIONS.md. Its 0.1.1 correction is retained in 0.1.2; it did not itself demonstrate A2's exception-disable scenario. Deferred maintenance/watch items remain deferred.
