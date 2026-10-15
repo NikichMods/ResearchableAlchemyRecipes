@@ -1,5 +1,9 @@
 ﻿# Diagnostic runtime tests
 
+## Next .54 source-negative check — selected natural tier-I save
+
+Read-only source-state census inspects 42 existing save/backup files; raw derived table SHA-256 49b71de6f36d50498c9a742963adcb28ec7b40f7eeba5128938d85e8c0d0237d. No original save or installed DLL was changed. Identified primary candidate SHA-256 e5f3666f8332d14a50e47b5e5552f02f7916334afd9d8fc62107d5ba7483c4c5, native menu 21 Sep 2026 03:44, skull44/cross20, day37. AWARENESS_SOURCE_AUDIT.md owns the derived tier/stock/knowledge/acquaintance distinctions and exact expected before/after trade behavior; private .dat/.info copies preserve the candidate bytes. Await only no-discovery mana absence -> actual trade opening -> mana topic presence with higher-tier topics excluded. Healing is independently quest-aware; speed already known is not evidence of locked-tier exclusion. No resources or progression changes required. This cannot close the real tier-up event or physical-source-negative gates.
+
 ## Accepted .54 presentation slice — F7 assortment and mixed-source continuation
 
 User confirms everything displayed through F7 works. Exact installed .54 SHA-256/source match the identity below. Archived LogOutput.log SHA-256 42388f1f48bc8f8fb02b8c695eb6de396b113316b7d26efbfc5288a03e925349 identifies .54, records two explicit clotho_and_other_sources previews, each with a three-potion expansion page/remaining3 followed by a generic three-paint page/remaining0. No Exception/RAR_WORK_ERROR/RAR_NOTICE_ERROR or RAR_CLOTHO_TIER_COMMITTED match in this capture. The ordinary initial overview also shows 14 eligible topics across five pages. Accept new text fit, cause separation and native continuation within this observed UI slice. Do not infer actual vendor-tier-event acceptance from unattached Item fixtures. The real positive tier event remains pending; no rebuild/new artifact or repeat F7 is needed for this receipt.
