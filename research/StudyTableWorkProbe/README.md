@@ -1,5 +1,9 @@
 # Study Table Work Probe
 
+## 0.1.53 remove result-preview scaffold
+
+.52 sound accepted through actual completion and F6. Remove F6 and its synthetic result mode/heading; ordinary completion and native unlock sound stay unchanged. Remaining diagnostic tools are separate. Earlier F6 instructions below are historical.
+
 ## 0.1.52 native completion sound
 
 One native `unlock` sound plays after the completion window opens, using the same Sounds.PlaySound defaults as technology unlocks. F6 with all windows closed previews the result and sound without granting knowledge. No audio asset/hook/timer is added. .51 header/appearance/input return is accepted; only listening is pending.

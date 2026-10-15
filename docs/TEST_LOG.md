@@ -1,5 +1,13 @@
 ﻿# Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.53 — remove accepted result preview
+
+Remove F6 result-example entry, preview-only method parameter/heading/log field and its eleven-language localization row. Actual completion/sound/count/knowledge stay unchanged; remaining diagnostic tools retain their separate scope. Compile/existing suites are the cleanup check, with no additional user matrix. Exact artifact/install identity follows source freeze.
+
+## Accepted 0.1.52 — sound on actual research and F6
+
+User explicitly reports ideal sound in both actual completion and F6 and asks to remove the now-unnecessary F6. Archived LogOutput.log SHA-256 fdb35ad2b2311e7f7530d83b000cf5694817b64229fd2c3e78fe1c4d2cf63228 identifies .52, actual yellow-paint result learned1/preview=False and synthetic black-paint result learned2/preview=True; no RAR_WORK_ERROR/Exception match. Exact installed .52 identity below remains preserved. This closes the auditory gate; no stable/main promotion or reopening of prior UI gates follows.
+
 ## Study Table Work Probe 0.1.52 — native technology unlock sound
 
 Add one native Sounds.PlaySound("unlock") after the owned result window's successful final layout, including its explicit F6 example. Native forced-technology-unlock branch uses the same group/default path. No extra assets, audio system, hooks, tick callback or notice sound. Frozen source 70174ddebef00199d2265b06a649bab57e88d0ce; SDK 6.0.406 Roslyn; plugin/assembly/file 0.1.52/0.1.52.0. Immutable artifacts/StudyTableWorkProbe-0.1.52/StudyTableWorkProbe-0.1.52.dll SHA-256 11b5341f4267d87b2936d3e26c1af6916e632e6102cdee806a35a931ea012919, manifest retained. Installed with game closed, one canonical payload and exact installed hash/version verified; previous accepted .51/log retained outside plugins, original saves untouched. Existing compile/knowledge/source/economics/localization/actual QueueEverything/MaxButtons/notice suites pass. Check only F6 result-example sound with all windows closed; no science/knowledge mutation or repeat recipe work is needed. Listening remains pending.

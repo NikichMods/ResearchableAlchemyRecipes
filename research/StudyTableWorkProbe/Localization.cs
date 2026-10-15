@@ -19,7 +19,7 @@ namespace NikichMods.Research
             NormalView, SulfurPreview, PreviewReady, PreviewWarning, PaintProbeTitle,
             PaintProbeWarning, ProbeActions, CleanupWorks, ProbeActionsWarning, Disabled,
             CleanupAvailable, CleanupDone, SampleFreeProbeName, OtherMethods, ResearchCompleted, NewRecipes,
-            NoticeTitle, NoticeHowTo, NoticeMore, Next, NoticePreview, NoticeFirst, NoticeBlocker, NoticePreviewWarning, ResultPreview
+            NoticeTitle, NoticeHowTo, NoticeMore, Next, NoticePreview, NoticeFirst, NoticeBlocker, NoticePreviewWarning
         }
         private static readonly Dictionary<string, Dictionary<Key, string>> languages = Read();
         private static readonly FieldInfo CurrentLanguage = AccessTools.Field(typeof(GJL), "cur_lng");
