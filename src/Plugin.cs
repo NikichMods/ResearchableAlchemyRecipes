@@ -7,8 +7,8 @@ using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyVersion("0.1.1.0")]
+[assembly: AssemblyFileVersion("0.1.1.0")]
 
 namespace NikichMods.ResearchableAlchemyRecipes
 {
@@ -17,7 +17,7 @@ namespace NikichMods.ResearchableAlchemyRecipes
     public sealed class Plugin : BaseUnityPlugin
     {
         public const string Id = "nikichmods.researchablealchemyrecipes";
-        public const string Version = "0.1.0";
+        public const string Version = "0.1.1";
         private const string HostHash = "e72e4270e4b88dd0a87ca23c9cf1750aec4c4a0fedb40b6d2dae7902fc9c7fd8";
         private static ManualLogSource log;
         internal static bool Enabled;

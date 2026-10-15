@@ -166,12 +166,13 @@ namespace NikichMods.ResearchableAlchemyRecipes
         private static void AdvancePage()
         {
             var game = MainGame.me;
+            // Initial delivery waits for a clear screen. Once this owned native
+            // window is open, later background bubbles must not hold Next hostage.
+            // Keep native foreground ownership and defer until the press releases.
             if (game == null || !ReferenceEquals(game.save, boundSave) || !MainGame.game_started ||
                 MainGame.game_starting || MainGame.paused || MainGame.disable_all_game ||
                 owner == null || !owner.is_shown_and_top || Time.frameCount <= requestFrame ||
-                Input.anyKey || Input.GetMouseButton(0) || Input.GetMouseButton(1) ||
-                HasOverlay(Tooltips) || HasOverlay(Speech) || ManagedHintShown(game.gui_elements) ||
-                game.gui_elements.corner_talk.is_shown || game.gui_elements.context_menu_bubble.is_shown) return;
+                Input.anyKey || Input.GetMouseButton(0) || Input.GetMouseButton(1)) return;
             Item data = game.player.data;
             bool alchemy = game.save.unlocked_techs.Contains(SourceResearch.Technology);
             SourceResearch.RefreshForNotices(game.save);

@@ -2,6 +2,8 @@
 
 ## Current recovery entry point — 2026-10-15
 
+Latest user-reported defect takes precedence: later background thoughts delayed Next on an already-open notice. The READY gate and source-established cause are in RESEARCH_NOTIFICATIONS.md. Production 0.1.1 removes the redundant continuation overlay checks, preserving initial safe delivery, native foreground/save ownership, source revalidation and input release. Four local suites pass; TEST_LOG.md owns subsequent exact candidate/install and focused overlap return. No runtime acceptance is claimed yet. Audit A1/A2 remain separate; do not conflate this normal-operation delay with optional-notice failure disable or silently bundle their fixes.
+
 Continue here in a new chat. Production source is in `src/` on `codex/feature/production-extraction`, with root build.ps1/test.ps1 and four test programs. The bounded failure/paid-settlement correction is implemented and locally checked. The user waives unpublished research-build/test-save compatibility: no aliases, synthetic definitions or migration. First candidate identity is Researchable Alchemy Recipes 0.1.0 / `nikichmods.researchablealchemyrecipes`, using the defined clean exact-source local gate. TEST_LOG.md owns build/install identity and runtime return; hosted CI is unselected. [PRODUCTION_PREPARATION.md](PRODUCTION_PREPARATION.md) owns the map and READY gate. Do not repeat accepted matrices.
 
 ### Exact working and installed state

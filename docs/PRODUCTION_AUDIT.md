@@ -77,4 +77,6 @@ These maintenance observations alone do not require a numbered build or a new us
 
 ## Next action
 
-Address A1/A2 in one narrowly scoped reliability segment with per-property READY gates before runtime mutation. Keep accepted economics, knowledge, sources, normal layout and optional-notice isolation invariant. The fixes may share one later candidate after sufficient local checks; do not rebuild 0.1.0. Only then resume publication readiness and an explicit stable-promotion decision. The audit itself requests no new gameplay check from the user.
+Priority clarification after the audit: A1/A2 are worthwhile bounded hardening, not observed installed failures or proof that 0.1.0 is unsafe to release. The original must-fix/publication wording above is stronger than the demonstrated urgency; do not treat it as an automatic release blocker or permission for a large harness/rewrite. Address them at a proportionate nearby reliability boundary with per-property READY gates; keep accepted economics, knowledge, sources and normal layout invariant. The fixes may share one later candidate after sufficient local checks; do not rebuild 0.1.0. The audit itself requests no new gameplay check from the user.
+
+The user's later actual background-thought/Next delay is a different normal-operation defect, now owned by RESEARCH_NOTIFICATIONS.md. Its 0.1.1 continuation correction takes precedence; it neither demonstrates A2's exception-disable scenario nor closes A1/A2.
