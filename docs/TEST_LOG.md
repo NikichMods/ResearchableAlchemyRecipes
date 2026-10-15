@@ -1,5 +1,12 @@
 # Diagnostic runtime tests
 
+## Documentation handoff — 2026-10-15
+
+User requests to preserve current decisions/evidence and continue in a new chat. Installed .57 and retained immutable artifact digests rechecked against the source manifest: 8b3faebe9f65e095aa8a6217fe8d6b23390ec4f2 / 3dd6ba5081eab69502652f865174c046334b6bc75da6b5bfbe881044b181954e. No runtime source, build, installed payload or save changed for this handoff. .57 separate runtime acceptance remains unclaimed.
+
+DESIGN.md is replaced with one current recovery entry and bounded next production-preparation action; its original historical design/recovery notes are preserved verbatim under docs/archive/DESIGN_HISTORY_2026-10-15.md after an archive disclaimer. Reconciled AGENTS.md, product requirements, notification mechanism/acceptance, source audit and native review: accepted price tint/paging/sound/header/picker attribution no longer demand old checks; F6 is not a current control. Natural later tier-up, acid quest-only/physical negatives and broad compatibility/production limits stay explicit. No new product decision, toolchain selection or stable promotion is implied.
+
+
 ## Accepted .56 tint and native picker attribution; .57 diagnostic removal
 
 Frozen .57 source 8b3faebe9f65e095aa8a6217fe8d6b23390ec4f2; immutable StudyTableWorkProbe-0.1.57.dll SHA-256 3dd6ba5081eab69502652f865174c046334b6bc75da6b5bfbe881044b181954e, plugin/assembly/file 0.1.57/0.1.57.0. Built clean with SDK 6.0.406, installed with host closed, exact old/new digests and installed version verified; one canonical payload, previous .56 outside plugins, no saves/unrelated mods changed. Temporary CheckLayer hook is absent from source/artifact. No new installed runtime acceptance is claimed for .57; accepted .56 appearance/picker evidence is retained, with no new user matrix for observation deletion.
