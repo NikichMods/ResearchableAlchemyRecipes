@@ -4,11 +4,23 @@ Status: science balance reopened after actual gameplay feedback on 2026-10-15; t
 
 ## Reopened price/value direction — 2026-10-15
 
-After playing, the user finds the small science numbers insufficient to communicate the value/weight of targeted research. This is qualitative player evidence about price perception, not a newly measured shortage or proof of an objective optimal tariff. The subsequent explicit choices are decorative paint1, black paint2, white paint4, healing potion2 (early introduction), acid6, current4-group ->8, silver/golden elixir14. For the current8-group the user names12 or10 without settling the alternative; keep that choice open. Exact new full-catalog fee would be212 with10 or222 with12, versus installed132. The user requests a comparison table, not an implementation/build yet. Installed0.1.2 remains unchanged.
+After playing, the user finds the small science numbers insufficient to communicate the value/weight of targeted research. This is qualitative player evidence about price perception, not a newly measured shortage or proof of an objective optimal tariff. The explicit final choices are decorative paint1, black paint2, white paint4, healing potion2 (early introduction), acid6, current4-group ->8, current8-group ->10 and silver/golden elixir14. The user settles10 over12 and requests concrete products grouped by price. The revised science tariff is adopted; source/build mutation is not part of this grouped-list response. Installed0.1.2 still uses the baseline132 tariff, while the adopted new full-catalog fee is212.
+
+| Adopted science | Topics | Product IDs |
+| ---: | ---: | --- |
+| 1 | 8 | yellow_paint, green_paint, brown_paint, red_paint, d_green_paint, d_violet_paint, violet_paint, blue_paint |
+| 2 | 2 | black_paint, pot_heal |
+| 4 | 1 | white_paint |
+| 6 | 1 | acid |
+| 8 | 14 | glue, alkali, energy_elixir, flask_green_l_plus, freshener, growth_enhancer, preservative, zombie_juise, pot_appetite, pot_armor, pot_berserk, pot_damage, pot_heal_long, pot_mana |
+| 10 | 5 | aromatizer, dark_elixir, flavor_enhancer, tanning_agent, pot_speed |
+| 14 | 2 | silver_elixir, golden_elixir |
+
+All33 existing topics remain, total212 science (106 paper-equivalent). energy_elixir and pot_mana share the Russian name Эликсир энергии but are separate ingredient/drinkable products; do not merge their research. No formula disclosure or new eligibility rule follows from this regrouping.
 
 The preceding assistant proposal (decorative1, black2, white4, other current2 ->6, current4 ->10, current8 ->16, current10 ->20; full catalog286) is superseded by the user's choices above. Full-catalog sums describe separate research jobs across progression, not required expenditure at game start.
 
-Scope remains science-price discussion. Previously accepted short work and energy should not silently increase with science: current code derives Work/Energy from science, so any implementation must explicitly preserve or separately agree their mapping before mutation. Final exact tariffs and work/energy handling require the user's decision; do not use the old formulas blindly on larger price values. This balance discussion takes precedence over release preparation until resolved.
+Scope is science fees. Previously accepted per-product short work and energy are preserved invariants: current code derives Work/Energy from science, so implementation must explicitly preserve those budgets unless a separate change is agreed. Do not use the old formulas blindly on larger prices. Next implementation needs its own READY checkpoint and a new immutable candidate under the common sequence0.1.58; do not rebuild0.1.2. Release preparation follows this balance update.
 
 ## Installed reduced-price list — retained baseline during review
 

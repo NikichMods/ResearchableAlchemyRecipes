@@ -17,6 +17,8 @@ For an alchemical product known to the character, the player can follow a predic
 
 ## Knowledge and payment
 
+Science rebalance adopted after gameplay feedback on 2026-10-15: decorative paints1; black paint/healing potion2; white paint4; acid6; former4-science group8; former8-science group10; silver/golden elixirs14. RESEARCH_PRICE_REVIEW.md owns the exact33-product grouping and212-science sum. These supersede the reduced science tariff in historical descriptions below; installed0.1.2 has not yet been changed. Preserve the accepted per-product work/energy budgets, faith0, full fee for partial knowledge and native payment/refund semantics unless separately agreed.
+
 - Reveal ingredient-source information with product research; no separate paid reagent-source research is required.
 - Show all source alternatives within the supported host-data scope, each material, processing method, equipment and required conditions. Include ordinary producer paths where relevant, not just alchemical decomposition. Do not explain world acquisition of the source material itself.
 - Show alternative sources without automatically completing their vanilla studies or charging for all of them.
