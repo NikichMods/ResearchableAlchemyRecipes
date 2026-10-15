@@ -2,7 +2,7 @@
 
 ## Study Table Work Probe 0.1.55 — match price digits to native header
 
-User requests smaller price digits matching the native header. Native evidence distinguishes tiny header font from small row font at identical nominal16 and identical ancestor scale; .55 clones the header counter font/locale component, preserving prior price colors/effects, atom size and positions. Remove fixed CountSize override. No new hook, frame work, payment/source change or calibration. Exact artifact/install identity follows source freeze. Check only price-digit size against header; source tests below are closed and must not be repeated.
+User requests smaller price digits matching the native header. Native evidence distinguishes tiny header font from small row font at identical nominal16 and identical ancestor scale; .55 clones the header counter font/locale component, preserving prior price colors/effects, atom size and positions. Remove fixed CountSize override. No new hook, frame work, payment/source change or calibration. Frozen source a3c84730a5811f0629519825255a8ae4f01b0ac8; SDK 6.0.406 Roslyn; plugin/assembly/file 0.1.55/0.1.55.0. Immutable artifacts/StudyTableWorkProbe-0.1.55/StudyTableWorkProbe-0.1.55.dll SHA-256 5c2e213fbf8e1f9286d30d42df2ecfcf735e358d8cedc9ed9c12ce1505b8398f, manifest retained. Installed with game closed, one canonical payload and exact installed hash/version verified; previous .54/log retained outside plugins, no original save changes. Compile/existing suites pass. Check only price-digit size against header; source tests below are closed and must not be repeated.
 
 ## Accepted .54 first-trade and locked-tier source check
 
