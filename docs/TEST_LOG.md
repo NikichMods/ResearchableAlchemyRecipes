@@ -4,6 +4,8 @@
 
 User confirms the price font changed and requests the same normal color as the native header instead of gold. Prepare the single color-overwrite removal under VERIFIED_RUNTIME_DATA.md's READY gate; deliberately batch with the next substantive check. Installed immutable .55 remains unchanged; no new artifact/version or extra user matrix is created for this preparation. The supplied screenshot confirms native-sized price digits; source/atom/positions remain accepted within prior bounds.
 
+Archived .55 return log SHA-256 4d2369c78a096a158a79f357ef97e4a5ebbb0a142def41e3a6694d9c00905919 identifies .55 without Exception/RAR_WORK_ERROR/RAR_NOTICE_ERROR matches; installed DLL digest still matches the immutable .55 identity below. Screenshot/tool-error image remain local ignored evidence. A clean mod log does not explain every separate Windows diagnostic dialog.
+
 ## Local inspector failures — tooling correction, not installed mod behavior
 
 The user reports repeated Windows application-error dialogs; the named inspect-static-font-private.exe corresponds to a directly captured unhandled TypeLoadException from looking for StaticFontLabel in Assembly-CSharp instead of Assembly-CSharp-firstpass. Earlier tool output had established the missing-type error, but its unhandled diagnostic entry point let Windows show an application-error dialog. This is a tooling defect, not evidence of a game/mod crash. Causes of all other reported dialogs are not individually established; no matching accessible event/report entries were recovered in the bounded check.
