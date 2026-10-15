@@ -93,4 +93,13 @@ Source structure/identity/local build are recorded above. Canonical installed fi
 
 Root build.ps1/test.ps1 accept explicit GameRoot/DotnetRoot inputs. Local SDK 6.0.406 compile/version checks and all three adapted suites pass: actual MaxButtonsRedux checker/cache/isolation/unpatch; source registry/economics/native knowledge/price/refund/quest/tier/formatter and actual QueueEverything ordering; native Item notice flags/blockers/pages/cause/metadata. All 22 keys in all 11 locales, native source-language changes, fallback, atomic markers and knowledge isolation pass. Synthetic setup/cleanup/legacy assertions are excluded rather than counted as production coverage. Tests still use private verified host/foreign references and cannot prove installed Unity detours or visual acceptance.
 
+Run from the repository root with the private local paths in LOCAL_ENVIRONMENT.md:
+
+```powershell
+./build.ps1 -GameRoot $gamePath -DotnetRoot $compilerPath -ExpectedSource (git rev-parse HEAD) -CheckOnly
+./test.ps1 -GameRoot $gamePath -DotnetRoot $compilerPath
+```
+
+CheckOnly permits development edits and creates compile-check.dll without an immutable candidate manifest. Omitting CheckOnly requires clean exact source and a previously unused numbered output; do not use it until the candidate gate is ready. The test command performs its own compile/version check.
+
 No numbered artifact, manifest/handoff, game installation, save edit, stable merge or release was performed. Only development compile-check output was produced. Historical research source and numbered payloads are unchanged. Required next gate: activation/failure/settlement ownership, then support-log/candidate/runtime acceptance and concrete hosted provisioning if justified.

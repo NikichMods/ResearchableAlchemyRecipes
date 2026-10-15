@@ -24,4 +24,3 @@ foreach ($testName in @('QuantityCompatibilityTests','SourceTopicTests','Notific
     & $output $outDir $managed $core $foreign $queue
     if ($LASTEXITCODE -ne 0) { throw "Test failed: $testName" }
 }
-

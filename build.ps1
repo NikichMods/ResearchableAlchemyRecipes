@@ -43,4 +43,3 @@ $manifest = [ordered]@{ version=$probeVersion; source=$sourceHead; compiler='SDK
 $manifest['localization'] = [ordered]@{ resource='RAR.Localization.tsv'; sha256=(Get-FileHash -LiteralPath $localizationPath -Algorithm SHA256).Hash.ToLowerInvariant() }
 $manifest | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $outDir 'build-identity.json') -Encoding utf8
 Write-Output "Built $output SHA256=$hash source=$sourceHead"
-
