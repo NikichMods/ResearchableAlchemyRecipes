@@ -83,9 +83,7 @@ Final candidate checks cover extraction: loader/identity/sparse normal log; ordi
 
 ## Next action
 
-The subsequent user-requested [production audit](PRODUCTION_AUDIT.md) takes precedence over the publication-first ordering below: address A1/A2 containment gaps under focused READY gates before claiming complete failure containment. This is source-review evidence, not a reported installed failure; immutable 0.1.0 and accepted normal flow remain unchanged.
-
-Extraction and the failure-path gate below are implemented; four suites and the exact installed 0.1.0 requested normal-flow return are accepted under TEST_LOG.md. Next finish publication/package/readme/licensing readiness around the unchanged artifact and obtain the explicit stable-promotion decision. No synthetic-save transition or replay is required.
+Latest actual interaction defect takes precedence: installed 0.1.1 removes background-overlay waits only from already-open notice paging. RESEARCH_NOTIFICATIONS.md owns its gate; TEST_LOG.md owns exact installed identity and pending focused return. [Audit A1/A2](PRODUCTION_AUDIT.md) remain separate proportionate hardening, not demonstrated installed failures or automatic release blockers. After the focused return, reassess that work and publication/package/readme/licensing readiness before an explicit stable-promotion decision. Accepted 0.1.0 normal-flow evidence remains bounded and immutable; no synthetic-save transition or old matrix replay is required.
 
 ## Failure-path gate — 2026-10-15, before mutation
 

@@ -1,5 +1,17 @@
 # Diagnostic runtime tests
 
+## Researchable Alchemy Recipes 0.1.1 — later background bubbles no longer gate paging, installed 2026-10-15
+
+User reports that a later ThoughtfulReminders/background thought delayed Next on an already-open availability page until the thought vanished. The historical session/version and input trace are unspecified; current 0.1.0 source contains the sufficient project-owned wait in AdvancePage. This report is distinct from audit A2's hypothetical exception-disable scenario. PRODUCT_REQUIREMENTS.md adopts initial-only background-overlay waiting; RESEARCH_NOTIFICATIONS.md owns the READY gate, verified native callback path and preserved invariants.
+
+Frozen source `e0008f9c16902c1c0a9384fbeb00788acaf48398`, branch codex/feature/production-extraction; plugin nikichmods.researchablealchemyrecipes, plugin version 0.1.1, assembly/file 0.1.1.0. Removes later tooltip/speech/managed-hint/corner/context guards from AdvancePage only; initial clear-screen delivery, native current-save/window ownership, input-release deferral, source revalidation and displayed-only flags remain. No third-party hook, extra state, gameplay mechanic change or audit A1/A2 correction is bundled.
+
+Clean exact-source SDK 6.0.406 Roslyn build under the existing local four-suite gate. Immutable artifact `artifacts/ResearchableAlchemyRecipes-0.1.1/ResearchableAlchemyRecipes-0.1.1.dll`, SHA-256 `0925f76ca898cdca8caae30f06c2a9c5dbd04d8e9ecffdf45a6b13ce9b466d52`. build-identity.json records source/tool/reference/resource identities. Compile/version checks and four suites pass, also against a hash-verified byte copy of the exact numbered DLL in ignored work/production-0.1.1-exact-check. Those fixtures do not execute rendered overlap interaction; no new success is inferred for that property.
+
+Installed with the host closed under canonical ResearchableAlchemyRecipes.dll. Installed digest/file version checked; one active project payload. Previous accepted-normal-flow 0.1.0 is backed up in ignored work/installation-backups/pre-production-0.1.1; preinstall log/receipt in work/evidence/pre-production-0.1.1. Saves, notice flags, research artifacts and unrelated mods are unchanged. Candidate 0.1.0 remains immutable; no main promotion/release is performed.
+
+Focused runtime return pending: when a naturally available multi-page notice is open and a later background thought/speech appears, Next must replace rows without waiting for that thought to vanish; Close must remain usable. Initial display still waits for earlier speech/windows. Use the next natural eligible batch if current topics were already announced; do not reset knowledge, tiers, tasks or notice flags merely to recreate a welcome screen. No repeat of the payment/work/save/locale matrix is requested. After the user returns, collect the accessible support log and record exact candidate identity and the reported interaction result.
+
 ## Returned 0.1.0 — requested player flow accepted, 2026-10-15
 
 User reports the requested installed pass completed normally. Installed DLL still matches frozen source33b906567cb46502a8aaf255aeab2645769a282b / SHA-25622e2d95cec9198af174cc47aa9a5171e4fb75dd46d2f061d984abc594c718ea1. Archived return LogOutput.log SHA-256 `df76573550b8db1f4a9833e5ba280788f19b4f4b7678453d536d48c74450ae7b`, retained in ignored work/evidence/production-0.1.0-return. Native host assembly hash rechecked e72e4270e4b88dd0a87ca23c9cf1750aec4c4a0fedb40b6d2dae7902fc9c7fd8.
