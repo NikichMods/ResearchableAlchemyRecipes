@@ -1,5 +1,13 @@
 ﻿# Diagnostic runtime tests
 
+## Study Table Work Probe 0.1.52 — native technology unlock sound
+
+Add one native Sounds.PlaySound("unlock") after the owned result window's successful final layout, including its explicit F6 example. Native forced-technology-unlock branch uses the same group/default path. No extra assets, audio system, hooks, tick callback or notice sound. Exact artifact/install identity follows source freeze. Check only F6 result-example sound with all windows closed; no science/knowledge mutation or repeat recipe work is needed. Listening remains pending.
+
+## Accepted 0.1.51 — immediate science header and fixed appearance
+
+User explicitly accepts immediate paper-conversion header updates, matching total across tabs, normal close/reopen and new appearance. Exact installed DLL/source match the identity below. Archived LogOutput.log SHA-256 096f64708ba13063eed0456517ceecae7899ffc9ff1158e25550c8086dcd2560 identifies .51, records eight layout_restored=True closes and alkali reward learned=1/remaining=0. No Exception/RAR_WORK_ERROR match in the captured session. User screenshots show the compact alkali result and accepted price/header appearance. This closes the bounded .51 gates; it is not production/main promotion, exhaustive compatibility or a performance measurement. Preserve remaining source/picker/foreign-popup/production gates; do not repeat accepted header/geometry matrices.
+
 ## Study Table Work Probe 0.1.51 — live native header and frozen price geometry
 
 Prepared: forward native Study UniversalObjectInfoGUI.Draw data to the owned visible outer header, preserving native item/count/layout drawing; darken only the live science icon through the native craft-item normal tint. No frame polling or science calculation change. Freeze accepted .50 icon (0,0)/40 and counter (17,-19)/16, remove F2/IMGUI/capture code and its module reference. Both independent READY gates are in VERIFIED_RUNTIME_DATA.md. Local compilation and existing source/knowledge/economics/localization/actual QueueEverything/MaxButtons/notice tests pass. Frozen source 004ced56923c2e670b86c1bd12df9c57e1e0f279; SDK 6.0.406 Roslyn; plugin/assembly/file 0.1.51/0.1.51.0. Immutable artifacts/StudyTableWorkProbe-0.1.51/StudyTableWorkProbe-0.1.51.dll SHA-256 77a0f59b33b1651ecf75dbda8c2fbc534f37a2f2a21ef2688bc3af9ed02d5505 and build manifest retained. Installed with game closed, one canonical payload and installed hash/version verified; previous .50/log retained outside plugins, no original save changes. Native immediate header gain and dark-edge visual acceptance remain pending.

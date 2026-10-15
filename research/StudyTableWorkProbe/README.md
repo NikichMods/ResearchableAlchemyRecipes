@@ -1,5 +1,9 @@
 # Study Table Work Probe
 
+## 0.1.52 native completion sound
+
+One native `unlock` sound plays after the completion window opens, using the same Sounds.PlaySound defaults as technology unlocks. F6 with all windows closed previews the result and sound without granting knowledge. No audio asset/hook/timer is added. .51 header/appearance/input return is accepted; only listening is pending.
+
 ## 0.1.51 native header updates and fixed geometry
 
 Native material conversions redraw the hidden Study header; forward its exact data to the visible outer native header. Use the native dark item tint on the live science header icon, preserving sprite/shader/count and other windows. Freeze the user's .50 price geometry: atom (0,0)/40; counter bottom-right (17,-19)/16. F2/IMGUI/input-capture scaffolding is removed. No science/payment calculation or frame polling. Existing suites pass; check one paper conversion's immediate header gain, same total on the research tab and normal close/reopen. Earlier calibration instructions below are historical.

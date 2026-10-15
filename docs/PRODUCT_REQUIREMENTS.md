@@ -40,6 +40,7 @@ The user explicitly chooses not to implement a separate research-cancel button (
 ## Research completion presentation
 
 - User adopts the compact completion result on 2026-10-14: native-style window, Russian heading `Исследование завершено`, one native product icon/name row and `Новых рецептов: N`.
+- User adds the native technology-unlock sound on 2026-10-15: play the same short cue once when the completion result appears. Reuse the game's audio path; do not add a separate cue to research-availability notices.
 - N counts only the formulas newly learned by this completion, including partially known products. Do not repeat previously known formulas, show duplicate product rows per formula or list recipe ingredients/manufacturing variants in the result window. Ordinary native alchemy lists and contextual guidance remain the place to inspect and compare variants.
 - Preserve the already accepted native knowledge/reward/save path; this is presentation work. Apply the selected-language localization policy to new visible text. Exact native UI seam, final layout and installed visual acceptance remain to be verified.
 

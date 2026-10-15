@@ -33,6 +33,8 @@ namespace NikichMods.Research
                 // Set its public heading after the native generic-information writer.
                 gui.label_header.text = Localization.Get(preview ? Localization.Key.ResultPreview : Localization.Key.ResearchCompleted);
                 gui.UpdateAllAnchors();
+                // Same native group/default path as a newly unlocked technology.
+                Sounds.PlaySound("unlock");
             }
             catch { container.SetActive(priorActive); throw; }
             StudyTableWorkProbe.Write("RAR_RESEARCH_RESULT product=" + product + " new_recipes=" + learned + " rows=1 native_info=True preview=" + preview);

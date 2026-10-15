@@ -10,6 +10,8 @@ Adjacent composition audit: only the five captured Study chrome objects are hidd
 
 ## Findings
 
+.51 return explicitly accepts immediate header gain, cross-tab total, close/reopen and fixed price/header appearance. This closes that defect's bounded gate. Performance scope: ResearchCostDisplay.Refresh runs on the owned research-tab switch, HeaderDraw on native header redraw events; neither adds a frame loop. Existing RecipeGuidance.Refresh checks the active selected known alchemy card from plugin Update; its owned bubble uses native render geometry seams. AvailabilityNotifications.Tick returns immediately without loaded pending work; while pending it checks delivery blockers and evaluates eligibility after a safe transition, rather than rescanning the world unconditionally every frame. These are bounded source observations, not measured CPU/GC/frame-time figures. Do not claim the entire probe has no frame callbacks or zero overhead. Production removal of diagnostic controls/censuses and remaining compatibility gates still applies.
+
 | Surface | Native owner retained / project addition | Evidence and limits |
 | --- | --- | --- |
 | Research work/payment | Native CraftDefinition/CraftComponent work and table Item science inventory; project adds registered one-time jobs, tariffs, eligibility and narrow quantity/queue guards | Accepted .42/.43 payment, restart, completion, cancellation/removal interruption slices. No separate work scheduler or science wallet. These additions remain real mod code, not vanilla behavior. |
