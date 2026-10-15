@@ -1,5 +1,9 @@
 ﻿# Diagnostic runtime tests
 
+## Accepted .54 presentation slice — F7 assortment and mixed-source continuation
+
+User confirms everything displayed through F7 works. Exact installed .54 SHA-256/source match the identity below. Archived LogOutput.log SHA-256 42388f1f48bc8f8fb02b8c695eb6de396b113316b7d26efbfc5288a03e925349 identifies .54, records two explicit clotho_and_other_sources previews, each with a three-potion expansion page/remaining3 followed by a generic three-paint page/remaining0. No Exception/RAR_WORK_ERROR/RAR_NOTICE_ERROR or RAR_CLOTHO_TIER_COMMITTED match in this capture. The ordinary initial overview also shows 14 eligible topics across five pages. Accept new text fit, cause separation and native continuation within this observed UI slice. Do not infer actual vendor-tier-event acceptance from unattached Item fixtures. The real positive tier event remains pending; no rebuild/new artifact or repeat F7 is needed for this receipt.
+
 ## Study Table Work Probe 0.1.54 — automatic Clotho tier discovery and explanatory notice
 
 User accepts automatic higher-tier discovery after first actual trade acquaintance and the exact copy `Клото расширила ассортимент зелий. Их рецепты можно изучить на исследовательском столе.` Native TryLevelUpVendor's successful before/after increase requests the existing safe notice/source refresh; it does not scan or create vendor state in the callback. Existing source snapshots reconcile actual higher tiers after load and apply unchanged current stock/access/physical/alchemy/remaining-knowledge gates. Native player Item parameters retain first acquaintance tier, per-product discovery and expansion origin. Legacy product flags provide conservative existing acquaintance evidence; no vendor_inited/save-age guess. First-visit/known-tier stock semantics remain, new higher-tier refill can be recognized without revisiting.
