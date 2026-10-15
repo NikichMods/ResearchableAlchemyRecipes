@@ -2,7 +2,7 @@
 
 ## Current recovery entry point — 2026-10-15
 
-Continue here in a new chat. Production source is extracted into `src/` on `codex/feature/production-extraction` (2026-10-15), with root build.ps1/test.ps1 and three adapted test programs. The user explicitly waives all unpublished research-build/test-save compatibility: no legacy aliases, synthetic definitions, snapshot migration or old-version refund policy. Development identity is Researchable Alchemy Recipes 0.1.0 / `nikichmods.researchablealchemyrecipes`; no distributable candidate or hosted CI selected yet. [PRODUCTION_PREPARATION.md](PRODUCTION_PREPARATION.md) owns the source boundary map and remaining activation/failure gate. Do not repeat accepted gameplay matrices.
+Continue here in a new chat. Production source is in `src/` on `codex/feature/production-extraction`, with root build.ps1/test.ps1 and four test programs. The bounded failure/paid-settlement correction is implemented and locally checked. The user waives unpublished research-build/test-save compatibility: no aliases, synthetic definitions or migration. First candidate identity is Researchable Alchemy Recipes 0.1.0 / `nikichmods.researchablealchemyrecipes`, using the defined clean exact-source local gate. TEST_LOG.md owns build/install identity and runtime return; hosted CI is unselected. [PRODUCTION_PREPARATION.md](PRODUCTION_PREPARATION.md) owns the map and READY gate. Do not repeat accepted matrices.
 
 ### Exact working and installed state
 
@@ -33,14 +33,14 @@ Source accounting is 33 paid products/42 formulas plus native-disclosed Spices/o
 
 | Work / observation | What remains and why |
 | --- | --- |
-| Production extraction | Source/build/test extraction is complete and locally checked. Next audit mandatory activation/failure/settlement before a distributable candidate. No research-save compatibility work; hosted reference provisioning/CI remain unselected. |
+| Production extraction | Extraction and bounded failure/settlement correction pass four local suites. First 0.1.0 candidate uses the defined clean exact-source local gate; TEST_LOG.md owns build/install and runtime return. No research-save compatibility work or hosted-reference provisioning is required for this local gate. |
 | Native higher Clotho tier event | Hook/policy and source fixtures exist, F7 wording accepted, but a genuine later trade-tier increase without revisiting is not installed-accepted. Observe naturally when possible; do not force tier/quest/knowledge resets. |
 | Acid quest-only isolation | Native task predicate is verified; no scanned suitable natural save combines assigned acid task, unknown formula and absent ordinary source. Keep pending; accepted healing quest-only offering is separate. |
 | Physical/source negatives | First-trade/locked-tier negative is accepted. General removal/disable/inaccessibility and exhaustive stock/source permutations are not; census presence does not prove physical access. |
 | Compatibility/performance | This picker warning attribution is closed. Broader foreign overlays, arbitrary mod stacks and CPU/GC/frame-time measurements are not proved. Source audit finds event/on-demand price/header refresh; existing active-card guidance and pending-notice callbacks still run from Update. Do not claim zero per-frame work/overhead. |
 | Final acceptance/distribution | Remove diagnostic controls, audit sparse support logs and licensing, choose concrete build gates and final player flow; explicit stable acceptance remains required before runtime promotion/release. |
 
-First useful action: audit Plugin.Fail/initialization and every retained patch consumer against already-paid work and UI restoration. The current extraction preserves the original Enabled=false/tab-restore failure mechanism; completion is Enabled-gated while reserve settlement is not uniformly gated. This is an independent readiness question, not proof of a runtime defect. Determine the smallest safe containment and verify any change with focused automated failure checks before a distributable candidate. Do not add legacy migrations, a framework, new global hook, separate wallet/save or a full gameplay replay.
+Current failure boundary is now corrected and locally checked: disable new registered starts/queues, retain registry-verified native completion/refunds, omit result display while disabled, clean each owned view independently, close the captured table window and log the root failure once. No global unpatch, forced cancellation or automatic refund on UI error. Four suites pass; injected CLR faults prove control/dispatch/knowledge/Item logic, not Unity rendered cleanup. Next collect the exact 0.1.0 candidate's normal loader/player-flow return and audit its ordinary support log. TEST_LOG.md owns exact build/install identity and the minimal return; no old matrices or game fault harness are requested.
 
 ### Recovery evidence and private tooling
 

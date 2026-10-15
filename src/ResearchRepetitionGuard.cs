@@ -31,7 +31,7 @@ namespace NikichMods.ResearchableAlchemyRecipes
             [HarmonyPriority(Priority.Last)]
             private static void Prefix(CraftDefinition craft_definition)
             {
-                if (Plugin.Enabled) RepairDefinition(craft_definition);
+                RepairDefinition(craft_definition);
             }
         }
         // QueueEverything's verified postfix can force true even after definition flags reject it.
@@ -41,7 +41,7 @@ namespace NikichMods.ResearchableAlchemyRecipes
             [HarmonyPriority(Priority.Last)]
             private static void Postfix(CraftDefinition __instance, ref bool __result)
             {
-                if (Plugin.Enabled && Plugin.IsJob(__instance)) __result = false;
+                if (Plugin.IsJob(__instance)) __result = false;
             }
         }
         [HarmonyPatch(typeof(CraftComponent), "CraftReally")]
@@ -50,7 +50,8 @@ namespace NikichMods.ResearchableAlchemyRecipes
             [HarmonyPriority(Priority.Last)]
             private static bool Prefix(CraftComponent __instance, CraftDefinition craft, ref int amount, ref bool __result)
             {
-                if (!Plugin.Enabled || !Plugin.IsJob(craft)) return true;
+                if (!Plugin.IsJob(craft)) return true;
+                if (!Plugin.Enabled) { __result = false; return false; }
                 if (amount <= 0 || !Ready(__instance, craft))
                 {
                     __result = false;
@@ -67,7 +68,8 @@ namespace NikichMods.ResearchableAlchemyRecipes
             [HarmonyPriority(Priority.Last)]
             private static bool Prefix(CraftComponent __instance, CraftDefinition craft, ref int amount)
             {
-                if (!Plugin.Enabled || !Plugin.IsJob(craft)) return true;
+                if (!Plugin.IsJob(craft)) return true;
+                if (!Plugin.Enabled) return false;
                 bool queued = __instance.craft_queue != null && __instance.craft_queue.Exists(q => q.id == craft.id);
                 if (amount <= 0 || !Ready(__instance, craft) || queued)
                 {
@@ -81,8 +83,9 @@ namespace NikichMods.ResearchableAlchemyRecipes
         {
             private static void Prefix(CraftComponent __instance)
             {
-                if (!Plugin.Enabled || __instance.craft_queue == null) return;
+                if (__instance.craft_queue == null) return;
                 if (!__instance.craft_queue.Exists(q => Plugin.IsJobId(q.id))) return;
+                if (!Plugin.Enabled) { RemoveQueued(__instance.craft_queue); return; }
                 var completed = MainGame.me.save.completed_one_time_crafts;
                 int removed = __instance.craft_queue.RemoveAll(q => Plugin.IsJobId(q.id) && completed.Contains(q.id));
                 foreach (var q in __instance.craft_queue)
@@ -95,7 +98,7 @@ namespace NikichMods.ResearchableAlchemyRecipes
         {
             private static void Prefix(CraftComponent __instance)
             {
-                if (!Plugin.Enabled || !Plugin.IsJob(__instance.current_craft)) return;
+                if (!Plugin.IsJob(__instance.current_craft)) return;
                 try
                 {
                 // Existing craft_amount repeats were paid at start; queued entries are not prepaid.

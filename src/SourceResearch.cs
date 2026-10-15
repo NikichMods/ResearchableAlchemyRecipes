@@ -346,7 +346,7 @@ namespace NikichMods.ResearchableAlchemyRecipes
         {
             var topic = topics[id];
             var learned = GrantRemaining(save, topic.formulas);
-            if (learned.Count != 0)
+            if (Plugin.Enabled && learned.Count != 0)
             {
                 // Knowledge is already committed through GrantRemaining. Presentation adds no reward.
                 ResearchCompletion.Show(topic.product, learned.Count, null);

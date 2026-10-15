@@ -14,7 +14,7 @@ $foreign = Join-Path $GameRoot 'BepInEx/plugins/MaxButtonsRedux'
 $queue = Join-Path $GameRoot 'BepInEx/plugins/QueueEverything'
 $refs = @('mscorlib.dll','System.dll','System.Core.dll','Assembly-CSharp.dll','Assembly-CSharp-firstpass.dll','UnityEngine.dll','UnityEngine.CoreModule.dll') | ForEach-Object { Join-Path $managed $_ }
 $refs += @('BepInEx.dll','0Harmony.dll') | ForEach-Object { Join-Path $core $_ }
-foreach ($testName in @('QuantityCompatibilityTests','SourceTopicTests','NotificationStateTests')) {
+foreach ($testName in @('QuantityCompatibilityTests','SourceTopicTests','NotificationStateTests','FailureContainmentTests')) {
     $output = Join-Path $outDir ($testName+'.exe')
     $compilerArgs = @('/nologo','/target:exe','/nostdlib+','/noconfig','/langversion:7.3','/warnaserror+',('/out:'+$output))
     $compilerArgs += $refs | ForEach-Object { '/reference:'+$_ }

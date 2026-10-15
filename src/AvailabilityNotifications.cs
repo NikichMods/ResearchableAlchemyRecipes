@@ -247,7 +247,7 @@ namespace NikichMods.ResearchableAlchemyRecipes
         }
         internal static void ObserveShown()
         {
-            if (disabled || !pageOpen || displayedPage == null) return;
+            if (!Plugin.Enabled || disabled || !pageOpen || displayedPage == null) return;
             try
             {
                 // A later frame/top-of-stack observation avoids consuming a page hidden/replaced

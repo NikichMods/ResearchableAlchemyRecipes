@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NikichMods.ResearchableAlchemyRecipes
 {
-    // Research-only native window composition. Survey still owns all sample/craft behavior.
+    // Native window composition. Survey still owns all sample/craft behavior.
     internal static class StudyTabs
     {
         internal const string StudyTab = "book";
@@ -68,7 +68,7 @@ namespace NikichMods.ResearchableAlchemyRecipes
         private static void Switch(string id)
         {
             if (!Active || switching || GUIElements.me.resource_picker.is_shown) return;
-            if (id != StudyTab && id != ResearchTab) throw new InvalidOperationException("Unexpected diagnostic tab");
+            if (id != StudyTab && id != ResearchTab) throw new InvalidOperationException("Unexpected research tab");
             switching = true;
             try
             {
@@ -108,12 +108,17 @@ namespace NikichMods.ResearchableAlchemyRecipes
         {
             if (snapshot == null || restoring) return;
             restoring = true;
+            var saved = snapshot;
+            table = null;
+            snapshot = null;
             try
             {
-                ResearchCostDisplay.Restore();
-                var saved = snapshot;
-                table = null;
-                snapshot = null;
+                try { ResearchCostDisplay.Restore(); }
+                catch (Exception ex)
+                {
+                    Plugin.Write("RAR_PRICE_RESTORE_ERROR action=ownership_cleared " + ex);
+                    Plugin.Fail(ex);
+                }
                 // Restore the exact windows captured at entry. The global GUIElements
                 // owner can already be gone during plugin/scene teardown.
                 var study = saved.StudyWindow;
@@ -129,10 +134,26 @@ namespace NikichMods.ResearchableAlchemyRecipes
             }
             catch (Exception ex)
             {
-                Plugin.Enabled = false;
                 Plugin.Write("RAR_TABS_RESTORE_ERROR action=disabled " + ex);
+                Plugin.Fail(ex);
             }
             finally { restoring = false; }
+        }
+
+        internal static void Disable()
+        {
+            var owned = snapshot == null ? null : snapshot.CraftWindow;
+            try { Restore(); }
+            finally
+            {
+                // Clear composition ownership before native Hide, so it cannot reenter
+                // our tab handlers. Notify the verified quantity owner of this real close.
+                if (owned != null && owned.is_shown)
+                {
+                    owned.Hide(false);
+                    QuantityInputCompatibility.OnOurFrameClosed();
+                }
+            }
         }
 
         // Selected through the 0.1.5 F2 panel: baseline + material(+1,+1), recipe(+2,+1).

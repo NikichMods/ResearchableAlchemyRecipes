@@ -1,5 +1,13 @@
 # Diagnostic runtime tests
 
+## Production failure boundary — local gate, 2026-10-15
+
+Before source mutation, PRODUCTION_PREPARATION.md records READY owner/final-consumer/invariant/check gates for disabled payment, already-paid native settlement and bounded cleanup. Inspection identifies an Enabled-gated completion versus ungated reserve settlement risk in the extracted source, not an installed loss. Correction blocks new registered starts/queues after disable, preserves validated registry completion and native refunds, suppresses result UI while disabled, invalidates readiness on native cache rebuild and logs one root failure. Separate owned-view cleanup attempts continue after failures; captured tab ownership clears before disposal and its native outer window closes after restoration. No global unpatch, automatic Cancel or speculative science compensation.
+
+All four local suites pass under SDK 6.0.406. New FailureContainmentTests invokes actual advice/grant/native Item refund and verifies foreign-craft isolation, stale-registry rejection, remaining-only/deduplicated disabled completion, exact refund, independent cleanup attempts, reentry/log count and cleared snapshot references. Test-only Harmony faults are attached before first JIT where needed; native notice Dispose dispatch is intercepted at its managed owner, and actual Unity destruction/geometry is outside this CLR test. A direct price-cell detour cannot be restored in standalone CLR because of Unity ECalls; the final test injects at the managed price owner instead. This is not installed failure-path or rendered cleanup acceptance.
+
+The first candidate gate is explicitly local: the four successful suites, compile/version checks, clean exact committed source, immutable numbered artifact and full input/resource identity manifest. Game/foreign references stay private/local. No hosted result is claimed; the exact candidate build/install receipt follows separately.
+
 ## Production source extraction — local checks, 2026-10-15
 
 User explicitly waives unpublished research-build/test-save compatibility and authorizes necessary renaming/cleanup. Production development source is extracted on codex/feature/production-extraction into src/ with Plugin identity nikichmods.researchablealchemyrecipes, numeric development version 0.1.0 / assembly/file 0.1.0.0. Real jobs use rar_research_<product>; no synthetic FormulaKnowledge, old-ID aliases, preparation/restoration, hotkeys, preview modes, source/card/save census or tooltip motion observer is compiled. Original settled-alpha/final geometry and accepted gameplay/UI mechanisms remain. Research source/artifacts and installed .57 are unchanged; no saves are touched.

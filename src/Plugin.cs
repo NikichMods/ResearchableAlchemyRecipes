@@ -22,6 +22,7 @@ namespace NikichMods.ResearchableAlchemyRecipes
         private static ManualLogSource log;
         internal static bool Enabled;
         private static bool registered;
+        private static bool failed;
         private Harmony harmony;
 
         private void Awake()
@@ -74,8 +75,20 @@ namespace NikichMods.ResearchableAlchemyRecipes
         internal static void Fail(Exception ex)
         {
             Enabled = false;
-            StudyTabs.Restore();
-            if (log != null) log.LogError("RAR_DISABLED action=entry_disabled " + ex);
+            if (failed) return;
+            failed = true;
+            if (log != null) log.LogError("RAR_DISABLED action=entry_disabled settlement=" + (registered ? "retained" : "unavailable") + " " + ex);
+            // Keep core settlement hooks. Each owned view gets its own cleanup attempt.
+            try { StudyTabs.Disable(); }
+            catch (Exception cleanup) { CleanupError("tabs", cleanup); }
+            try { RecipeGuidance.Restore(); }
+            catch (Exception cleanup) { CleanupError("guidance", cleanup); }
+            try { AvailabilityNotifications.Dispose(); }
+            catch (Exception cleanup) { CleanupError("notices", cleanup); }
+        }
+        private static void CleanupError(string feature, Exception ex)
+        {
+            if (log != null) log.LogError("RAR_CLEANUP_FAILED feature=" + feature + " action=entry_remains_disabled " + ex);
         }
         internal static bool IsJob(CraftDefinition craft) { return craft != null && IsJobId(craft.id); }
         internal static bool IsJobId(string id) { return SourceResearch.IsJob(id); }
@@ -85,7 +98,9 @@ namespace NikichMods.ResearchableAlchemyRecipes
         {
             private static void Prefix(GameBalanceBase __instance)
             {
-                if (!Enabled || !(__instance is GameBalance)) return;
+                if (!(__instance is GameBalance)) return;
+                registered = false; // A rebuilt native cache needs its own validation.
+                if (!Enabled) return;
                 try
                 {
                     SourceResearch.Register((GameBalance)__instance);
@@ -122,7 +137,8 @@ namespace NikichMods.ResearchableAlchemyRecipes
         {
             private static void Postfix(GameSave __instance, CraftDefinition craft)
             {
-                if (!Enabled || !IsJob(craft)) return;
+                // Presentation disable must not discard an already-paid, verified native job.
+                if (!registered || !IsJob(craft)) return;
                 try { SourceResearch.Complete(craft.id, __instance); }
                 catch (Exception ex) { Fail(ex); }
             }

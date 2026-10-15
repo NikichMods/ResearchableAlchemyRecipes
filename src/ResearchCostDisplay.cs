@@ -36,8 +36,15 @@ namespace NikichMods.ResearchableAlchemyRecipes
 
         internal static void Restore()
         {
-            foreach (var cell in cells.Values) cell.Dispose();
-            cells.Clear();
+            Exception failure = null;
+            try
+            {
+                foreach (var cell in cells.Values)
+                    try { cell.Dispose(); }
+                    catch (Exception ex) { if (failure == null) failure = ex; }
+            }
+            finally { cells.Clear(); }
+            if (failure != null) throw new InvalidOperationException("Owned research price view cleanup failed", failure);
         }
 
         internal static string Format(int price, int available, string nativeText)
