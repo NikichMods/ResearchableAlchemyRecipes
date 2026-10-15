@@ -209,7 +209,7 @@ namespace NikichMods.ResearchableAlchemyRecipes
                 // Native collider-mode Update raises zero alpha. Keep creation hidden;
                 // only the render-geometry consumer may reveal the settled instance.
                 try { bubble.widget.alpha = settled > 0 ? 1f : 0f; }
-                catch (Exception ex) { Hide(); Plugin.Fail(ex); }
+                catch (Exception ex) { Plugin.Fail(ex); }
             }
         }
         [HarmonyPatch(typeof(BaseBubbleGUI), "UpdateBubble")]
@@ -234,7 +234,7 @@ namespace NikichMods.ResearchableAlchemyRecipes
                 {
                     PrepareGeometry();
                 }
-                catch (Exception ex) { Hide(); Plugin.Fail(ex); }
+                catch (Exception ex) { Plugin.Fail(ex); }
             }
         }
     }

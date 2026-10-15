@@ -15,6 +15,9 @@ internal static class FailureContainmentTests
     private static Assembly assembly;
     private static Type plugin, source;
     private static int tabsAttempts, guidanceAttempts, noticeAttempts, priceAttempts;
+    private static int pageAttempts;
+    private static bool failPage, failNotice;
+    private static TechUnlockDialogGUI closedPage;
     private static bool SkipBag() { return false; }
     private static bool ScienceCapacity(string item_id, ref int __result)
     { if (item_id != "science") return true; __result = 1000; return false; }
@@ -23,8 +26,19 @@ internal static class FailureContainmentTests
     private static void TabsFault() { tabsAttempts++; throw new InvalidOperationException("fixture_tabs_fault"); }
     private static void GuidanceFault() { guidanceAttempts++; throw new InvalidOperationException("fixture_guidance_fault"); }
     // Verify dispatch/continuation; actual native window disposal requires the engine.
-    private static bool NoticeAttempt() { noticeAttempts++; return false; }
+    private static bool NoticeAttempt() { noticeAttempts++; if (failNotice) throw new InvalidOperationException("fixture_notice_fault"); return false; }
     private static void PriceFault() { priceAttempts++; throw new InvalidOperationException("fixture_price_fault"); }
+    private static bool PageAttempt(TechUnlockDialogGUI page)
+    {
+        pageAttempts++; closedPage = page;
+        var notices = Own("AvailabilityNotifications");
+        Assert(Field(notices, "owner") == null && !(bool)Field(notices, "pageOpen") && !(bool)Field(notices, "nextPage") &&
+            Field(notices, "displayedPage") == null, "Native close reached before relinquishing page ownership");
+        if (failPage) throw new InvalidOperationException("fixture_page_fault");
+        return false;
+    }
+    private static void Marker() { }
+    private static bool MarkerPrefix() { return false; }
     private static object Call(Type type, string method, params object[] args) { return type.GetMethod(method, Private).Invoke(null, args); }
     private static object Field(Type type, string name) { return type.GetField(name, Private).GetValue(null); }
     private static void Set(Type type, string name, object value) { type.GetField(name, Private).SetValue(null, value); }
@@ -55,6 +69,7 @@ internal static class FailureContainmentTests
     {
         assembly = Assembly.LoadFrom(Path.Combine(args[0], "compile-check.dll"));
         plugin = Own("Plugin"); source = Own("SourceResearch");
+        var notices = Own("AvailabilityNotifications");
         var fixture = new Harmony("rar.offline.failure-fixtures");
         try
         {
@@ -134,6 +149,39 @@ internal static class FailureContainmentTests
                 Assert(logs.FindAll(x => x.StartsWith("RAR_DISABLED ")).Count == 1 && logs.FindAll(x => x.StartsWith("RAR_CLEANUP_FAILED ")).Count == 2 &&
                     logs.Count > 0 && logs[0].Contains("settlement=retained") && logs[0].Contains("fixture_primary_failure"),
                     "Failure support log mismatch: " + string.Join(" | ", logs.ToArray()));
+
+                var bubble = (TooltipBubbleGUI)FormatterServices.GetUninitializedObject(typeof(TooltipBubbleGUI));
+                Set(Own("GuidanceTooltip"), "bubble", bubble);
+                logs.Clear(); tabsAttempts = guidanceAttempts = noticeAttempts = 0; State(true, true);
+                // The real owned-bubble handler encounters its missing widget; its
+                // cleanup also throws. No engine Update/Input reconstruction is needed.
+                try { Advice("GuidanceTooltip", "Position", "Postfix").Invoke(null, new object[] { bubble }); }
+                finally { Set(Own("GuidanceTooltip"), "bubble", null); }
+                Assert(!(bool)Field(plugin, "Enabled") && (bool)Field(plugin, "failed") &&
+                    tabsAttempts == 1 && guidanceAttempts == 1 && noticeAttempts == 1 &&
+                    logs.Exists(x => x.StartsWith("RAR_DISABLED ") && x.Contains("NullReferenceException")),
+                    "Actual guidance handler loses primary failure or bypasses containment when cleanup also throws");
+
+                var instance = FormatterServices.GetUninitializedObject(plugin);
+                var teardownOwner = new Harmony("rar.offline.teardown-owned");
+                var marker = typeof(FailureContainmentTests).GetMethod("Marker", Private);
+                teardownOwner.Patch(marker, prefix: new HarmonyMethod(typeof(FailureContainmentTests), "MarkerPrefix"));
+                plugin.GetField("harmony", Instance).SetValue(instance, teardownOwner);
+                logs.Clear(); tabsAttempts = guidanceAttempts = noticeAttempts = 0;
+                failNotice = true; State(true, true);
+                bool removedOwnPatch;
+                try
+                {
+                    plugin.GetMethod("OnDestroy", Instance).Invoke(instance, null);
+                    removedOwnPatch = !Harmony.GetPatchInfo(marker).Owners.Contains(teardownOwner.Id);
+                }
+                finally { failNotice = false; teardownOwner.UnpatchSelf(); }
+                Assert(!(bool)Field(plugin, "Enabled") && tabsAttempts == 1 && guidanceAttempts == 1 && noticeAttempts == 1 && removedOwnPatch,
+                    "Teardown skips later cleanup after a prior cleanup exception");
+                Assert(logs.Exists(x => x.StartsWith("RAR_CLEANUP_FAILED feature=notices ")) &&
+                    logs.Exists(x => x.StartsWith("RAR_CLEANUP_FAILED feature=guidance ")) &&
+                    logs.Exists(x => x.StartsWith("RAR_CLEANUP_FAILED feature=tabs ")),
+                    "Teardown does not report independent failed cleanup categories");
             }
             finally { cleanup.UnpatchSelf(); }
 
@@ -154,6 +202,52 @@ internal static class FailureContainmentTests
                     "Nested price cleanup failure is hidden or repeats disable logging");
             }
             finally { priceFault.UnpatchSelf(); }
+
+            // Optional failure must release a paid-ineligible presentation only,
+            // retaining gameplay and the unseen-topic ledger even if native cleanup fails.
+            var view = (TechUnlockDialogGUI)FormatterServices.GetUninitializedObject(typeof(TechUnlockDialogGUI));
+            var unseen = new Item("fixture_unseen_notice", 1);
+            Set(notices, "disabled", false); Set(notices, "loaded", true); Set(notices, "dirty", true);
+            Set(notices, "pageOpen", true); Set(notices, "nextPage", true); Set(notices, "owner", view);
+            Set(notices, "displayedData", unseen); Set(notices, "displayedPage", new List<string> { "fixture_unseen" });
+            int generation = (int)Field(notices, "generation");
+            var optionalOwner = new Harmony("rar.offline.notice-owned");
+            var optionalMarker = typeof(FailureContainmentTests).GetMethod("Marker", Private);
+            optionalOwner.Patch(optionalMarker, prefix: new HarmonyMethod(typeof(FailureContainmentTests), "MarkerPrefix"));
+            Set(notices, "eventHarmony", optionalOwner); Set(notices, "installed", true);
+            fixture.Patch(notices.GetMethod("CloseOwnedPage", Private), prefix: new HarmonyMethod(typeof(FailureContainmentTests), "PageAttempt"));
+            // RestoreContainer's Unity ECall cannot execute under CLR. Its real
+            // method-entry failure is caught by Reset, which must still close/unpatch.
+            logs.Clear(); State(true, true); pageAttempts = 0; failPage = true;
+            Call(notices, "Fail", new InvalidOperationException("fixture_notice_primary"));
+            Call(notices, "Fail", new InvalidOperationException("fixture_notice_repeat"));
+            Assert((bool)Field(plugin, "Enabled") && (bool)Field(notices, "disabled") && !(bool)Field(notices, "loaded") &&
+                !(bool)Field(notices, "dirty") && !(bool)Field(notices, "pageOpen") && !(bool)Field(notices, "nextPage") &&
+                Field(notices, "owner") == null && Field(notices, "displayedData") == null && Field(notices, "displayedPage") == null &&
+                (int)Field(notices, "generation") == generation + 1 && pageAttempts == 1 && ReferenceEquals(closedPage, view),
+                "Notice failure leaves active ownership, repeats cleanup or disables research");
+            Assert(unseen.GetParamInt("rar_notice_seen_fixture_unseen") == 0 && unseen.GetParamInt("rar_notice_initial") == 0,
+                "Failure cleanup consumes undisplayed notice flags");
+            Assert(!(bool)Field(notices, "installed") && Field(notices, "eventHarmony") == null &&
+                !Harmony.GetPatchInfo(optionalMarker).Owners.Contains(optionalOwner.Id), "UI cleanup fault skips optional-owner unpatch");
+            Assert(logs.FindAll(x => x.StartsWith("RAR_NOTICE_ERROR ")).Count == 1 &&
+                logs.Exists(x => x.StartsWith("RAR_NOTICE_CLEANUP_ERROR feature=container ")) &&
+                logs.Exists(x => x.StartsWith("RAR_NOTICE_CLEANUP_ERROR feature=page ") && x.Contains("fixture_page_fault")) && logs[0].Contains("fixture_notice_primary"),
+                "Notice primary/secondary failure diagnostic missing or repeated");
+            failPage = false;
+            Set(notices, "disabled", false); Set(notices, "pageOpen", true); Set(notices, "nextPage", true); Set(notices, "owner", view);
+            pageAttempts = 0;
+            try { Call(notices, "WindowOpened", view); } // A native consumer replaces the same shared instance.
+            catch (TargetInvocationException ex)
+            {
+                // The ownership/failure work precedes Request. CLR cannot JIT its
+                // Time.frameCount ECall, even though disabled Request is inert in Unity.
+                if (!(ex.InnerException is System.Security.SecurityException) ||
+                    !ex.InnerException.StackTrace.Contains("AvailabilityNotifications.Request")) throw;
+            }
+            Assert((bool)Field(notices, "disabled") && Field(notices, "owner") == null && !(bool)Field(notices, "pageOpen") && pageAttempts == 0,
+                "Restoration fault while relinquishing a shared window closes the foreign replacement");
+            Console.WriteLine("PASS audit cleanup: actual guidance handler containment and teardown continuation; notice disable clears ownership before close, preserves unseen flags, isolates cleanup faults and unpatches only its owner; foreign replacement is not closed");
         }
         finally { fixture.UnpatchSelf(); }
     }

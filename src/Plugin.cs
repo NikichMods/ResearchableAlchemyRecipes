@@ -7,8 +7,8 @@ using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 
-[assembly: AssemblyVersion("0.1.1.0")]
-[assembly: AssemblyFileVersion("0.1.1.0")]
+[assembly: AssemblyVersion("0.1.2.0")]
+[assembly: AssemblyFileVersion("0.1.2.0")]
 
 namespace NikichMods.ResearchableAlchemyRecipes
 {
@@ -17,7 +17,7 @@ namespace NikichMods.ResearchableAlchemyRecipes
     public sealed class Plugin : BaseUnityPlugin
     {
         public const string Id = "nikichmods.researchablealchemyrecipes";
-        public const string Version = "0.1.1";
+        public const string Version = "0.1.2";
         private const string HostHash = "e72e4270e4b88dd0a87ca23c9cf1750aec4c4a0fedb40b6d2dae7902fc9c7fd8";
         private static ManualLogSource log;
         internal static bool Enabled;
@@ -50,11 +50,16 @@ namespace NikichMods.ResearchableAlchemyRecipes
         private void OnDestroy()
         {
             Enabled = false;
-            AvailabilityNotifications.Dispose();
-            RecipeGuidance.Restore();
-            StudyTabs.Restore();
-            if (harmony != null) harmony.UnpatchSelf();
-            TabArtwork.Dispose();
+            try { AvailabilityNotifications.Dispose(); }
+            catch (Exception ex) { CleanupError("notices", ex); }
+            try { RecipeGuidance.Restore(); }
+            catch (Exception ex) { CleanupError("guidance", ex); }
+            try { StudyTabs.Restore(); }
+            catch (Exception ex) { CleanupError("tabs", ex); }
+            try { if (harmony != null) harmony.UnpatchSelf(); }
+            catch (Exception ex) { CleanupError("patches", ex); }
+            try { TabArtwork.Dispose(); }
+            catch (Exception ex) { CleanupError("artwork", ex); }
         }
 
         private void Update()
@@ -62,7 +67,7 @@ namespace NikichMods.ResearchableAlchemyRecipes
             AvailabilityNotifications.Tick();
             if (!MainGame.game_started) return;
             try { RecipeGuidance.Refresh(); }
-            catch (Exception ex) { RecipeGuidance.Restore(); Fail(ex); }
+            catch (Exception ex) { Fail(ex); }
         }
         private void LateUpdate() { AvailabilityNotifications.ObserveShown(); }
 

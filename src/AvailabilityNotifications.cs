@@ -57,33 +57,42 @@ namespace NikichMods.ResearchableAlchemyRecipes
         {
             if (installed)
             {
+                installed = false;
                 BaseGUI.on_window_opened -= WindowOpened;
                 BaseGUI.on_window_closed -= WindowClosed;
-                installed = false;
             }
             Reset();
-            if (eventHarmony != null)
+            var patches = eventHarmony;
+            eventHarmony = null;
+            if (patches != null)
             {
-                try { eventHarmony.UnpatchSelf(); }
-                catch (Exception ex) { Fail(ex); }
-                eventHarmony = null;
+                try { patches.UnpatchSelf(); }
+                catch (Exception ex) { CleanupError("patches", ex); }
             }
         }
         private static void RestoreContainer()
         {
-            if (countContainer != null) countContainer.SetActive(priorContainerActive);
+            var container = countContainer;
             countContainer = null;
+            if (container != null) container.SetActive(priorContainerActive);
+        }
+        private static void CloseOwnedPage(TechUnlockDialogGUI page)
+        {
+            if (page != null && page.is_shown) page.Hide(false);
         }
         private static void Reset()
         {
             var previousOwner = owner;
             bool closeOwnPage = pageOpen;
             generation++;
-            RestoreContainer();
             loaded = false; dirty = false; pageOpen = false; nextPage = false;
             quietFrame = -1; boundSave = null; owner = null;
             displayedData = null; displayedPage = null;
-            if (closeOwnPage && previousOwner != null && previousOwner.is_shown) previousOwner.Hide(false);
+            // Relinquish ownership before native callbacks or restoration can fail.
+            try { RestoreContainer(); }
+            catch (Exception ex) { CleanupError("container", ex); }
+            try { if (closeOwnPage) CloseOwnedPage(previousOwner); }
+            catch (Exception ex) { CleanupError("page", ex); }
         }
         internal static void Request()
         {
@@ -93,10 +102,12 @@ namespace NikichMods.ResearchableAlchemyRecipes
         private static void WindowOpened(BaseGUI gui)
         {
             // A foreign replacement of this same shared instance ends our ownership.
-            if (pageOpen && gui == owner)
+            if (pageOpen && ReferenceEquals(gui, owner))
             {
-                generation++; RestoreContainer(); pageOpen = false; nextPage = false;
+                generation++; pageOpen = false; nextPage = false; owner = null;
                 displayedData = null; displayedPage = null;
+                try { RestoreContainer(); }
+                catch (Exception ex) { Fail(ex); }
             }
             Request();
         }
@@ -206,12 +217,19 @@ namespace NikichMods.ResearchableAlchemyRecipes
             int token = generation;
             nextPage = false;
             if (!replaceContents)
+            {
                 owner.OpenAsItemsList(subheader, items, delegate {
                     if (token != generation) return;
-                    RestoreContainer(); pageOpen = false; nextPage = false;
+                    generation++; pageOpen = false; nextPage = false; owner = null;
                     displayedData = null; displayedPage = null;
                     dirty = false; quietFrame = -1;
+                    try { RestoreContainer(); }
+                    catch (Exception ex) { Fail(ex); }
                 });
+                // Native Open has returned; later heading/button/layout failure
+                // must still close this page through the owned cleanup path.
+                pageOpen = true;
+            }
             else
             {
                 // Native info row rendering, without closing/reopening the window.
@@ -233,8 +251,8 @@ namespace NikichMods.ResearchableAlchemyRecipes
             }
             owner.label_header.text = Localization.Get(Localization.Key.NoticeTitle);
             var buttons = owner.GetComponentInChildren<DialogButtonsGUI>(true);
-            buttons.Set(more ? Localization.Get(Localization.Key.Next) : GJL.L("OK"), delegate { ClosePage(more); },
-                more ? Localization.Get(Localization.Key.Close) : null, more ? new GJCommons.VoidDelegate(delegate { ClosePage(false); }) : null,
+            buttons.Set(more ? Localization.Get(Localization.Key.Next) : GJL.L("OK"), delegate { if (token == generation) ClosePage(more); },
+                more ? Localization.Get(Localization.Key.Close) : null, more ? new GJCommons.VoidDelegate(delegate { if (token == generation) ClosePage(false); }) : null,
                 null, null, GameKey.Select, GameKey.Back);
             owner.UpdateAllAnchors();
             // Match DialogGUI.OpenDialog: anchor layout can collapse a previously hidden
@@ -261,8 +279,9 @@ namespace NikichMods.ResearchableAlchemyRecipes
         }
         private static void ClosePage(bool continuePages)
         {
-            if (!pageOpen) return;
+            if (disabled || !pageOpen) return;
             ObserveShown();
+            if (disabled || !pageOpen) return;
             nextPage = continuePages;
             if (continuePages) requestFrame = Time.frameCount;
             else owner.Hide(true);
@@ -270,8 +289,13 @@ namespace NikichMods.ResearchableAlchemyRecipes
         private static void Fail(Exception ex)
         {
             if (disabled) return;
-            disabled = true; dirty = false; RestoreContainer();
+            disabled = true;
             Plugin.Write("RAR_NOTICE_ERROR action=disabled_for_session research_preserved=True " + ex);
+            Dispose();
+        }
+        private static void CleanupError(string feature, Exception ex)
+        {
+            Plugin.Write("RAR_NOTICE_CLEANUP_ERROR feature=" + feature + " action=cleanup_continues " + ex);
         }
 
         private static class Loading

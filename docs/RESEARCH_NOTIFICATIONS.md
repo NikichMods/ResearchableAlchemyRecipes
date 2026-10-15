@@ -10,6 +10,8 @@ F6/result preview was removed in .53. F7 notice previews remain research-only an
 
 ## Mechanism and boundaries
 
+Audit A2 is corrected in development 0.1.2 under PRODUCTION_AUDIT.md: optional Fail disposes its own hooks/events, releases page/generation/displayed/save ownership before native cleanup, independently attempts count-container restoration and captured-page close, and does not consume unseen flags. Shared-instance replacement releases ownership before any restoration fault; stale button/on-hide callbacks are invalidated. Native Open's return establishes ownership before later formatting/layout. Local faults prove managed cleanup/dispatch/own unpatching; actual rendered Hide/SetActive remain native-runtime boundaries. This does not alter initial-only overlay waiting or claim the pending later-thought interaction is installed-accepted.
+
 ### Open-page interaction correction gate — 2026-10-15
 
 User reports a later background reminder prevented Next until the thought disappeared, after the notice correctly waited for an earlier sleep speech bubble. Installed third-party payload is named ThoughtfulReminders; the exact historical session/version and click trace are not identified by this report. Current production 0.1.0 contains a sufficient project-owned explanation: ClosePage(true) schedules nextPage; Tick dispatches AdvancePage, which rechecks tooltip/speech/managed-hint/corner/context overlays and waits for them to vanish. This is an active interaction defect, separate from audit A2's exception-disable path. No evidence requires changing the reminder mod or native speech/input.
