@@ -1,5 +1,15 @@
 ﻿# Diagnostic runtime tests
 
+## Accepted .55 digit size; native tint queued for the next candidate
+
+User confirms the price font changed and requests the same normal color as the native header instead of gold. Prepare the single color-overwrite removal under VERIFIED_RUNTIME_DATA.md's READY gate; deliberately batch with the next substantive check. Installed immutable .55 remains unchanged; no new artifact/version or extra user matrix is created for this preparation. The supplied screenshot confirms native-sized price digits; source/atom/positions remain accepted within prior bounds.
+
+## Local inspector failures — tooling correction, not installed mod behavior
+
+The user reports repeated Windows application-error dialogs; the named inspect-static-font-private.exe corresponds to a directly captured unhandled TypeLoadException from looking for StaticFontLabel in Assembly-CSharp instead of Assembly-CSharp-firstpass. Earlier tool output had established the missing-type error, but its unhandled diagnostic entry point let Windows show an application-error dialog. This is a tooling defect, not evidence of a game/mod crash. Causes of all other reported dialogs are not individually established; no matching accessible event/report entries were recovered in the bounded check.
+
+Repair: all 33 local reflection inspector sources/executables in this series now catch/report failures on stderr and return exit1; 17 pinned native inspectors also resolve types across both native assemblies. Rebuilt all33 successfully. Checked a valid StaticFontLabel lookup (exit0), a deliberately missing reflected type (exit1/TypeLoadException) and a nonexistent assembly path (exit1/FileNotFoundException); both failures are returned normally to the command without an application crash. Original private helpers and bounded check logs remain ignored local evidence. No Windows-global error policy, game process, save or installed DLL was changed. The canonical local inspector template is guarded for later reuse; this does not promise that unrelated future executable/native failures cannot occur.
+
 ## Study Table Work Probe 0.1.55 — match price digits to native header
 
 User requests smaller price digits matching the native header. Native evidence distinguishes tiny header font from small row font at identical nominal16 and identical ancestor scale; .55 clones the header counter font/locale component, preserving prior price colors/effects, atom size and positions. Remove fixed CountSize override. No new hook, frame work, payment/source change or calibration. Frozen source a3c84730a5811f0629519825255a8ae4f01b0ac8; SDK 6.0.406 Roslyn; plugin/assembly/file 0.1.55/0.1.55.0. Immutable artifacts/StudyTableWorkProbe-0.1.55/StudyTableWorkProbe-0.1.55.dll SHA-256 5c2e213fbf8e1f9286d30d42df2ecfcf735e358d8cedc9ed9c12ce1505b8398f, manifest retained. Installed with game closed, one canonical payload and exact installed hash/version verified; previous .54/log retained outside plugins, no original save changes. Compile/existing suites pass. Check only price-digit size against header; source tests below are closed and must not be repeated.

@@ -45,10 +45,9 @@ namespace NikichMods.Research
                 icon.sprite2D = EasySpritesCollection.GetSprite(new Item("science", 1).definition.GetIcon(), false, "");
 
                 counter = Object.Instantiate(headerCounter, box, false);
-                // Use the header's tiny native font and locale route, retaining the
-                // existing gold/shortage presentation of the research price.
+                // Use the header's native tiny font, locale route and normal tint,
+                // retaining the price's existing outline and shortage indication.
                 var priceStyle = row.item_gui.x1.counter;
-                counter.color = priceStyle.color;
                 counter.effectStyle = priceStyle.effectStyle;
                 counter.effectColor = priceStyle.effectColor;
                 counter.effectDistance = priceStyle.effectDistance;
