@@ -1,6 +1,7 @@
 # Diagnostic runtime tests
 
 ## Study Table Work Probe 0.1.56 — identify picker layer warning
+Frozen source 3e464cd7fca5b2a5d1e06ed9db6d14dd1fb45f2a; immutable StudyTableWorkProbe-0.1.56.dll SHA-256 d3045fdf20d5411bed3443b39b42d4cf7905cc6cc79ff025831c012347c1883d. SDK 6.0.406 deterministic clean-source build; plugin/assembly/file 0.1.56/0.1.56.0. Installed with host closed, previous .55 backed up outside plugins, exact old/new digests and installed version verified. Installation was initially not executed because automatic approval review could not complete at account limit; authorized continuation later succeeded. One canonical payload remains; no saves/unrelated mods changed. Installed warning identities/tint remain pending; no runtime acceptance or repair is claimed.
 
 Research-only candidate adds bounded read-only UIWidget.CheckLayer observation before the native correction: maximum16 mismatch identities and one stack, only with the resource picker shown. No layer/parent writes, suppression, scene scans, new frame callback or persistent state. Observer exceptions disable only observation. VERIFIED_RUNTIME_DATA.md owns method selection and the still-BLOCKED repair gate. Includes separately READY native counter normal tint; sizes/positions/shortage behavior unchanged.
 
