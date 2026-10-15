@@ -3,7 +3,7 @@
 Current adopted direction: study-table research plus informational alchemy guidance. The user adopts contextual ingredient guidance at known native recipes as the initial goal; a standalone journal is deferred and not required for the first version. This is design work, not a verified implementation architecture.
 
 ## Current recovery entry point — 2026-10-14
-2026-10-15 current: .52 native technology-unlock sound explicitly accepted on actual research completion and F6 example. User requests deleting the completed diagnostic. Prepare .53 removing F6, synthetic result parameter/heading/log field and unused locale row; actual result/sound/knowledge and other diagnostic tools remain unchanged. No further user test matrix is required for this cleanup. .51 header/geometry/tab/input acceptance remains closed. TEST_LOG.md owns exact accepted/prepared/installed identities; remaining source/compatibility/production gates retain their limits.
+2026-10-15 current: .52 native technology-unlock sound explicitly accepted on actual research completion and F6 example. User requests deleting the completed diagnostic. Immutable .53 is installed/hash verified (identity in TEST_LOG.md), removing F6, synthetic result parameter/heading/log field and unused locale row; actual result/sound/knowledge and other diagnostic tools remain unchanged. No further user test matrix is required for this cleanup. .51 header/geometry/tab/input acceptance remains closed. TEST_LOG.md owns exact accepted/prepared/installed identities; remaining source/compatibility/production gates retain their limits.
 
 ## Historical candidate recovery notes
 

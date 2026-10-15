@@ -2,7 +2,7 @@
 
 ## Study Table Work Probe 0.1.53 — remove accepted result preview
 
-Remove F6 result-example entry, preview-only method parameter/heading/log field and its eleven-language localization row. Actual completion/sound/count/knowledge stay unchanged; remaining diagnostic tools retain their separate scope. Compile/existing suites are the cleanup check, with no additional user matrix. Exact artifact/install identity follows source freeze.
+Remove F6 result-example entry, preview-only method parameter/heading/log field and its eleven-language localization row. Actual completion/sound/count/knowledge stay unchanged; remaining diagnostic tools retain their separate scope. Compile/existing suites are the cleanup check, with no additional user matrix. Frozen source 44618994860b2e7bf7d929cb7fc549622e74d0d5; SDK 6.0.406 Roslyn; plugin/assembly/file 0.1.53/0.1.53.0. Immutable artifacts/StudyTableWorkProbe-0.1.53/StudyTableWorkProbe-0.1.53.dll SHA-256 1a39e36ed7fe535b4948ab45ce796c6ed6d10a4703d710b47ecf5ededec80b72, manifest retained. Installed with game closed, one canonical payload and exact installed hash/version verified; accepted .52/log retained outside plugins, no original save changes. Compile/existing suites pass, including 53 keys x 11 locales.
 
 ## Accepted 0.1.52 — sound on actual research and F6
 
