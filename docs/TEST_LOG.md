@@ -1,4 +1,10 @@
-﻿# Diagnostic runtime tests
+# Diagnostic runtime tests
+
+## Study Table Work Probe 0.1.56 — identify picker layer warning
+
+Research-only candidate adds bounded read-only UIWidget.CheckLayer observation before the native correction: maximum16 mismatch identities and one stack, only with the resource picker shown. No layer/parent writes, suppression, scene scans, new frame callback or persistent state. Observer exceptions disable only observation. VERIFIED_RUNTIME_DATA.md owns method selection and the still-BLOCKED repair gate. Includes separately READY native counter normal tint; sizes/positions/shortage behavior unchanged.
+
+SDK 6.0.406 compile and existing knowledge/actual installed quantity checker/QueueEverything/source/55-key eleven-language/notification suites pass; these do not prove Unity hook execution or warning ownership. Frozen identity/install recorded below after clean build. Exact .55 remains immutable/recoverable. Procedure: open ordinary-material tab, open selection once and cancel/close; optionally inspect light research-price digits. No F7/source/reward/payment matrix. A returning warning should have RAR_PICKER_LAYER widget/panel identity; no returning warning alone does not prove repair. This candidate observes, not fixes, the warning.
 
 ## Accepted .55 digit size; native tint queued for the next candidate
 
