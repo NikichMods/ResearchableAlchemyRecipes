@@ -1,20 +1,20 @@
 # Research price and utility review — 2026-10-14
 
-Status: revised science tariff explicitly accepted after gameplay feedback on 2026-10-15 and implemented in development0.1.58. The earlier reduced tariff is retained below as a historical baseline. Prior acceptance proves bounded payment/lifecycle behavior, not final progression balance. The user adopted faster work2/2/3/5/8 in the bounded0.1.43 return; those per-product work/energy budgets remain unchanged. The prior quantitative study counted material Study expenditure only; it did not value failed mixtures, material acquisition/processing time, certainty of outcome or convenience. Its2–3 science result is a comparison anchor, not a ceiling on a richer player-facing fee.
+Status: revised science tariff explicitly accepted after gameplay feedback on 2026-10-15 and implemented in installed candidate0.1.58; TEST_LOG.md owns exact identity and pending natural-play return. The earlier reduced tariff is retained below as a historical baseline. Prior acceptance proves bounded payment/lifecycle behavior, not final progression balance. The user adopted faster work2/2/3/5/8 in the bounded0.1.43 return; those per-product work/energy budgets remain unchanged. The prior quantitative study counted material Study expenditure only; it did not value failed mixtures, material acquisition/processing time, certainty of outcome or convenience. Its2–3 science result is a comparison anchor, not a ceiling on a richer player-facing fee.
 
 ## Reopened price/value direction — 2026-10-15
 
 After playing, the user finds the small science numbers insufficient to communicate the value/weight of targeted research. This is qualitative player evidence about price perception, not a newly measured shortage or proof of an objective optimal tariff. The explicit final choices are decorative paint1, black paint2, white paint4, healing potion2 (early introduction), acid6, current4-group ->8, current8-group ->10 and silver/golden elixir14. The user settles10 over12, reviews concrete groups and explicitly accepts the distribution. The new full-catalog fee is212. Implementation follows the READY gate below; TEST_LOG.md owns subsequent exact candidate/install and runtime-return status.
 
-| Adopted science | Topics | Product IDs |
-| ---: | ---: | --- |
-| 1 | 8 | yellow_paint, green_paint, brown_paint, red_paint, d_green_paint, d_violet_paint, violet_paint, blue_paint |
-| 2 | 2 | black_paint, pot_heal |
-| 4 | 1 | white_paint |
-| 6 | 1 | acid |
-| 8 | 14 | glue, alkali, energy_elixir, flask_green_l_plus, freshener, growth_enhancer, preservative, zombie_juise, pot_appetite, pot_armor, pot_berserk, pot_damage, pot_heal_long, pot_mana |
-| 10 | 5 | aromatizer, dark_elixir, flavor_enhancer, tanning_agent, pot_speed |
-| 14 | 2 | silver_elixir, golden_elixir |
+| Adopted science | Work | Energy | Topics | Product IDs |
+| ---: | ---: | ---: | ---: | --- |
+| 1 | 2 | 2 | 8 | yellow_paint, green_paint, brown_paint, red_paint, d_green_paint, d_violet_paint, violet_paint, blue_paint |
+| 2 | 2 | 3 | 2 | black_paint, pot_heal |
+| 4 | 2 | 3 | 1 | white_paint |
+| 6 | 2 | 3 | 1 | acid |
+| 8 | 3 | 6 | 14 | glue, alkali, energy_elixir, flask_green_l_plus, freshener, growth_enhancer, preservative, zombie_juise, pot_appetite, pot_armor, pot_berserk, pot_damage, pot_heal_long, pot_mana |
+| 10 | 5 | 12 | 5 | aromatizer, dark_elixir, flavor_enhancer, tanning_agent, pot_speed |
+| 14 | 8 | 15 | 2 | silver_elixir, golden_elixir |
 
 All33 existing topics remain, total212 science (106 paper-equivalent). energy_elixir and pot_mana share the Russian name Эликсир энергии but are separate ingredient/drinkable products; do not merge their research. No formula disclosure or new eligibility rule follows from this regrouping.
 
@@ -32,7 +32,7 @@ Cheapest checks: existing four suites with revised registered-fee counts/total a
 
 Local implementation result: ResearchEconomics now stores an explicit immutable science/work/energy tuple per cost group, with one product-to-group map. The obsolete price-derived work/energy functions are removed. All33 IDs remain; total science212/work107/energy202. A private direct CLR comparison invokes actual Apply from the hash-verified immutable0.1.2 DLL and current output for every product: all revised fees match the accepted transformation and each individual work/energy budget is unchanged. Existing four suites pass; registration/price/shortage, native Item reserve/refund and failure/compatibility tests remain. The reserve fixture now checks a stored old8-science payment against a newly10-science definition and a14-science fallback. This is managed/native-data evidence, not a new installed economic-feel acceptance.
 
-## Installed reduced-price list — retained baseline during review
+## Historical reduced-price list — pre-rebalance baseline
 
 Current working science tariff is 1/2/4/8/10. The user approves the grouped list and moves the fertilizer energy elixir from 8 to 4 because its first use belongs to earlier progression. Decorative paint 1 is the explicit exception to whole-paper even pricing. Stage names describe approximate role/value groups, not automatic availability gates or a dynamic price rule. The complete assignments below are the working balance; installed 0.1.42 has bounded accepted tariff/payment/lifecycle evidence and faith is fixed at zero; the energy/work gradient is fixed below; partial products pay the full fee for remaining variants. Historical higher-price tables below are comparison evidence.
 
