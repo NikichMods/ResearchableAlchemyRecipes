@@ -2,7 +2,7 @@
 
 ## Study Table Work Probe 0.1.52 — native technology unlock sound
 
-Add one native Sounds.PlaySound("unlock") after the owned result window's successful final layout, including its explicit F6 example. Native forced-technology-unlock branch uses the same group/default path. No extra assets, audio system, hooks, tick callback or notice sound. Exact artifact/install identity follows source freeze. Check only F6 result-example sound with all windows closed; no science/knowledge mutation or repeat recipe work is needed. Listening remains pending.
+Add one native Sounds.PlaySound("unlock") after the owned result window's successful final layout, including its explicit F6 example. Native forced-technology-unlock branch uses the same group/default path. No extra assets, audio system, hooks, tick callback or notice sound. Frozen source 70174ddebef00199d2265b06a649bab57e88d0ce; SDK 6.0.406 Roslyn; plugin/assembly/file 0.1.52/0.1.52.0. Immutable artifacts/StudyTableWorkProbe-0.1.52/StudyTableWorkProbe-0.1.52.dll SHA-256 11b5341f4267d87b2936d3e26c1af6916e632e6102cdee806a35a931ea012919, manifest retained. Installed with game closed, one canonical payload and exact installed hash/version verified; previous accepted .51/log retained outside plugins, original saves untouched. Existing compile/knowledge/source/economics/localization/actual QueueEverything/MaxButtons/notice suites pass. Check only F6 result-example sound with all windows closed; no science/knowledge mutation or repeat recipe work is needed. Listening remains pending.
 
 ## Accepted 0.1.51 — immediate science header and fixed appearance
 
